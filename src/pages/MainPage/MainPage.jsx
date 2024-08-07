@@ -6,6 +6,7 @@ import RandomFriend from '../../components/RandomFriend/RandomFriend';
 import Modal from '../../components/Modal/Modal';
 import AdComponent from '../../components/AdComponent/AdComponent';
 import { MainContainer, Content, WhiteBox } from './MainPage.style';
+import AlbumUpdates from '../../components/AlbumUpdates/AlbumUpdates';
 
 const MainPage = () => {
   const adImage = '/path/to/your/ad-image.jpg';
@@ -15,8 +16,8 @@ const MainPage = () => {
     <MainContainer>
       <Sidebar />
       <WhiteBox>
-          {/* 여기 안에 원하는 내용을 추가하세요 */}
-        </WhiteBox>
+        <AlbumUpdates />
+      </WhiteBox>
       <Content>
         <RandomFriend />
         <AdComponent adImage={adImage} adText={adText} />
