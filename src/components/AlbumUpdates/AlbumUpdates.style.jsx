@@ -5,7 +5,6 @@ export const AlbumUpdatesContainer = styled.div`
   overflow-x: auto;
   padding: 20px;
   background-color: #fff;
-  border-radius: 15px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 `;
 

@@ -1,3 +1,4 @@
+// MainPage.jsx
 import React from 'react';
 import Header from '../../components/Header/Header';
 import Sidebar from '../../components/Sidebar/Sidebar';
@@ -5,8 +6,9 @@ import Profile from '../../components/Profile/Profile';
 import RandomFriend from '../../components/RandomFriend/RandomFriend';
 import Modal from '../../components/Modal/Modal';
 import AdComponent from '../../components/AdComponent/AdComponent';
-import { MainContainer, Content, WhiteBox } from './MainPage.style';
 import AlbumUpdates from '../../components/AlbumUpdates/AlbumUpdates';
+import Feed from '../../components/Feed/Feed';
+import { MainContainer, Content, WhiteBox, AlbumUpdatesFeedContainer } from './MainPage.style';
 
 const MainPage = () => {
   const adImage = '/path/to/your/ad-image.jpg';
@@ -16,7 +18,10 @@ const MainPage = () => {
     <MainContainer>
       <Sidebar />
       <WhiteBox>
-        <AlbumUpdates />
+        <AlbumUpdatesFeedContainer>
+          <AlbumUpdates />
+          <Feed />
+        </AlbumUpdatesFeedContainer>
       </WhiteBox>
       <Content>
         <RandomFriend />

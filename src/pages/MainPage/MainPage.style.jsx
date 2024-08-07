@@ -1,31 +1,38 @@
+// MainPage.style.jsx
 import styled from 'styled-components';
-import { Layout } from '../../components/Common';
 
 export const MainContainer = styled.div`
   display: flex;
-  width: 100%;
-  height: 100vh;
-  background-color: #f0f0f0;
+  justify-content: center;
+  padding: 20px;
+`;
+
+export const WhiteBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  background: ${(props) => props.theme.color.white};
+  border-radius: 15px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  max-width: 100%;
+  box-sizing: border-box;
 `;
 
 export const Content = styled.div`
-  flex-grow: 1;
-  padding: 20px;
   display: flex;
   flex-direction: column;
-  align-items: center;
   gap: 20px;
-  width: auto;
-  box-sizing: border-box;
-  margin-left: auto; /* Add this line */
+  width: 25%;
+  max-width: 500px;
+  margin-left: 20px;
 `;
 
-export const WhiteBox = styled(Layout)`
-  width: 80%;
-  height: auto;
-  background: #ffffff;
-  border-radius: 15px;
-  padding: 20px;
+export const AlbumUpdatesFeedContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
   box-sizing: border-box;
-  margin: 0 auto;
+  overflow: hidden;
+  flex-grow: 1;
 `;
