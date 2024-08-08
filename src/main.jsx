@@ -11,6 +11,7 @@ import { ChattingPage } from './pages/ChattingPage';
 import { ExplorePage } from './pages/ExplorePage';
 import { FriendPage } from './pages/FriendPage';
 import { MainPage } from './pages/MainPage';
+import AlbumMakingPage from './pages/AlbumMakingPage/AlbumMakingPage';
 
 import './index.css';
 
@@ -52,6 +53,10 @@ const router = createBrowserRouter([
       {
         path: '/album/post',
         element: <AlbumPostPage />,
+      },
+      {
+        path: '/album-create',
+        element: <AlbumMakingPage />, // AlbumMakingPage 경로 추가
       },
       {
         path: '/friend',
