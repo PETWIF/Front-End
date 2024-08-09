@@ -15,9 +15,13 @@ const FeedItem = ({ data }) => {
   };
 
   const handleCommentSubmit = () => {
-    // 댓글 제출 로직
     console.log('새 댓글:', newComment);
     setNewComment('');
+  };
+
+  const handleReport = (commentId) => {
+    console.log(`댓글 ${commentId}가 신고되었습니다.`);
+    // 여기에 신고 처리 로직을 추가
   };
 
   const formatDate = (date) => {
@@ -29,7 +33,7 @@ const FeedItem = ({ data }) => {
       <S.Header>
         <S.Profile>
           <img src={profileImage} alt={`${profileName} 프로필`} />
-          <div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             <S.ProfileName>{profileName}</S.ProfileName>
             <S.CreatedAt>{formatDate(createdAt)}</S.CreatedAt>
           </div>
@@ -47,10 +51,14 @@ const FeedItem = ({ data }) => {
           <div>
             <S.Likes>
               {likeUsers.length > 0 ? (
-                <>
-                  <img src={likeUsers[0].profileImage} alt={`${likeUsers[0].name} 프로필`} style={{ width: '20px', height: '20px', borderRadius: '50%', marginRight: '5px' }} />
-                  {likeUsers[0].name} 외 {likeCount - 1}명이 좋아요를 눌렀어요
-                </>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                <img 
+                  src={likeUsers[0].profileImage} 
+                  alt={`${likeUsers[0].name} 프로필`} 
+                  style={{ width: '20px', height: '20px', borderRadius: '50%' }} 
+                />
+                {likeUsers[0].name} 외 {likeCount - 1}명이 좋아요를 눌렀어요
+              </div>
               ) : (
                 `${profileName} 외 ${likeCount - 1}명이 좋아요를 눌렀어요`
               )}
@@ -59,16 +67,25 @@ const FeedItem = ({ data }) => {
             <S.CreatedAt>{formatDate(createdAt)}</S.CreatedAt>
             <hr />
             <S.CommentSectionContainer>
-              <CommentSection comments={comments.map((comment) => ({
-                ...comment,
-                createdAt: formatDate(comment.createdAt),
-              }))} />
+              <CommentSection
+                comments={comments.map((comment) => ({
+                  ...comment,
+                  createdAt: formatDate(comment.createdAt),
+                  replies: comment.replies
+                    ? comment.replies.map((reply) => ({
+                        ...reply,
+                        createdAt: formatDate(reply.createdAt),
+                      }))
+                    : [],
+                }))}
+                onReport={handleReport} // 신고 기능 처리 함수 전달
+              />
             </S.CommentSectionContainer>
           </div>
           <S.CommentInputWrapper>
             <S.CommentInputSection>
               <S.UserProfileImage src={profileImage} alt="현재 로그인된 사용자 프로필" />
-              <S.CommentInput 
+              <S.CommentInput
                 type="text"
                 value={newComment}
                 onChange={handleCommentChange}

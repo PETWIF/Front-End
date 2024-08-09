@@ -1,7 +1,6 @@
 // MainPage.jsx
 import React from 'react';
 import Header from '../../components/Header/Header';
-import Sidebar from '../../components/Sidebar/Sidebar';
 import Profile from '../../components/Profile/Profile';
 import RandomFriend from '../../components/RandomFriend/RandomFriend';
 import Modal from '../../components/Modal/Modal';
@@ -16,7 +15,6 @@ const MainPage = () => {
 
   return (
     <MainContainer>
-      <Sidebar />
       <WhiteBox>
         <AlbumUpdatesFeedContainer>
           <AlbumUpdates />

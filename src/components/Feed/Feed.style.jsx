@@ -58,19 +58,23 @@ export const Actions = styled.div`
 export const MainContent = styled.div`
   display: flex;
   gap: 20px;
+  height: 100%;
 `;
 
 export const AlbumImage = styled.img`
   width: 60%;
   border-radius: 10px;
+  height: auto;
+  max-height: 100%;
 `;
 
 export const AlbumDetails = styled.div`
   width: 40%;
   display: flex;
   flex-direction: column;
-  gap: 10px;
   justify-content: space-between;
+  gap: 10px;
+  height: 100%;
 `;
 
 export const Likes = styled.div`
@@ -86,47 +90,33 @@ export const AlbumComment = styled.div`
 export const CommentSectionContainer = styled.div`
   flex: 1;
   overflow-y: auto;
+  height: calc(100% - 60px);  /* 댓글 입력란을 제외한 영역 전체를 댓글 섹션으로 설정 */
+  padding-right: 10px; /* 스크롤 바 공간 확보 */
+  ::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
 `;
 
 export const CommentSection = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 5px;
-  padding: 10px;
-  background: ${(props) => props.theme.color.lightGray};
-  border-radius: 10px;
-  margin-top: 10px;
-`;
-
-export const CommentAuthor = styled.div`
-  font-weight: bold;
-`;
-
-export const CommentText = styled.div`
-  margin-left: 10px;
-`;
-
-export const CommentActions = styled.div`
-  display: flex;
-  align-items: center;
   gap: 10px;
-  font-size: 12px;
-  color: ${(props) => props.theme.color.gray};
+  padding: 10px;
+  height: 100%; /* 댓글 섹션이 전체 영역을 채우도록 설정 */
 `;
-
-export const CommentCreatedAt = styled.div``;
 
 export const CommentInputWrapper = styled.div`
   display: flex;
   justify-content: flex-end;
+  padding-top: 10px;
+  border-top: 1px solid ${(props) => props.theme.color.gray};
 `;
 
 export const CommentInputSection = styled.div`
   display: flex;
   align-items: center;
   gap: 10px;
-  padding-top: 10px;
-  border-top: 1px solid ${(props) => props.theme.color.gray};
   width: 100%;
 `;
 

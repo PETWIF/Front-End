@@ -4,7 +4,6 @@ import styled from 'styled-components';
 export const MainContainer = styled.div`
   display: flex;
   justify-content: center;
-  padding: 20px;
 `;
 
 export const WhiteBox = styled.div`
