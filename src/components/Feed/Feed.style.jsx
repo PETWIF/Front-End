@@ -73,7 +73,7 @@ export const Actions = styled.div`
 export const MainContent = styled.div`
   display: flex;
   flex-direction: column;
-  justify-contents: flex-start;
+  justify-content: flex-start;
   gap: 10px;
   width: 30%;
   height: 90%;
@@ -112,7 +112,7 @@ export const AlbumComment = styled.div`
 
 export const CommentSectionContainer = styled.div`
   align-items: center;
-  justify-contents: flex-start;
+  justify-content: flex-start;
   height: 100%; /* 본문 제외 영역 전체를 댓글 섹션으로 설정 */
   padding-right: 10px; /* 스크롤 바 공간 확보 */
 `;
