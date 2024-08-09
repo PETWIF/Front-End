@@ -11,6 +11,14 @@ import { ChattingPage } from './pages/ChattingPage';
 import { ExplorePage } from './pages/ExplorePage';
 import { FriendPage } from './pages/FriendPage';
 import { MainPage } from './pages/MainPage';
+import { LoginPage } from './pages/LoginPage';
+import { PwdSearchPage } from './pages/PwdSearchPage';
+import { PwdChangePage } from './pages/PwdChangePage';
+import { SignUpPage } from './pages/SignUpPage';
+import { AgreePage } from './pages/AgreePage';
+import { SetNicknamePage } from './pages/SetNicknamePage';
+import { AddInfoPage } from './pages/AddInfoPage';
+import { RegisteredPage } from './pages/RegisteredPage';
 
 import './index.css';
 
@@ -22,6 +30,38 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <MainPage />,
+      },
+      {
+        path: '/login',
+        element: <LoginPage />,
+      },
+      {
+        path: '/searchPwd',
+        element: <PwdSearchPage />,
+      },
+      {
+        path: '/changePwd',
+        element: <PwdChangePage />,
+      },
+      {
+        path: '/signup',
+        element: <SignUpPage />,
+      },
+      {
+        path: '/agree',
+        element: <AgreePage />,
+      },
+      {
+        path: '/setNickname',
+        element: <SetNicknamePage />,
+      },
+      {
+        path: '/addInfo',
+        element: <AddInfoPage />,
+      },
+      {
+        path: '/registered',
+        element: <RegisteredPage />,
       },
       {
         path: '/home',
