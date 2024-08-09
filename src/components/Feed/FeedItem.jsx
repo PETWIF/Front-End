@@ -30,28 +30,32 @@ const FeedItem = ({ data }) => {
 
   return (
     <S.FeedItem>
-      <S.Header>
-        <S.Profile>
-          <img src={profileImage} alt={`${profileName} 프로필`} />
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <S.ProfileName>{profileName}</S.ProfileName>
-            <S.CreatedAt>{formatDate(createdAt)}</S.CreatedAt>
-          </div>
+      <S.FeedZone>
+        <S.Header>
+          <S.Profile>
+            <img src={profileImage} alt={`${profileName} 프로필`} />
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <S.ProfileName>{profileName}</S.ProfileName>
+              <S.CreatedAt>{formatDate(createdAt)}</S.CreatedAt>
+            </div>
+          </S.Profile>
           <S.Actions>
-            <Icon id='albumdm' width='31' height='32'></Icon>
-            <Icon id='albumheart' width='31' height='26'></Icon>
-            <Icon id='albumbookmark' width='22' height='27'></Icon>
-            <Icon id='albumhamburger' width='23' height='4'></Icon>
+            <Icon id='albumdm' width='31' height='32' />
+            <Icon id='albumheart' width='31' height='26' />
+            <Icon id='albumbookmark' width='22' height='27' />
+            <Icon id='albumhamburger' width='23' height='4' />
           </S.Actions>
-        </S.Profile>
-      </S.Header>
-      <S.MainContent>
+        </S.Header>
         <S.AlbumImage src={dummyImg} alt="앨범 이미지" />
+      </S.FeedZone>
+
+
+      <S.MainContent>
+        <S.Spacer />
         <S.AlbumDetails>
-          <div>
-            <S.Likes>
-              {likeUsers.length > 0 ? (
-                <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+          <S.Likes>
+            {likeUsers.length > 0 ? (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
                 <img 
                   src={likeUsers[0].profileImage} 
                   alt={`${likeUsers[0].name} 프로필`} 
@@ -59,29 +63,33 @@ const FeedItem = ({ data }) => {
                 />
                 {likeUsers[0].name} 외 {likeCount - 1}명이 좋아요를 눌렀어요
               </div>
-              ) : (
-                `${profileName} 외 ${likeCount - 1}명이 좋아요를 눌렀어요`
-              )}
-            </S.Likes>
-            <S.AlbumComment>{comment}</S.AlbumComment>
-            <S.CreatedAt>{formatDate(createdAt)}</S.CreatedAt>
-            <hr />
-            <S.CommentSectionContainer>
-              <CommentSection
-                comments={comments.map((comment) => ({
-                  ...comment,
-                  createdAt: formatDate(comment.createdAt),
-                  replies: comment.replies
-                    ? comment.replies.map((reply) => ({
-                        ...reply,
-                        createdAt: formatDate(reply.createdAt),
-                      }))
-                    : [],
-                }))}
-                onReport={handleReport} // 신고 기능 처리 함수 전달
-              />
-            </S.CommentSectionContainer>
-          </div>
+            ) : (
+              `${profileName} 외 ${likeCount - 1}명이 좋아요를 눌렀어요`
+            )}
+          </S.Likes>
+          <S.AlbumComment>{comment}</S.AlbumComment>
+          <S.CreatedAt>{formatDate(createdAt)}</S.CreatedAt>
+        </S.AlbumDetails>
+
+        <S.StyledHr />
+
+        <S.CommentSectionContainer>
+          <S.CommentSection>
+          <CommentSection
+            comments={comments.map((comment) => ({
+              ...comment,
+              createdAt: formatDate(comment.createdAt),
+              replies: comment.replies
+                ? comment.replies.map((reply) => ({
+                    ...reply,
+                    createdAt: formatDate(reply.createdAt),
+                  }))
+                : [],
+            }))}
+            onReport={handleReport} // 신고 기능 처리 함수 전달
+          /> 
+          </S.CommentSection>
+          
           <S.CommentInputWrapper>
             <S.CommentInputSection>
               <S.UserProfileImage src={profileImage} alt="현재 로그인된 사용자 프로필" />
@@ -94,8 +102,9 @@ const FeedItem = ({ data }) => {
               <S.CommentButton onClick={handleCommentSubmit}>등록</S.CommentButton>
             </S.CommentInputSection>
           </S.CommentInputWrapper>
-        </S.AlbumDetails>
-      </S.MainContent>
+
+        </S.CommentSectionContainer>
+        </S.MainContent>
     </S.FeedItem>
   );
 };
