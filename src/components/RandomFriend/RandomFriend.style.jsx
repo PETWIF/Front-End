@@ -3,6 +3,7 @@ import { Layout } from '../Common/';
 
 export const RandomFriendLayout = styled(Layout)`
   padding: 30px 20px;
+  width: 100%;
 `;
 
 export const Title = styled.h2`
