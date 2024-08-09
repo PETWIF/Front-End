@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import * as S from './CommentSection.style';
-import { FaHeart, FaReply, FaFlag } from 'react-icons/fa';
+import { Icon } from '../Icon';
 
 const CommentSection = ({ comments, onReport }) => {
   const [reply, setReply] = useState({});
@@ -46,15 +46,15 @@ const CommentSection = ({ comments, onReport }) => {
               {comment.author}
             </S.CommentAuthor>
             <S.ReportButton onClick={() => onReport(comment.id)}>
-              <FaFlag /> 신고
+              신고
             </S.ReportButton>
           </S.CommentHeader>
           <S.CommentText>{comment.text}</S.CommentText>
           <S.CommentActions>
-            <FaHeart /> {comment.likeCount}
+            <Icon id='commentheart' width='14' height='12'></Icon> {comment.likeCount}
             {comment.replies && comment.replies.length > 0 && (
               <>
-                <FaReply onClick={() => toggleShowReplies(comment.id)} />
+                <Icon id='replybutton' width='13' height='12' onClick={() => toggleShowReplies(comment.id)} />
                 <span>{comment.replies.length}</span>
               </>
             )}
@@ -72,7 +72,7 @@ const CommentSection = ({ comments, onReport }) => {
                       </S.ReplyAuthor>
                       <S.ReplyText>{reply.text}</S.ReplyText>
                       <S.ReplyActions>
-                        <FaHeart /> {reply.likeCount}
+                        <Icon id='commentheart' width='14' height='12'></Icon>{reply.likeCount}
                         <S.CommentCreatedAt>{reply.createdAt}</S.CommentCreatedAt>
                       </S.ReplyActions>
                     </S.Reply>

@@ -1,10 +1,10 @@
 import React from 'react';
 import CommentSection from './CommentSection';
 import * as S from './Feed.style';
-import { FaHeart, FaBookmark, FaRegEnvelope, FaEllipsisH } from 'react-icons/fa';
+import { Icon } from '../Icon';
 import { formatDistanceToNow } from 'date-fns';
 import { ko } from 'date-fns/locale';
-import dummyImg from './Icons/dummyImg.svg';
+import dummyImg from '../../dummy/images/dummyImg.svg'; 
 
 const FeedItem = ({ data }) => {
   const { profileImage, profileName, albumImage, likeCount, createdAt, comments, comment, likeUsers = [] } = data;
@@ -38,10 +38,10 @@ const FeedItem = ({ data }) => {
             <S.CreatedAt>{formatDate(createdAt)}</S.CreatedAt>
           </div>
           <S.Actions>
-            <FaRegEnvelope />
-            <FaHeart />
-            <FaBookmark />
-            <FaEllipsisH />
+            <Icon id='albumdm' width='31' height='32'></Icon>
+            <Icon id='albumheart' width='31' height='26'></Icon>
+            <Icon id='albumbookmark' width='22' height='27'></Icon>
+            <Icon id='albumhamburger' width='23' height='4'></Icon>
           </S.Actions>
         </S.Profile>
       </S.Header>
