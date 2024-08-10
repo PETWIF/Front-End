@@ -4,7 +4,7 @@ export const CommentSection = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
-  max-height: 300px;
+  height: 100%; // max-height이 설정되어 있어서 댓글창 잘리는 문제 발생
   overflow-y: auto;
 `;
 
