@@ -21,6 +21,7 @@ const FeedItem = ({ data }) => {
 
   const handleReport = (commentId) => {
     console.log(`댓글 ${commentId}가 신고되었습니다.`);
+    // 여기에 신고 처리 로직을 추가
   };
 
   const formatDate = (date) => {
@@ -45,10 +46,9 @@ const FeedItem = ({ data }) => {
             <Icon id='albumhamburger' width='23' height='4' />
           </S.Actions>
         </S.Header>
-        <S.AlbumImageWrapper>
-          <S.AlbumImage src={dummyImg} alt="앨범 이미지" />
-        </S.AlbumImageWrapper>
+        <S.AlbumImage src={dummyImg} alt="앨범 이미지" />
       </S.FeedZone>
+
 
       <S.MainContent>
         <S.Spacer />
@@ -75,19 +75,19 @@ const FeedItem = ({ data }) => {
 
         <S.CommentSectionContainer>
           <S.CommentSection>
-            <CommentSection
-              comments={comments.map((comment) => ({
-                ...comment,
-                createdAt: formatDate(comment.createdAt),
-                replies: comment.replies
-                  ? comment.replies.map((reply) => ({
-                      ...reply,
-                      createdAt: formatDate(reply.createdAt),
-                    }))
-                  : [],
-              }))}
-              onReport={handleReport} // 신고 기능 처리 함수 전달
-            /> 
+          <CommentSection
+            comments={comments.map((comment) => ({
+              ...comment,
+              createdAt: formatDate(comment.createdAt),
+              replies: comment.replies
+                ? comment.replies.map((reply) => ({
+                    ...reply,
+                    createdAt: formatDate(reply.createdAt),
+                  }))
+                : [],
+            }))}
+            onReport={handleReport} // 신고 기능 처리 함수 전달
+          /> 
           </S.CommentSection>
           
           <S.CommentInputWrapper>
@@ -102,8 +102,9 @@ const FeedItem = ({ data }) => {
               <S.CommentButton onClick={handleCommentSubmit}>등록</S.CommentButton>
             </S.CommentInputSection>
           </S.CommentInputWrapper>
+
         </S.CommentSectionContainer>
-      </S.MainContent>
+        </S.MainContent>
     </S.FeedItem>
   );
 };

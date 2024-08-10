@@ -7,7 +7,6 @@ export const FeedContainer = styled.div`
 `;
 
 export const FeedItem = styled.div`
-  height: 800px;
   background: ${(props) => props.theme.color.white};
   border-radius: 15px;
   padding: 20px;
@@ -15,18 +14,20 @@ export const FeedItem = styled.div`
   display: flex;
   flex-direction: flex-inline;
   gap: 20px;
+  height: auto; /* 높이를 자동으로 조정 */
 `;
 
 export const FeedZone = styled.div`
   width: 70%;
-  height: auto;
   background: ${(props) => props.theme.color.white};
   border-radius: 15px;
   padding: 20px;
   display: flex;
   flex-direction: column;
   gap: 20px;
+  height: auto; /* 높이를 자동으로 조정 */
 `;
+
 
 export const Header = styled.div`
   width: 100%;
@@ -36,23 +37,12 @@ export const Header = styled.div`
   align-items: center;
 `;
 
-export const AlbumImageWrapper = styled.div`
-  width: 100%;
-  height: 0;
-  padding-bottom: 75%; /* 4:3 비율 유지 */
-  position: relative;
-  background-color: ${(props) => props.theme.color.lightGray};
-  border-radius: 10px;
-`;
 
 export const AlbumImage = styled.img`
-  position: absolute;
-  top: 0;
-  left: 0;
   width: 100%;
-  height: 100%;
-  object-fit: cover;
+  height: auto;
   border-radius: 10px;
+  display: block;
 `;
 
 export const Profile = styled.div`
@@ -89,10 +79,9 @@ export const Actions = styled.div`
 export const MainContent = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  gap: 10px;
+  justify-content: space-between;
   width: 30%;
-  height: 90%;
+  height: auto; /* 높이를 자동으로 조정 */
 `;
 
 export const Spacer = styled.div`
@@ -120,10 +109,21 @@ export const AlbumComment = styled.div`
 `;
 
 export const CommentSectionContainer = styled.div`
-  align-items: center;
-  justify-content: flex-start;
-  height: 100%; 
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow-y: auto;  /* 스크롤 기능을 활성화 */
   padding-right: 10px; 
+  padding-top: 10px;
+  box-sizing: border-box; /* 패딩과 경계도 크기에 포함 */
+  
+  /* 스크롤 바 숨김 */
+  ::-webkit-scrollbar {
+    display: none; /* 웹킷 브라우저에서 스크롤 바 숨김 */
+  }
+
+  -ms-overflow-style: none;  /* IE 및 Edge에서 스크롤 바 숨김 */
+  scrollbar-width: none;  /* Firefox에서 스크롤 바 숨김 */
 `;
 
 export const CommentSection = styled.div`
@@ -132,23 +132,25 @@ export const CommentSection = styled.div`
   gap: 10px;
   padding: 10px;
   width: 100%;
-  overflow-y: auto; /* 스크롤이 필요할 때 스크롤 바를 활성화 */
-  height: 65%; 
+  overflow-y: auto; /* 스크롤 기능을 유지 */
+  flex-grow: 1;
 
+  /* 스크롤 바 숨김 */
   ::-webkit-scrollbar {
-    display: none; /* 웹킷 브라우저에서 스크롤바 숨김 */
+    display: none; /* 웹킷 브라우저에서 스크롤 바 숨김 */
   }
 
-  -ms-overflow-style: none;  /* IE 및 Edge에서 스크롤바 숨김 */
-  scrollbar-width: none;  /* Firefox에서 스크롤바 숨김 */
+  -ms-overflow-style: none;  /* IE 및 Edge에서 스크롤 바 숨김 */
+  scrollbar-width: none;  /* Firefox에서 스크롤 바 숨김 */
 `;
 
 export const CommentInputWrapper = styled.div`
   display: flex;
-  height: 60px;
+  height: 60px; 
   justify-content: flex-end;
   padding-top: 10px;
   border-top: 1px solid ${(props) => props.theme.color.gray};
+  position: relative; /* 위치를 부모 요소 내에 고정 */
 `;
 
 export const CommentInputSection = styled.div`
