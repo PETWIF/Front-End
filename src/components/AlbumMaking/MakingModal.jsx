@@ -20,12 +20,6 @@ export default function AlbumModal({ close }) {
           </div>
           <div>
             <label>
-              <S.B>앨범 태그</S.B>
-            </label>
-            <S.Input type='text' placeholder='태그를 입력해주세요' />
-          </div>
-          <div>
-            <label>
               <S.B>앨범 문구</S.B>
             </label>
             <S.TextArea placeholder='문구를 입력해주세요' />

@@ -52,7 +52,7 @@ export const Albumcontexts = styled.div`
   padding: 20px;
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 10%;
   position: relative;
 `;
 
