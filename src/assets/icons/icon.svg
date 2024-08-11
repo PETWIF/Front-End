@@ -19,6 +19,9 @@
   <symbol id="arrow-up" width="13" height="8" viewBox="0 0 13 8" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M12 6.5L7.44121 1.31956C7.05354 0.87902 6.37162 0.865429 5.96671 1.29017L1 6.5" stroke="#999999" stroke-width="1.5" stroke-linecap="round"/>
   </symbol>
+  <symbol id='arrow-down' width="13" height="8" viewBox="0 0 13 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M1 1L5.55879 6.18044C5.94646 6.62098 6.62838 6.63457 7.0333 6.20983L12 1" stroke="#999999" stroke-width="1.5" stroke-linecap="round"/>
+  </symbol>
   <symbol id="message" width="current" height="current" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M1.33101 10.7128L29.3344 1.02892C29.7316 0.891995 30.1126 1.26495 29.9691 1.64965L19.8202 28.7465C19.6511 29.1964 18.9843 29.1599 18.8689 28.6943L15.5494 15.3461C15.5065 15.1713 15.3656 15.0344 15.1858 14.9901L1.37662 11.6374C0.898966 11.5213 0.866764 10.8732 1.33101 10.7128Z" stroke="#585858" stroke-width="2" stroke-miterlimit="10"/>
     <path d="M15.0322 15.0323L30 1" stroke="#585858" stroke-width="2" stroke-miterlimit="10"/>

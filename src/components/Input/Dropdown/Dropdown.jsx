@@ -17,7 +17,7 @@ export default function DropDown({ options, placeholder, callback }) {
   return (
     <S.Select onClick={() => setIsOpen((prev) => !prev)}>
       <S.Text $placeholder={!value}>{value?.name ?? placeholder}</S.Text>
-      <Icon id='arrow-up' width='13' height='8' />
+      <Icon id={isOpen ? 'arrow-up' : 'arrow-down'} width='13' height='8' />
       <S.OptionList $show={isOpen}>
         {options.map((option) => (
           <S.OptionItem
