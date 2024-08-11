@@ -59,6 +59,12 @@ export default function MainArea() {
               <ToolbarItem>
                 <Icon id='textright' width='24' height='24' />
               </ToolbarItem>
+              <ToolbarItem>
+                <Icon id='addlink' width='24' height='24' />
+              </ToolbarItem>
+              <ToolbarItem>
+                <Icon id='mdicolor' width='28' height='28' />
+              </ToolbarItem>
             </ToolbarContainer>
             <InputField placeholder='여기에 텍스트 입력...' />
           </>
