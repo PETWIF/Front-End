@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 
 import * as S from './RadioGroup.style.jsx';
 
-export default function RadioGroup({ name, callback, children }) {
-  const [value, setValue] = useState();
+export default function RadioGroup({ name, defaultValue, callback, children }) {
+  const [value, setValue] = useState(defaultValue);
   const handleRadio = (event) => {
     setValue(event.target.value);
     callback(event.target.value);

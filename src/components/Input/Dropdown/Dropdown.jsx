@@ -4,7 +4,7 @@ import { Icon } from '../../Icon';
 
 import * as S from './Dropdown.style.jsx';
 
-export default function DropDown({ options, placeholder, callback }) {
+export default function DropDown({ width, options, placeholder, callback }) {
   const [value, setValue] = useState();
   const [isOpen, setIsOpen] = useState(false);
   const update = (event) => {
@@ -15,7 +15,7 @@ export default function DropDown({ options, placeholder, callback }) {
   };
 
   return (
-    <S.Select onClick={() => setIsOpen((prev) => !prev)}>
+    <S.Select $width={width} onClick={() => setIsOpen((prev) => !prev)}>
       <S.Text $placeholder={!value}>{value?.name ?? placeholder}</S.Text>
       <Icon id={isOpen ? 'arrow-up' : 'arrow-down'} width='13' height='8' />
       <S.OptionList $show={isOpen}>

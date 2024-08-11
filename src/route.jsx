@@ -15,7 +15,8 @@ import { AgreePage } from './pages/AgreePage';
 import { SetNicknamePage } from './pages/SetNicknamePage';
 import { AddInfoPage } from './pages/AddInfoPage';
 import { RegisteredPage } from './pages/RegisteredPage';
-import AlbumMakingPage from './pages/AlbumMakingPage/AlbumMakingPage';
+import { UserProfilePage } from './pages/UserProfilePage';
+import { AlbumMakingPage } from './pages/AlbumMakingPage';
 
 export const routeList = [
   {
@@ -107,6 +108,10 @@ export const routeList = [
       {
         path: '/chatting',
         element: <ChattingPage />,
+      },
+      {
+        path: '/user-profile',
+        element: <UserProfilePage />,
       },
     ],
   },

@@ -4,7 +4,13 @@ import { Icon } from '../../Icon';
 
 import * as S from './Radio.style.jsx';
 
-export default function Radio({ name, value, currentValue, children }) {
+export default function Radio({
+  name,
+  value,
+  currentValue,
+  defaultChecked = false,
+  children,
+}) {
   return (
     <S.RadioLayout>
       <Icon
@@ -12,7 +18,12 @@ export default function Radio({ name, value, currentValue, children }) {
         width='18'
         height='18'
       />
-      <S.RadioStyle type='radio' name={name} value={value} />
+      <S.RadioStyle
+        type='radio'
+        name={name}
+        value={value}
+        defaultChecked={defaultChecked}
+      />
       <S.Label>{children}</S.Label>
       {/* <span>{children}</span> */}
     </S.RadioLayout>

@@ -1,10 +1,12 @@
 import styled from 'styled-components';
 
 export const Select = styled.div`
+  width: ${(props) => props.$width ?? 'auto'};
+  padding: 16px 10px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 14px;
+  flex-shrink: 0;
   border: none;
   border-radius: 10px;
   background: ${(props) => props.theme.color.gray5};
@@ -12,8 +14,7 @@ export const Select = styled.div`
   cursor: pointer;
 
   font-weight: 400;
-  font-size: 15px;
-  line-height: 22px;
+  font-size: 14px;
   color: ${(props) => props.theme.color.gray1};
 `;
 
@@ -23,6 +24,7 @@ export const Text = styled.span`
 
 export const OptionList = styled.ul`
   width: 100%;
+  max-height: 170px;
   margin-top: 10px;
   display: ${(props) => (props.$show ? 'block' : 'none')};
   background: ${(props) => props.theme.color.gray5};
@@ -30,6 +32,8 @@ export const OptionList = styled.ul`
   position: absolute;
   top: 100%;
   left: 0;
+  filter: drop-shadow(2px 4px 4px rgba(0, 0, 0, 0.15));
+  overflow-y: auto;
 `;
 
 export const OptionItem = styled.li`
