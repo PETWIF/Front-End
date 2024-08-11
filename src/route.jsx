@@ -1,21 +1,21 @@
 import App from './App.jsx';
-import { AlbumDetailPage } from './pages/AlbumDetailPage/index.js';
-import { AlbumPage } from './pages/AlbumPage/index.js';
-import { AlbumPostPage } from './pages/AlbumPostPage/index.js';
-import { BookmarkPage } from './pages/BookmarkPage/index.js';
-import { ChattingPage } from './pages/ChattingPage/index.js';
-import { ExplorePage } from './pages/ExplorePage/index.js';
-import { FriendPage } from './pages/FriendPage/index.js';
-import { MainPage } from './pages/MainPage/index.js';
-import { LoginPage } from './pages/LoginPage/index.js';
-import { PwdSearchPage } from './pages/PwdSearchPage/index.js';
-import { PwdChangePage } from './pages/PwdChangePage/index.js';
-import { SignUpPage } from './pages/SignUpPage/index.js';
-import { AgreePage } from './pages/AgreePage/index.js';
-import { SetNicknamePage } from './pages/SetNicknamePage/index.js';
-import { AddInfoPage } from './pages/AddInfoPage/index.js';
-import { RegisteredPage } from './pages/RegisteredPage/index.js';
-import AlbumMakingPage from './pages/AlbumMakingPage/AlbumMakingPage.jsx';
+import { AlbumDetailPage } from './pages/AlbumDetailPage';
+import { AlbumPage } from './pages/AlbumPage';
+import { AlbumPostPage } from './pages/AlbumPostPage';
+import { BookmarkPage } from './pages/BookmarkPage';
+import { ChattingPage } from './pages/ChattingPage';
+import { ExplorePage } from './pages/ExplorePage';
+import { FriendPage } from './pages/FriendPage';
+import { MainPage } from './pages/MainPage';
+import { LoginPage } from './pages/LoginPage';
+import { PwdSearchPage } from './pages/PwdSearchPage';
+import { PwdChangePage } from './pages/PwdChangePage';
+import { SignUpPage } from './pages/SignUpPage';
+import { AgreePage } from './pages/AgreePage';
+import { SetNicknamePage } from './pages/SetNicknamePage';
+import { AddInfoPage } from './pages/AddInfoPage';
+import { RegisteredPage } from './pages/RegisteredPage';
+import AlbumMakingPage from './pages/AlbumMakingPage/AlbumMakingPage';
 
 export const routeList = [
   {
@@ -29,34 +29,42 @@ export const routeList = [
       {
         path: '/login',
         element: <LoginPage />,
+        meta: { hideHeader: true },
       },
       {
         path: '/searchPwd',
         element: <PwdSearchPage />,
+        meta: { hideHeader: true },
       },
       {
         path: '/changePwd',
         element: <PwdChangePage />,
+        meta: { hideHeader: true },
       },
       {
         path: '/signup',
         element: <SignUpPage />,
+        meta: { hideHeader: true },
       },
       {
         path: '/agree',
         element: <AgreePage />,
+        meta: { hideHeader: true },
       },
       {
         path: '/setNickname',
         element: <SetNicknamePage />,
+        meta: { hideHeader: true },
       },
       {
         path: '/addInfo',
         element: <AddInfoPage />,
+        meta: { hideHeader: true },
       },
       {
         path: '/registered',
         element: <RegisteredPage />,
+        meta: { hideHeader: true },
       },
       {
         path: '/home',
@@ -71,7 +79,7 @@ export const routeList = [
         element: <AlbumPage />,
         children: [
           {
-            path: ':userId',
+            path: '/album/:userId',
             element: <AlbumPage />,
           },
         ],
