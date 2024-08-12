@@ -24,7 +24,7 @@ export const Button = styled.button`
 
   width: ${(props) => props.$width || '100%'};
   border-radius: ${(props) => props.$borderRadius || '10px'};
-  font-weight: 600;
+  font-weight: 400;
   line-height: 29px;
   text-align: center;
   padding: ${(props) => `${props.$padding || 0} 0`};

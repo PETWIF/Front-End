@@ -1,4 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg">
+  <symbol id='check-circle' width="18" height="18" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M10.5 19C15.4706 19 19.5 14.9706 19.5 10C19.5 5.02944 15.4706 1 10.5 1C5.52944 1 1.5 5.02944 1.5 10C1.5 14.9706 5.52944 19 10.5 19Z" stroke="#F87F28" stroke-width="2" stroke-linecap="round"/>
+    <path d="M7.00024 11.9995L8.11924 13.3985C8.52024 13.8995 8.72124 14.1505 8.97924 14.1355C9.23724 14.1205 9.40724 13.8485 9.74824 13.3035L14.0002 6.49951" stroke="#F87F28" stroke-width="2" stroke-linecap="round"/>
+  </symbol>
+  <symbol id='uncheck-circle' width="18" height="18" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M10.5 19C15.4706 19 19.5 14.9706 19.5 10C19.5 5.02944 15.4706 1 10.5 1C5.52944 1 1.5 5.02944 1.5 10C1.5 14.9706 5.52944 19 10.5 19Z" stroke="#999999" stroke-width="2" stroke-linecap="round"/>
+  </symbol>
   <symbol id="check" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M1.25 3.75C1.25 2.36929 2.36929 1.25 3.75 1.25H16.25C17.6307 1.25 18.75 2.36929 18.75 3.75V16.25C18.75 17.6307 17.6307 18.75 16.25 18.75H3.75C2.36929 18.75 1.25 17.6307 1.25 16.25V3.75Z" fill="#FFA34E"/>
     <path d="M8.27625 14.375C8.03676 14.375 7.79728 14.2854 7.61436 14.1057L4.0241 10.5799C3.65863 10.221 3.65863 9.63875 4.0241 9.27984C4.38956 8.92094 4.98241 8.92094 5.34787 9.27984L8.27625 12.1557L14.6521 5.89418C15.0176 5.53527 15.6104 5.53527 15.9759 5.89418C16.3414 6.25308 16.3414 6.8353 15.9759 7.19421L8.93813 14.1057C8.7556 14.2854 8.51573 14.375 8.27625 14.375Z" fill="#F4F4F4"/>
@@ -11,6 +18,9 @@
   </symbol>
   <symbol id="arrow-up" width="13" height="8" viewBox="0 0 13 8" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M12 6.5L7.44121 1.31956C7.05354 0.87902 6.37162 0.865429 5.96671 1.29017L1 6.5" stroke="#999999" stroke-width="1.5" stroke-linecap="round"/>
+  </symbol>
+  <symbol id='arrow-down' width="13" height="8" viewBox="0 0 13 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M1 1L5.55879 6.18044C5.94646 6.62098 6.62838 6.63457 7.0333 6.20983L12 1" stroke="#999999" stroke-width="1.5" stroke-linecap="round"/>
   </symbol>
   <symbol id="message" width="current" height="current" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M1.33101 10.7128L29.3344 1.02892C29.7316 0.891995 30.1126 1.26495 29.9691 1.64965L19.8202 28.7465C19.6511 29.1964 18.9843 29.1599 18.8689 28.6943L15.5494 15.3461C15.5065 15.1713 15.3656 15.0344 15.1858 14.9901L1.37662 11.6374C0.898966 11.5213 0.866764 10.8732 1.33101 10.7128Z" stroke="#585858" stroke-width="2" stroke-miterlimit="10"/>
@@ -36,14 +46,6 @@
   <symbol id='warning' width="230" height="43" viewBox="0 0 230 43" fill="none" xmlns="http://www.w3.org/2000/svg">
     <circle cx="114.5" cy="21.5" r="20" stroke="#FF5F5F" stroke-width="3"/>
     <path d="M113.848 24.95L113.368 12.95L113.278 9.38H116.758L116.638 12.95L116.158 24.95H113.848ZM114.988 32.39C113.698 32.39 112.708 31.4 112.708 29.99C112.708 28.55 113.698 27.53 114.988 27.53C116.308 27.53 117.328 28.55 117.328 29.99C117.328 31.4 116.308 32.39 114.988 32.39Z" fill="#FF5F5F"/>
-  </symbol>
-  <symbol id='check' width="35" height="35" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M17.5 25C21.6421 25 25 21.6421 25 17.5C25 13.3579 21.6421 10 17.5 10C13.3579 10 10 13.3579 10 17.5C10 21.6421 13.3579 25 17.5 25Z" stroke="#F87F28" stroke-width="2" stroke-linecap="round"/>
-    <path d="M14.5835 19.1663L15.516 20.3322C15.8502 20.7497 16.0177 20.9588 16.2327 20.9463C16.4477 20.9338 16.5893 20.7072 16.8735 20.253L20.4168 14.583" stroke="#F87F28" stroke-width="2" stroke-linecap="round"/>
-  </symbol>
-  <symbol id='uncheck' width="35" height="35" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M17.5 25C21.6421 25 25 21.6421 25 17.5C25 13.3579 21.6421 10 17.5 10C13.3579 10 10 13.3579 10 17.5C10 21.6421 13.3579 25 17.5 25Z" stroke="#909090" stroke-width="2" stroke-linecap="round"/>
-    <path d="M14.5835 19.1663L15.516 20.3322C15.8502 20.7497 16.0177 20.9588 16.2327 20.9463C16.4477 20.9338 16.5893 20.7072 16.8735 20.253L20.4168 14.583" stroke="#909090" stroke-width="2" stroke-linecap="round"/>
   </symbol>
   <symbol id='back' width="36" height="35" viewBox="0 0 36 35" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M21.5 25L14.5 17.5L21.5 10" stroke="#636363" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
