@@ -90,10 +90,10 @@ export default function AddInfoPage() {
                   $width='316px'
                   type='text'
                   className='address'
-                  placeholder='거주지를 입력해 주세요'
+                  placeholder='거주지를 입력해 주세요 (예: 서울시 용산구)'
                 />
                 <Button width='119px' padding='14px' buttonStyle='orange'>
-                  주소 검색
+                  주소 입력
                 </Button>
               </S.InputWrapper>
               <br />
