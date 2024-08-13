@@ -73,18 +73,6 @@ export const TextArea = styled.textarea`
   resize: none;
 `;
 
-export const RadioGroup = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  padding: 10px 0;
-  gap: 20px;
-
-  label {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-  }
-`;
 
 export const ModalFooter = styled.div`
   padding: 10px 20px;
