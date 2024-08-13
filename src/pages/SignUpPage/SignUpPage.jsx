@@ -131,7 +131,6 @@ export default function SignUpPage() {
                   인증번호 전송
                 </Button>
                 </S.InputContainer>
-                {/* css 위치 조정 */}
                 <S.WarningText className={isRightEmail ? 'success' : 'error'}>
                     {emailError}
                   </S.WarningText>

@@ -61,9 +61,9 @@ export default function LoginPage() {
       console.log({ email });
       console.error('로그인 실패:', error.message);
       if (error.message === 'User not found') {
-        setEmailError('이메일이 등록되어 있지 않습니다.');
+        setEmailError('가입되지 않은 이메일입니다.');
       } else if (error.message === 'Incorrect password') {
-        setPwdError('비밀번호가 틀렸습니다.');
+        setPwdError('비밀번호가 일치하지 않습니다.');
       }
     }
   };

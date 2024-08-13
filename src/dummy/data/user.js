@@ -47,3 +47,13 @@ export const mockPostLogin = async (formData) => {
 
   return { email: user.email, name: user.name };
 };
+
+export const mockPostPwdChange = async (formData) => {
+  // 비밀번호 찾기 - 가입된 이메일인지 확인
+  const user = users.find((user) => user.email === formData.email);
+  if (!user) {
+    throw new Error('User not found');
+  }
+
+  return { email: user.email };
+};

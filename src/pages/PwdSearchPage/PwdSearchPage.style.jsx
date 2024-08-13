@@ -92,6 +92,7 @@ export const FormWrapper = styled.div`
 // 이메일 입력 ~ 인증 완료 버튼까지의 부분
 export const FormContainer = styled.form`
   display: flex;
+  width: 100%;
   gap: 15px;
   justify-content: flex-start;
   flex-direction: column;
@@ -103,26 +104,25 @@ export const FormContainer = styled.form`
 export const InputWrapper = styled.div`
   width: 100%;
   margin: 5px 0 20px 0;
-  gap: 0 10px;
+  gap: 10px;
   display: flex;
-  flex-direction: flex-inline;
-  align-items: center;
-  justify-content: space-evenly;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
 `;
 
 // MainBoldText, (MainBoldText,) InputStyle을 묶는 컨테이너
 export const InputContainer = styled.div`
   display: flex;
   width: 100%;
-  gap: 5px;
+  gap: 10px;
   justify-content: flex-start;
-  flex-direction: column;
+  flex-direction: flex-inline;
 `;
 
 export const InputStyle = styled.input`
-  width: ${(props) => props.$width || '100%'};
+  width: 100%;
   height: 56px;
-  margin-top: 5px;
   padding: 15px;
   border: none;
   border-radius: 10px;
