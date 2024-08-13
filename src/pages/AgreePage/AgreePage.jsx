@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 import { Button } from '../../components/Button';
@@ -15,6 +16,30 @@ import * as S from './AgreePage.style.jsx';
 
 export default function AgreePage() {
   const { isChecked, checking } = useCheckIcon();
+
+  // 개별 약관 동의 상태
+  const [isServiceChecked, setIsServiceChecked] = useState(false);
+  const [isPrivacyChecked, setIsPrivacyChecked] = useState(false);
+
+  // 전체 동의 상태
+  const [isAllChecked, setIsAllChecked] = useState(false);
+
+  // '전체 동의하기' 클릭 시 모든 체크박스를 체크/해제
+  const handleAllAgreeClick = () => {
+    const newState = !isAllChecked;
+    setIsAllChecked(newState);
+    setIsServiceChecked(newState);
+    setIsPrivacyChecked(newState);
+  };
+
+  // 개별 체크박스 상태 변경 시 전체 동의 상태 업데이트
+  useEffect(() => {
+    if (isServiceChecked && isPrivacyChecked) {
+      setIsAllChecked(true);
+    } else {
+      setIsAllChecked(false);
+    }
+  }, [isServiceChecked, isPrivacyChecked]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -41,21 +66,25 @@ export default function AgreePage() {
                 있습니다.
               </S.MainNormalText>
             </S.ExplainContainer>
-            <S.AllAgreeContainer>
-                <Icon
-                  id={isChecked ? 'checked' : 'unchecked'}
-                  width='35px'
-                  height='35px'
-                  onClick={checking}
-                />
-                <S.GrayText>전체 동의하기</S.GrayText>
-              </S.AllAgreeContainer>
-              <S.StyledHr />
+            <S.AllAgreeContainer onClick={handleAllAgreeClick}>
+              <Icon
+                id={isAllChecked ? 'checked' : 'unchecked'}
+                width='35px'
+                height='35px'
+                onClick={checking}
+              />
+              <S.GrayText>전체 동의하기</S.GrayText>
+            </S.AllAgreeContainer>
+            <S.StyledHr />
             <S.FormContainer onSubmit={handleSubmit}>
               <S.ServiceTermWrapper>
                 <S.TermTitleContainer>
                   <S.GrayText>[필수] 서비스 이용 약관</S.GrayText>
-                  <input type='checkbox' />
+                  <input
+                    type='checkbox'
+                    checked={isServiceChecked}
+                    onChange={() => setIsServiceChecked(!isServiceChecked)}
+                  />
                 </S.TermTitleContainer>
                 <S.ServiceTermContainer>
                   <Service />
@@ -64,7 +93,11 @@ export default function AgreePage() {
               <S.ServiceTermWrapper>
                 <S.TermTitleContainer>
                   <S.GrayText>[필수] 개인정보 처리 약관</S.GrayText>
-                  <input type='checkbox' />
+                  <input
+                    type='checkbox'
+                    checked={isPrivacyChecked}
+                    onChange={() => setIsPrivacyChecked(!isPrivacyChecked)}
+                  />
                 </S.TermTitleContainer>
                 <S.ServiceTermContainer>
                   <Privacy />

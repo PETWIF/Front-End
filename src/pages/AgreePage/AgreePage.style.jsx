@@ -44,16 +44,27 @@ export const FormContainer = styled.form`
   padding: 0 10px;
   justify-content: space-evenly;
   align-items: center;
-  overflow: auto;
-
-  ::-webkit-scrollbar {
-    display: none;
+  overflow-y: scroll;
+  
+  // 왜 설정이 안 바뀌는지??
+  -webkit-scrollbar {
+    width: 10px; 
   }
 
-  scrollbar-width: 1;
-  scrollbar-color: orange transparent;
+   ::-webkit-scrollbar-track {
+     background: transparent; 
+   }
 
-  -ms-overflow-style: none;
+   ::-webkit-scrollbar-thumb {
+     background-color: ${(props) => props.theme.color.primary};
+     border-radius: 10px; 
+     border: 2px solid transparent;
+     background-clip: content-box;
+   }
+
+   ::-webkit-scrollbar-button {
+     display: none;
+   }
 `;
 
 // MainBoldText, (MainBoldText,) InputStyle을 묶는 컨테이너
