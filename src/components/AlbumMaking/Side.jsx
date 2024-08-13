@@ -25,6 +25,18 @@ import {
 } from './Side.style';
 import { Icon } from '../Icon';
 import MakingModal from './MakingModal';
+import Image1 from '/src/assets/icons/image/01.png';
+import Image2 from '/src/assets/icons/image/02.png';
+import Image3 from '/src/assets/icons/image/03.png';
+import Image4 from '/src/assets/icons/image/04.png';
+import Image5 from '/src/assets/icons/image/05.png';
+import Image6 from '/src/assets/icons/image/06.png';
+import Image7 from '/src/assets/icons/image/07.png';
+import Image8 from '/src/assets/icons/image/08.png';
+import Image9 from '/src/assets/icons/image/09.png';
+import Image10 from '/src/assets/icons/image/10.png';
+import Image11 from '/src/assets/icons/image/11.png';
+import Image12 from '/src/assets/icons/image/12.png';
 
 export default function Side() {
   const {
@@ -98,15 +110,54 @@ export default function Side() {
               {isMineSelected && (
                 <StickerSContainer>
                   <Sticker>
-                    <Emoticon></Emoticon>
-                    <Emoticon></Emoticon>
-                    <Emoticon></Emoticon>
-                    <Emoticon></Emoticon>
-                    <Emoticon></Emoticon>
-                    <Emoticon></Emoticon>
-                    <Emoticon></Emoticon>
-                    <Emoticon></Emoticon>
-                    <Emoticon></Emoticon>
+                    <Emoticon>
+                      <img
+                        src={Image1}
+                        alt='My Image'
+                        width='100'
+                        height='100'
+                      />
+                    </Emoticon>
+                    <Emoticon>
+                      <img
+                        src={Image4}
+                        alt='My Image'
+                        width='100'
+                        height='100'
+                      />
+                    </Emoticon>
+                    <Emoticon>
+                      <img
+                        src={Image6}
+                        alt='My Image'
+                        width='100'
+                        height='100'
+                      />
+                    </Emoticon>
+                    <Emoticon>
+                      <img
+                        src={Image7}
+                        alt='My Image'
+                        width='100'
+                        height='100'
+                      />
+                    </Emoticon>
+                    <Emoticon>
+                      <img
+                        src={Image11}
+                        alt='My Image'
+                        width='100'
+                        height='100'
+                      />
+                    </Emoticon>
+                    <Emoticon>
+                      <img
+                        src={Image12}
+                        alt='My Image'
+                        width='100'
+                        height='100'
+                      />
+                    </Emoticon>
                   </Sticker>
                 </StickerSContainer>
               )}
@@ -114,12 +165,54 @@ export default function Side() {
               {isMarketSelected && (
                 <StickerSContainer>
                   <Sticker>
-                    <Emoticon></Emoticon>
-                    <Emoticon></Emoticon>
-                    <Emoticon></Emoticon>
-                    <Emoticon></Emoticon>
-                    <Emoticon></Emoticon>
-                    <Emoticon></Emoticon>
+                    <Emoticon>
+                      <img
+                        src={Image2}
+                        alt='My Image'
+                        width='100'
+                        height='100'
+                      />
+                    </Emoticon>
+                    <Emoticon>
+                      <img
+                        src={Image3}
+                        alt='My Image'
+                        width='100'
+                        height='100'
+                      />
+                    </Emoticon>
+                    <Emoticon>
+                      <img
+                        src={Image5}
+                        alt='My Image'
+                        width='100'
+                        height='100'
+                      />
+                    </Emoticon>
+                    <Emoticon>
+                      <img
+                        src={Image8}
+                        alt='My Image'
+                        width='100'
+                        height='100'
+                      />
+                    </Emoticon>
+                    <Emoticon>
+                      <img
+                        src={Image9}
+                        alt='My Image'
+                        width='100'
+                        height='100'
+                      />
+                    </Emoticon>
+                    <Emoticon>
+                      <img
+                        src={Image10}
+                        alt='My Image'
+                        width='100'
+                        height='100'
+                      />
+                    </Emoticon>
                   </Sticker>
                 </StickerSContainer>
               )}
