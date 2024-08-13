@@ -20,7 +20,7 @@ export default function SettingPage() {
         </Link>
         <Link to='/setting/update-block-list'>
           <Button buttonStyle='white' hasBorder padding='13px'>
-            업데이트를 보지 못하게 설정한 계정
+            업데이트를 보지 않도록 설정한 계정
           </Button>
         </Link>
         <Link to='/setting/help'>
