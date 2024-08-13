@@ -119,7 +119,8 @@ export default function LoginPage() {
               width='370px'
               padding='18px'
               type='submit'
-              buttonStyle={isRightEmail && isRightPwd ? 'orange' : 'gray'}
+              buttonStyle='orange'
+              disabled={!isRightEmail || !isRightPwd}
             >
               로그인
             </Button>

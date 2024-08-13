@@ -17,14 +17,11 @@ import * as S from './AgreePage.style.jsx';
 export default function AgreePage() {
   const { isChecked, checking } = useCheckIcon();
 
-  // 개별 약관 동의 상태
   const [isServiceChecked, setIsServiceChecked] = useState(false);
   const [isPrivacyChecked, setIsPrivacyChecked] = useState(false);
 
-  // 전체 동의 상태
   const [isAllChecked, setIsAllChecked] = useState(false);
 
-  // '전체 동의하기' 클릭 시 모든 체크박스를 체크/해제
   const handleAllAgreeClick = () => {
     const newState = !isAllChecked;
     setIsAllChecked(newState);
@@ -32,7 +29,6 @@ export default function AgreePage() {
     setIsPrivacyChecked(newState);
   };
 
-  // 개별 체크박스 상태 변경 시 전체 동의 상태 업데이트
   useEffect(() => {
     if (isServiceChecked && isPrivacyChecked) {
       setIsAllChecked(true);
@@ -105,7 +101,11 @@ export default function AgreePage() {
               </S.ServiceTermWrapper>
             </S.FormContainer>
             <Link to='/setNickname'>
-              <Button width='446px' padding='16px' buttonStyle='gray'>
+              <Button 
+                width='446px' 
+                padding='16px' 
+                buttonStyle='orange' 
+                disabled={!isAllChecked}>
                 다음으로
               </Button>
             </Link>
