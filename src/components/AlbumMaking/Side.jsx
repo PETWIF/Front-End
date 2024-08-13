@@ -86,7 +86,10 @@ export default function Side() {
                   <Category2 $isActive={isMineSelected} onClick={selectMine}>
                     <Paragraph>내 스티커</Paragraph>
                   </Category2>
-                  <Category2 $isActive={isMarketSelected} onClick={selectMarket}>
+                  <Category2
+                    $isActive={isMarketSelected}
+                    onClick={selectMarket}
+                  >
                     <Paragraph>스티커 상점</Paragraph>
                   </Category2>
                 </StickerSelectSection>

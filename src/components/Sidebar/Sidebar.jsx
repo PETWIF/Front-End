@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useLocation, Link } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 
 import { Button } from '../Button';
 import { Icon } from '../Icon';
@@ -11,6 +11,7 @@ import * as S from './Sidebar.style.jsx';
 export default function Sidebar({ isOpen, close }) {
   const { pathname } = useLocation();
   const [isLogin, setIsLogin] = useState();
+  const navigate = useNavigate();
 
   // 사이드바 동작 확인을 위한 임시 기능
   const login = () => {
@@ -57,7 +58,9 @@ export default function Sidebar({ isOpen, close }) {
             onClick={() => {
               if (isLogin) {
                 logout();
+                console.log('로그아웃');
               } else {
+                navigate('/login');
                 login();
                 console.log('로그인');
               }

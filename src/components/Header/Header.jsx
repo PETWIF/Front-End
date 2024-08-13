@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 import { Flex } from '../Common';
 import { Icon } from '../Icon';
@@ -35,7 +36,9 @@ export default function Header() {
             <span>사용자 관리</span>
           </S.MenuItem>
           <S.MenuItem>
-            <Avatar src={Img} size='37px' />
+            <Link to='/user-profile'>
+              <Avatar src={Img} size='37px' />
+            </Link>
           </S.MenuItem>
         </Flex>
       </S.HeaderContainer>
