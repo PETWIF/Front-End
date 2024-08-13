@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { Layout } from '../../components/Common';
 
-export const PageContainer = styled.div`
+export const PageContainer = styled(Layout)`
   padding: 20px;
 `;
 
@@ -14,12 +14,6 @@ export const TopContainer = styled.div`
 
 export const DropDownBox = styled.div`
   margin: 0;
-`;
-
-export const MainContainer = styled(Layout)`
-  flex: 1;
-  padding: 0;
-  overflow: hidden;
 `;
 
 export const AlbumContainer = styled.div`
