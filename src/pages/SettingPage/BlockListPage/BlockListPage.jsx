@@ -10,7 +10,7 @@ export default function BlockListPage() {
     <S.SettingLayout>
       <S.Content>
         <S.Fieldset>
-          <S.Title>계정 공개 범위</S.Title>
+          <S.Title>차단 계정 목록</S.Title>
           <S.Field>
             <S.Label>공개 여부</S.Label>
             <S.Text>
