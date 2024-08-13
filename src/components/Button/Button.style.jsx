@@ -2,6 +2,13 @@ import styled, { css } from 'styled-components';
 
 export const Button = styled.button`
   ${(props) => {
+    if (props.$style === 'white') {
+      return css`
+        background-color: ${props.theme.color.white};
+        color: ${props.theme.color.primary};
+      `;
+    }
+
     if (props.$style === 'light') {
       return css`
         background-color: ${props.theme.color.secondary};
