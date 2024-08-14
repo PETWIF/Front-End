@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 
 import { Layout } from '../../components/Common';
+import { Icon } from '../../components/Icon';
 
 export const MainLayout = styled.div`
   padding: 0 30px;
@@ -15,10 +16,20 @@ export const MainContainer = styled(Layout)`
 `;
 
 export const MenuList = styled.div`
+  padding: 0 0 0 15px;
   margin-top: 20px;
   display: inline-flex;
   flex-direction: column;
   gap: 24px;
+`;
+
+export const BackButton = styled.div`
+  display: flex;
+  padding: 0 0 20px 0;
+`;
+
+export const StyledIcon = styled(Icon)`
+  cursor: pointer;
 `;
 
 export const MenuItem = styled.div`
