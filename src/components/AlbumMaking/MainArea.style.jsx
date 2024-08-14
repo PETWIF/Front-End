@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { ResizableBox } from 'react-resizable';
 
 export const MainContainer = styled.main`
   flex: 1;
@@ -61,6 +62,7 @@ export const MainContnetContainer = styled.div`
   gap: 10%;
   background-color: #FFF;
   overflow-y: auto;
+  position: relative;
 `;
 
 export const ToolbarContainer = styled.div`
@@ -132,4 +134,45 @@ export const StyledSelect = styled.select`
 export const StyledOption = styled.option`
   background-color: #333;
   color: #fff;
+`;
+
+export const ImagePreview = styled.img`
+  width: 100%;
+  height: 100%;
+`;
+
+export const ResizableBoxContainer = styled(ResizableBox)`
+  position: absolute;
+
+  .react-resizable-handle-n {
+    cursor: n-resize;
+  }
+
+  .react-resizable-handle-s {
+    cursor: s-resize;
+  }
+
+  .react-resizable-handle-e {
+    cursor: e-resize;
+  }
+
+  .react-resizable-handle-w {
+    cursor: w-resize;
+  }
+
+  .react-resizable-handle-ne {
+    cursor: ne-resize;
+  }
+
+  .react-resizable-handle-nw {
+    cursor: nw-resize;
+  }
+
+  .react-resizable-handle-se {
+    cursor: se-resize;
+  }
+
+  .react-resizable-handle-sw {
+    cursor: sw-resize;
+  }
 `;

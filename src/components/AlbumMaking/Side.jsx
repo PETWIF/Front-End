@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useStore } from '../../store/store';
 import {
   SideContainer,
@@ -38,7 +38,7 @@ import Image10 from '/src/assets/icons/image/10.png';
 import Image11 from '/src/assets/icons/image/11.png';
 import Image12 from '/src/assets/icons/image/12.png';
 
-export default function Side() {
+export default function Side({ setSelectedImage }) {
   const {
     isStickerSelected,
     isMineSelected,
@@ -52,7 +52,23 @@ export default function Side() {
     isTextEditing,
     toggleTextEditing,
   } = useStore();
+
+  
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const fileInputRef = useRef(null);
+
+  const handleCategoryClick = () => {
+    fileInputRef.current.click(); // 숨겨진 파일 입력을 클릭
+  };
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const imageUrl = URL.createObjectURL(file);
+      setSelectedImage(imageUrl); // 선택한 이미지의 URL을 상태로 저장
+    }
+  };
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
@@ -64,7 +80,7 @@ export default function Side() {
           <EditTitleContainer>
             <Paragraph2>앨범 편집</Paragraph2>
           </EditTitleContainer>
-          <Category>
+          <Category onClick={handleCategoryClick}>
             <Icon id='editPic' width='42' height='42'></Icon>
             <Paragraph>사진 추가</Paragraph>
           </Category>
@@ -82,6 +98,15 @@ export default function Side() {
           </Category>
         </EditSelectContainer>
       </SideSection1>
+
+      {/* 숨겨진 파일 입력 요소 */}
+      <input
+        type="file"
+        ref={fileInputRef}
+        style={{ display: 'none' }}
+        onChange={handleFileChange}
+        accept="image/*" // 이미지 파일만 선택 가능
+      />
 
       {isStickerSelected && (
         <>
