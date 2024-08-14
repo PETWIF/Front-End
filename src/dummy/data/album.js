@@ -10,6 +10,7 @@ export const ALBUM_LIST = Object.freeze([
     like: 789,
     comment: 25,
     bookmark: 10,
+    date: '2024-08-01T12:00:00Z',
   },
   {
     id: 2,
@@ -20,6 +21,7 @@ export const ALBUM_LIST = Object.freeze([
     like: 788,
     comment: 25,
     bookmark: 10,
+    date: '2024-08-01T12:00:00Z',
   },
   {
     id: 3,
@@ -30,6 +32,7 @@ export const ALBUM_LIST = Object.freeze([
     like: 787,
     comment: 25,
     bookmark: 10,
+    date: '2024-08-01T12:00:00Z',
   },
   {
     id: 4,
@@ -40,6 +43,7 @@ export const ALBUM_LIST = Object.freeze([
     like: 786,
     comment: 25,
     bookmark: 10,
+    date: '2024-08-01T12:00:00Z',
   },
   {
     id: 5,
@@ -50,6 +54,7 @@ export const ALBUM_LIST = Object.freeze([
     like: 785,
     comment: 25,
     bookmark: 10,
+    date: '2024-08-01T12:00:00Z',
   },
   {
     id: 6,
@@ -60,6 +65,7 @@ export const ALBUM_LIST = Object.freeze([
     like: 784,
     comment: 25,
     bookmark: 10,
+    date: '2024-08-01T12:00:00Z',
   },
   {
     id: 7,
@@ -70,6 +76,7 @@ export const ALBUM_LIST = Object.freeze([
     like: 783,
     comment: 25,
     bookmark: 10,
+    date: '2024-08-01T12:00:00Z',
   },
   {
     id: 8,
@@ -80,6 +87,7 @@ export const ALBUM_LIST = Object.freeze([
     like: 782,
     comment: 25,
     bookmark: 10,
+    date: '2024-08-01T12:00:00Z',
   },
   {
     id: 9,
@@ -90,6 +98,7 @@ export const ALBUM_LIST = Object.freeze([
     like: 781,
     comment: 25,
     bookmark: 10,
+    date: '2024-08-01T12:00:00Z',
   },
   {
     id: 10,
@@ -100,6 +109,7 @@ export const ALBUM_LIST = Object.freeze([
     like: 780,
     comment: 25,
     bookmark: 10,
+    date: '2024-08-01T12:00:00Z',
   },
   // Add more albums as needed
 ]);
