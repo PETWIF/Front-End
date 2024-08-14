@@ -5,8 +5,9 @@ import { AlbumItem } from '../AlbumPage';
 import { ALBUM_LIST } from '../../dummy/data';
 import { DropDown } from '../../components/DropDown';
 import { Icon } from '../../components/Icon';
-import { RandomFriend } from '../../components/RandomFriend';
+import { AlbumDetail } from '../../components/AlbumDetail';
 import { SORT_CATEGORIES } from '../../constants';
+import { feedData } from '../../dummy/data/comments'; 
 import * as S from './AlbumDetailPage.style.jsx';
 
 
@@ -65,7 +66,7 @@ export default function AlbumDetailPage() {
       </S.MainContainer>
       <S.SideContainer>
         <AlbumInfo album={selectedAlbum} />
-        <RandomFriend />
+        <AlbumDetail album={feedData[0]}/>
       </S.SideContainer>
     </S.MainLayout>
   );
