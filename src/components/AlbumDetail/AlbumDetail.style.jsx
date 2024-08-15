@@ -91,7 +91,7 @@ export const CommentSectionContainer = styled.div`
 
 export const CommentSection = styled.div`
   flex-grow: 1;
-  max-height: 200px; /* 댓글 리스트의 최대 높이를 설정 */
+  max-height: 300px; /* 댓글 리스트의 최대 높이를 설정 */
   overflow-y: auto; /* 댓글이 많아지면 스크롤을 생성 */
   margin-bottom: 16px;
 `;

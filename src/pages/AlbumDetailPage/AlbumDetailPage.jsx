@@ -9,7 +9,11 @@ import { DropDown } from '../../components/DropDown';
 import { Icon } from '../../components/Icon';
 import { AlbumDetail } from '../../components/AlbumDetail';
 import { SORT_CATEGORIES } from '../../constants';
-import { feedData } from '../../dummy/data/comments'; 
+import { feedData } from '../../dummy/data';
+import { Search } from '../../components/Search';
+import { AlbumViewer } from '../../components/AlbumViewer';
+import { UserInfo } from '../../components/UserInfo';
+
 import * as S from './AlbumDetailPage.style.jsx';
 
 
@@ -40,6 +44,10 @@ export default function AlbumDetailPage() {
         </S.BackButton>
         {myId !== userId && (
           <S.MenuList>
+            <Search
+              value={keyword}
+              onChange={(event) => setKeyword(event.target.value)}
+            />
             <Link to='/album/bookmark'>
               <S.MenuItem>
                 <Icon id='bookmark' width='26' height='27' />
@@ -52,34 +60,13 @@ export default function AlbumDetailPage() {
             </S.MenuItem>
           </S.MenuList>
         )}
-        <S.AlbumBox>
-          <S.DropDownBox>
-            <DropDown
-              options={SORT_CATEGORIES}
-              placeholder='나열 순서'
-              value={sort}
-              setFn={setSort}
-            />
-          </S.DropDownBox>
-          {ALBUM_LIST && (
-            <S.AlbumList>
-              {ALBUM_LIST.map((album) => (
-                <AlbumItem key={album.id} album={album} />
-              ))}
-            </S.AlbumList>
-          )}
-          <S.AlbumAmount>
-            <span>{ALBUM_LIST.length}</span>
-            <span>Albums</span>
-          </S.AlbumAmount>
-        </S.AlbumBox>
+        <AlbumViewer/>
       </S.MainContainer>
       <S.SideContainer>
+        <UserInfo/>
         <AlbumInfo album={selectedAlbum} />
         <AlbumDetail album={feedData[0]}/>
       </S.SideContainer>
     </S.MainLayout>
   );
 }
-
-
