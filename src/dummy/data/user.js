@@ -69,12 +69,12 @@ export const mockPostSetNickname = async (email, formData) => {
   return user;
 };
 
-export const mockPostAddInfo = async (email, additionalData) => {
+export const mockPostAddInfo = async (email, formData) => {
   const user = users.find((user) => user.email === email);
   if (!user) {
     throw new Error('User not found');
   }
 
-  Object.assign(user, additionalData); 
+  Object.assign(user, formData); 
   return user;
 };

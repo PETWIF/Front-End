@@ -1,6 +1,9 @@
-import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 import { Button } from '../../components/Button';
+
+import { mockPostAddInfo } from '../../dummy/data/user.js';
 
 import LoginHeader from '../../components/LoginComponents/LoginHeader';
 import TitleContainer from '../../components/LoginComponents/TitleContainer';
@@ -9,9 +12,43 @@ import * as S from './AddInfoPage.style.jsx';
 
 // 추후 유효성 검사 통과 여부에 따라 글씨 바뀌도록 설정 필요
 export default function AddInfoPage() {
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    // 여기에 코드 추가
+  const location = useLocation();
+  const navigate = useNavigate();
+  
+  const { email, nickname } = location.state || {};
+
+  const [gender, setGender] = useState('');
+  const [year, setYear] = useState('');
+  const [month, setMonth] = useState('');
+  const [day, setDay] = useState('');
+  const [phone, setPhone] = useState('');
+  const [address, setAddress] = useState('');
+  const [petName, setPetName] = useState('');
+  const [petGender, setPetGender] = useState('');
+  const [petAge, setPetAge] = useState('');
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const formData = {
+      gender,
+      birthdate: `${year}-${month}-${day}`,
+      phone,
+      address,
+      petInfo: {
+        name: petName,
+        gender: petGender,
+        age: petAge,
+      },
+    };
+
+    try {
+      console.log('Form data submitted:', formData);
+      await mockPostAddInfo(email, formData);
+      navigate('/registered', { state: { nickname } }); // 성공적으로 저장된 후 이동할 페이지
+    } catch (error) {
+      console.error('Error updating user info:', error);
+    }
   };
 
   return (
@@ -28,7 +65,6 @@ export default function AddInfoPage() {
             <S.FormContainer onSubmit={handleSubmit}>
               <S.MainBoldText>회원 정보</S.MainBoldText>
               <S.StyledHr />
-              {/* css, radio 체크 */}
               <S.MainBoldText>성별</S.MainBoldText>
               <S.InputWrapper>
                 <S.InputStyle
@@ -36,6 +72,7 @@ export default function AddInfoPage() {
                   type='radio'
                   name='gender'
                   value='male'
+                  onChange={(e) => setGender(e.target.value)}
                 />
                 <S.MainNormalText>남성</S.MainNormalText>
                 <S.InputStyle
@@ -43,6 +80,7 @@ export default function AddInfoPage() {
                   type='radio'
                   name='gender'
                   value='female'
+                  onChange={(e) => setGender(e.target.value)}
                 />
                 <S.MainNormalText>여성</S.MainNormalText>
               </S.InputWrapper>
@@ -53,23 +91,30 @@ export default function AddInfoPage() {
                   type='text'
                   className='year'
                   placeholder='연도'
+                  onChange={(e) => setYear(e.target.value)}
                 />
                 <S.InputStyle
                   $width='92px'
                   type='text'
                   className='month'
                   placeholder='월'
+                  onChange={(e) => setMonth(e.target.value)}
                 />
                 <S.InputStyle
                   $width='92px'
                   type='text'
                   className='day'
                   placeholder='일'
+                  onChange={(e) => setDay(e.target.value)}
                 />
               </S.InputWrapper>
               <S.MainBoldText>전화번호</S.MainBoldText>
               <S.InputWrapper>
-                <S.SelectStyle $width='92px' className='mobile'>
+                <S.SelectStyle 
+                  $width='92px' 
+                  className='mobile'
+                  onChange={(e) => setPhone(e.target.value)}
+                  >
                   <option value=''>통신사 선택</option>
                   <option value='skt'>SKT</option>
                   <option value='kt'>KT</option>
@@ -82,6 +127,7 @@ export default function AddInfoPage() {
                   type='text'
                   className='phone'
                   placeholder='전화번호를 입력해 주세요'
+                  onChange={(e) => setPhone(e.target.value)}
                 />
               </S.InputWrapper>
               <S.MainBoldText>거주지</S.MainBoldText>
@@ -91,6 +137,7 @@ export default function AddInfoPage() {
                   type='text'
                   className='address'
                   placeholder='거주지를 입력해 주세요 (예: 서울시 용산구)'
+                  onChange={(e) => setAddress(e.target.value)}
                 />
                 <Button width='119px' fontSize='14px' padding='14px' buttonStyle='light'>
                   주소 입력
@@ -107,6 +154,7 @@ export default function AddInfoPage() {
                     type='text'
                     className='pet-name'
                     placeholder='반려동물의 이름을 입력해 주세요'
+                    onChange={(e) => setPetName(e.target.value)}
                   />
                 </S.InputContainer>
               </S.InputWrapper>
@@ -117,6 +165,7 @@ export default function AddInfoPage() {
                   type='radio'
                   name='pet-gender'
                   value='pet-male'
+                  onChange={(e) => setPetGender(e.target.value)}
                 />
                 <S.MainNormalText>수컷</S.MainNormalText>
                 <S.InputStyle
@@ -124,6 +173,7 @@ export default function AddInfoPage() {
                   type='radio'
                   name='pet-gender'
                   value='pet-female'
+                  onChange={(e) => setPetGender(e.target.value)}
                 />
                 <S.MainNormalText>암컷</S.MainNormalText>
               </S.InputWrapper>
@@ -135,14 +185,13 @@ export default function AddInfoPage() {
                     type='text'
                     className='pet-age'
                     placeholder='반려동물의 나이를 입력해 주세요'
+                    onChange={(e) => setPetAge(e.target.value)}
                   />
                 </S.InputContainer>
               </S.InputWrapper>
-              <Link to='/registered'>
-                <Button width='100%' padding='15px' buttonStyle='orange'>
+                <Button type='submit' width='100%' padding='15px' buttonStyle='orange'>
                   입력 완료
                 </Button>
-              </Link>
             </S.FormContainer>
           </S.FormWrapper>
           <Link to='/login'>
