@@ -4,7 +4,7 @@ import * as S from './Feed.style';
 import { Icon } from '../Icon';
 import { formatDistanceToNow } from 'date-fns';
 import { ko } from 'date-fns/locale';
-import dummyImg from '../../dummy/images/dummyImg.svg'; 
+import { albumThumbnail } from '../../dummy/images';
 
 const FeedItem = ({ data }) => {
   const { profileImage, profileName, albumImage, likeCount, createdAt, comments, comment, likeUsers = [] } = data;
@@ -46,8 +46,10 @@ const FeedItem = ({ data }) => {
             <Icon id='albumhamburger' width='23' height='4' />
           </S.Actions>
         </S.Header>
-        <S.AlbumImage src={dummyImg} alt="앨범 이미지" />
-      </S.FeedZone>
+        <S.StyledLink key={data.id} to={`/album/detail/${data.id}`}>
+          <S.AlbumImage src={albumThumbnail} alt="앨범 이미지" />
+        </S.StyledLink>
+      </S.FeedZone> 
 
 
       <S.MainContent>
@@ -55,14 +57,14 @@ const FeedItem = ({ data }) => {
         <S.AlbumDetails>
           <S.Likes>
             {likeUsers.length > 0 ? (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+              <S.AlbumLikes>
                 <img 
                   src={likeUsers[0].profileImage} 
                   alt={`${likeUsers[0].name} 프로필`} 
                   style={{ width: '20px', height: '20px', borderRadius: '50%' }} 
                 />
                 {likeUsers[0].name} 외 {likeCount - 1}명이 좋아요를 눌렀어요
-              </div>
+              </S.AlbumLikes>
             ) : (
               `${profileName} 외 ${likeCount - 1}명이 좋아요를 눌렀어요`
             )}

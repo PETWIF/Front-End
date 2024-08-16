@@ -107,6 +107,24 @@ export const feedData = [
           createdAt: '2024-08-09T14:00:00Z',
           replies: [],
         },
+        {
+          id: 9,
+          profileImage: '/path/to/profile4.jpg',
+          author: '고양이5',
+          text: '고양이5가 귀엽네요!',
+          likeCount: 29,
+          createdAt: '2024-08-09T14:00:00Z',
+          replies: [],
+        },
+        {
+          id: 10,
+          profileImage: '/path/to/profile4.jpg',
+          author: '고양이5',
+          text: '고양이5가 귀엽네요!',
+          likeCount: 29,
+          createdAt: '2024-08-09T14:00:00Z',
+          replies: [],
+        },
       ],
       likeUsers: [
         {

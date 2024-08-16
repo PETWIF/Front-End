@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 
 export const FeedContainer = styled.div`
   display: flex;
@@ -40,7 +41,13 @@ export const Header = styled.div`
 
 export const AlbumImage = styled.img`
   width: 100%;
-  height: auto;
+  height: 100%
+`;
+
+export const StyledLink = styled(Link)`
+  display: block;
+  width: auto;
+  max-height: 1100px;
   border-radius: 10px;
   display: block;
 `;
@@ -102,10 +109,22 @@ export const Likes = styled.div`
   font-size: 14px;
   font-weight: bold;
 `;
+export const AlbumLikes = styled.div`
+  font-family: Noto Sans KR;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 23.17px;
+  text-align: left;
+  display: flex;
+  lignItems: center;
+`;
 
 export const AlbumComment = styled.div`
-  font-size: 14px;
-  margin-top: 10px;
+  font-family: Noto Sans KR;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 30px;
+  text-align: left;
 `;
 
 export const CommentSectionContainer = styled.div`
@@ -134,6 +153,7 @@ export const CommentSection = styled.div`
   width: 100%;
   overflow-y: auto; /* 스크롤 기능을 유지 */
   flex-grow: 1;
+  max-height: 900px;
 
   /* 스크롤 바 숨김 */
   ::-webkit-scrollbar {

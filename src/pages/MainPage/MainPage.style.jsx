@@ -1,12 +1,11 @@
-// MainPage.style.jsx
 import styled from 'styled-components';
-
 export const MainContainer = styled.div`
+  padding: 0 30px;
   display: flex;
-  justify-content: center;
+  gap: 30px;
 `;
-
 export const WhiteBox = styled.div`
+  flex: 1;
   display: flex;
   flex-direction: column;
   background: ${(props) => props.theme.color.white};
@@ -16,16 +15,12 @@ export const WhiteBox = styled.div`
   max-width: 100%;
   box-sizing: border-box;
 `;
-
 export const Content = styled.div`
+  width: 400px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  width: 25%;
-  max-width: 500px;
-  margin-left: 20px;
+  gap: 30px;
 `;
-
 export const AlbumUpdatesFeedContainer = styled.div`
   display: flex;
   flex-direction: column;
