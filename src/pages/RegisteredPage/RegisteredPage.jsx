@@ -39,10 +39,12 @@ export default function RegisteredPage() {
             <S.MainBoldText>{nickname} 님</S.MainBoldText>
             <S.StyledHr />
             <S.Welcome>
-              <S.MainBoldText>새로운 회원이 되신 것을 환영해요!</S.MainBoldText>
-              <S.MainBoldText>
+              <S.MainNormalText>
+                새로운 회원이 되신 것을 환영해요!
+                </S.MainNormalText>
+              <S.MainNormalText>
                 펫위프와 함께 추억을 저장하러 가 볼까요?
-              </S.MainBoldText>
+              </S.MainNormalText>
               <br />
             </S.Welcome>
             <Button width='100%' padding='16px' buttonStyle='orange' onClick={handleButtonClick}>
