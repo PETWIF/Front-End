@@ -68,10 +68,10 @@ export default function SetNicknamePage() {
               <br />
               <S.MainBoldText>추가 정보 입력</S.MainBoldText>
               <S.StyledHr />
-              <Button width='450px' padding='16px' buttonStyle='orange' onClick={(e) => handleSubmit(e, '/addInfo')}>
+              <Button width='100%' padding='16px' buttonStyle='orange' onClick={(e) => handleSubmit(e, '/addInfo')}>
                 지금 입력
               </Button>
-              <Button width='450px' padding='16px' buttonStyle='gray' onClick={(e) => handleSubmit(e, '/home')}>
+              <Button width='100%' padding='16px' buttonStyle='gray' onClick={(e) => handleSubmit(e, '/home')}>
                 나중에 하기
               </Button>
             </S.FormContainer>
