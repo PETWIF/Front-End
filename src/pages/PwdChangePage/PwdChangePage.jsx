@@ -39,16 +39,16 @@ export default function PwdChangePage() {
         setIsRightPwd(isValidPwd);
         if (value.length < 4 || value.length > 12) {
           if (value.length < 4) {
-            setPwdError('* 비밀번호를 4자리 이상 입력해 주세요');
+            setPwdError('비밀번호를 4자리 이상 입력해 주세요');
             break;
           } else if (value.length > 12) {
-            setPwdError('* 비밀번호는 12자리까지 입력 가능합니다');
+            setPwdError('비밀번호는 12자리까지 입력 가능합니다');
             break;
           }
         }
         if (!/^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*?_])/.test(value)) {
           setPwdError(
-            '* 영어, 숫자, 특수문자를 모두 조합해서 비밀번호를 작성해 주세요 '
+            '영어, 숫자, 특수문자를 모두 조합해서 비밀번호를 작성해 주세요 '
           );
           break;
         } else setPwdError('올바른 양식입니다!');
@@ -60,7 +60,7 @@ export default function PwdChangePage() {
         setPwdReError(
           isValidPwdRe
             ? '비밀번호가 일치합니다!'
-            : '* 입력한 비밀번호가 잘못되었어요.'
+            : '입력한 비밀번호가 잘못되었어요.'
         );
         break;
       default:
@@ -81,7 +81,7 @@ export default function PwdChangePage() {
       <S.Wrapper>
         <S.Container>
           <S.FormWrapper>
-            <TitleContainer titleText='비밀번호 변경하기' />
+          <TitleContainer titleText='비밀번호 변경하기' />
             <S.FormContainer onSubmit={handleSubmit}>
               <S.InputWrapper>
               <S.MainBoldText>비밀번호</S.MainBoldText>
@@ -117,14 +117,15 @@ export default function PwdChangePage() {
               <Button
                 width='100%'
                 padding='15px'
-                buttonStyle='gray'
+                buttonStyle='orange'
                 onClick={open}
+                disabled={!isRightPwd || !isRightPwdRe}
               >
                 비밀번호 변경하기
               </Button>
-            </S.FormContainer>
             <S.StyledHr />
             <S.UnderlinedText to='/signup'>새 계정 만들기</S.UnderlinedText>
+            </S.FormContainer>
           </S.FormWrapper>
         </S.Container>
       </S.Wrapper>

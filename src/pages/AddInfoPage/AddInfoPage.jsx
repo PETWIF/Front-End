@@ -92,7 +92,7 @@ export default function AddInfoPage() {
                   className='address'
                   placeholder='거주지를 입력해 주세요 (예: 서울시 용산구)'
                 />
-                <Button width='119px' padding='14px' buttonStyle='orange'>
+                <Button width='119px' fontSize='14px' padding='14px' buttonStyle='light'>
                   주소 입력
                 </Button>
               </S.InputWrapper>
@@ -139,7 +139,7 @@ export default function AddInfoPage() {
                 </S.InputContainer>
               </S.InputWrapper>
               <Link to='/registered'>
-                <Button width='100%' padding='15px' buttonStyle='gray'>
+                <Button width='100%' padding='15px' buttonStyle='orange'>
                   입력 완료
                 </Button>
               </Link>
@@ -147,7 +147,7 @@ export default function AddInfoPage() {
           </S.FormWrapper>
           <Link to='/login'>
             <Button
-              width='537px'
+              width='450px'
               padding='20px'
               borderRadius='0'
               buttonStyle='light'

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { Button } from '../../components/Button';
 
@@ -7,7 +7,7 @@ import LoginHeader from '../../components/LoginComponents/LoginHeader';
 import TitleContainer from '../../components/LoginComponents/TitleContainer';
 
 import * as S from './PwdSearchPage.style.jsx';
-import { mockPostPwdChange } from '../../dummy/data/user.js';
+import { mockPostPwdSearch } from '../../dummy/data/user.js';
 
 // 추후 유효성 검사 통과 여부에 따라 경고 텍스트 글씨 바뀌도록 설정 필요
 export default function PwdSearchPage() {
@@ -62,42 +62,50 @@ export default function PwdSearchPage() {
         );
         break;
       case 'code':
+        console.log({ code });
         setCode(value);
-        const isValidCode = validateCode(value);
-        setIsRightCode(isValidCode);
         break;
       default:
         break;
     }
   };
 
+  const navigate = useNavigate();
+
   const handleEmailSubmit = async (e) => {
     e.preventDefault();
 
-    // if (!isRightEmail) {
-    //       return;
-    // }
+    if (!isRightEmail) {
+           return;
+    }
 
     try {
-      await mockPostPwdChange({ email });
+      await mockPostPwdSearch({ email });
       console.log('이메일 존재:', { email });
     } catch (error) {
       console.log({ email });
       console.error('이메일 존재하지 않음:', error.message);
       if (error.message === 'User not found') {
+        console.log('이메일 미존재:', { email });
         setEmailError('가입되지 않은 이메일입니다.');
       } 
     }
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault();
-    // 코드 추가
+    // e.preventDefault();
+    navigate('/changePwd');
   };
 
   const handleCodeSubmit = (e) => {
     e.preventDefault();
 
+    // if (!isRightCode) {
+    //   return;
+    // } -> 해당 코드가 이메일에서는 잘 작동하는데, 코드는 disabled의 length 제한과 onChange 적용 시점 등이 얽혀서 제대로 작동하지 않음
+        
+    const isValidCode = validateCode(code);
+    setIsRightCode(isValidCode);
     setCodeError(
       isRightCode ? '인증번호가 일치합니다!' : '인증번호가 일치하지 않습니다.'
     );
@@ -128,13 +136,16 @@ export default function PwdSearchPage() {
                     onChange={handleInputChange}
                   />
                 <Button
+                  type='button'
                   width='150px'
                   buttonStyle='light'
-                  onClick={() => {
-                    handleSendCode 
-                    setEmailError('인증번호가 전송되었습니다.')
-                    handleEmailSubmit
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleSendCode;
+                    setEmailError('인증번호가 전송되었습니다.');
+                    handleEmailSubmit(e);
                   }}
+                  fontSize='14px'
                   disabled={!isRightEmail}
                 >
                   인증번호 전송
@@ -158,7 +169,8 @@ export default function PwdSearchPage() {
                   id='code'
                   width='150px' 
                   buttonStyle='light'
-                  disabled={!isRightCode}
+                  fontSize='14px'
+                  disabled={code.length !== 6}
                   onClick={handleCodeSubmit}
                   >
                   인증번호 확인
@@ -171,25 +183,28 @@ export default function PwdSearchPage() {
               {isTimerActive && (
                 <S.TimerDisplay>{formatTime(timeLeft)}</S.TimerDisplay>
               )}
-              <Link to='/changePwd'>
                 <Button 
+                  type='submit'
                   width='100%' 
                   padding='15px' 
                   buttonStyle='orange'
-                  disabled={!isRightCode || !isRightEmail}>
+                  disabled={!isRightCode || !isRightEmail}
+                  >
                   인증 완료
                 </Button>
-              </Link>
-            </S.FormContainer>
-            <S.UnderlinedText to={'/changePwd'}>
+            <S.UnderlinedText 
+              //to={'/changePwd'}
+              >
+                <br />
               비밀번호를 재설정할 수 없나요?
             </S.UnderlinedText>
             <S.StyledHr />
             <S.UnderlinedText to={'/signup'}>새 계정 만들기</S.UnderlinedText>
+            </S.FormContainer>
           </S.FormWrapper>
           <Link to='/login'>
             <Button
-              width='537px'
+              width='450px'
               padding='20px'
               borderRadius='0'
               hasBorder='true'

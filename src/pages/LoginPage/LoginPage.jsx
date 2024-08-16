@@ -13,6 +13,7 @@ import * as S from './LoginPage.style.jsx';
 export default function LoginPage() {
   const { isChecked, checking } = useCheckIcon();
   const navigate = useNavigate();
+  // 이름, 비번, 인증번호도 추가하기
 
   const [email, setEmail] = useState('');
   const [password, setPwd] = useState('');
@@ -54,9 +55,9 @@ export default function LoginPage() {
     // }
 
     try {
-      await mockPostLogin({ email, password });
+      await mockPostLogin({ name, email, password });
       navigate('/home');
-      console.log('로그인 성공:', { email, password });
+      console.log('로그인 성공:', { name, email, password });
     } catch (error) {
       console.log({ email });
       console.error('로그인 실패:', error.message);

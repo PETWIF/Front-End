@@ -4,7 +4,7 @@ let users = [
     name: '임도이',
     email: 'doirang1@gmail.com',
     age: '24',
-    username: 'doirang1',
+    nickname: '되',
     password: 'qaz121!',
   },
   {
@@ -12,7 +12,7 @@ let users = [
     name: '일론 머스크',
     email: 'elone@gmail.com',
     age: '45',
-    username: 'elonmusk1004',
+    nickname: '테슬라',
     password: 'elon1004!',
   },
 ];
@@ -27,6 +27,7 @@ export const mockPostSignup = async (formData) => {
 
   users.push({
     ...formData,
+    name: formData.name,
     email: formData.email,
     password: formData.password,
   });
@@ -48,7 +49,7 @@ export const mockPostLogin = async (formData) => {
   return { email: user.email, name: user.name };
 };
 
-export const mockPostPwdChange = async (formData) => {
+export const mockPostPwdSearch = async (formData) => {
   // 비밀번호 찾기 - 가입된 이메일인지 확인
   const user = users.find((user) => user.email === formData.email);
   if (!user) {
@@ -56,4 +57,24 @@ export const mockPostPwdChange = async (formData) => {
   }
 
   return { email: user.email };
+};
+
+export const mockPostSetNickname = async (email, formData) => {
+  const user = users.find((user) => user.email === email);
+  if (!user) {
+    throw new Error('User not found');
+  }
+
+  Object.assign(user, formData); 
+  return user;
+};
+
+export const mockPostAddInfo = async (email, additionalData) => {
+  const user = users.find((user) => user.email === email);
+  if (!user) {
+    throw new Error('User not found');
+  }
+
+  Object.assign(user, additionalData); 
+  return user;
 };

@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { Flex } from '../../components/Common';
 
 export const Header = styled(Flex)`
-  height: 95px;
+  height: 80px;
   width: 100%;
   justify-content: center;
   align-items: center;
@@ -20,13 +20,14 @@ export const Wrapper = styled(Flex)`
   justify-content: center;
   align-items: center;
   background: ${(props) => props.theme.color.white};
-  padding: 100px;
+  padding: 80px 150px;
+  gap: 150px;
 `;
 
 // 가운데 블럭 전체
 export const Container = styled(Flex)`
-  width: 537px;
-  height: 100%;
+  width: 450px;
+  height: 450px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -52,8 +53,20 @@ export const FormWrapper = styled(Flex)`
 export const FormContainer = styled.form`
   height: 100%;
   width: 100%;
+  display: flex;
+  flex-direction: column;
   justify-content: flex-start;
   align-items: center;
+  overflow: auto;
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
+  scrollbar-width: none;
+  scrollbar-color: transparent transparent;
+
+  -ms-overflow-style: none;
 `;
 
 // MainBoldText, (MainBoldText,) InputStyle, Button을 세로로 묶는 컨테이너
@@ -94,7 +107,7 @@ export const StyledHr = styled.hr`
   width: 100%;
   height: 1px;
   background-color: ${(props) => props.theme.color.gray2};
-  border: none;
+  margin: 20px;
 `;
 
 // input label과 같이 올라가는 두꺼운 텍스트

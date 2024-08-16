@@ -1,22 +1,18 @@
-import { Link } from 'react-router-dom';
-
-import { Icon } from '../Icon';
-
 import styled from 'styled-components';
 
 // back 아이콘과 TitleText, Spacer를 묶는 컨테이너
 export const TitleContainer = styled.div`
   width: 100%;
-  gap: 0 120px;
+  height: 70px;
   display: flex;
-  justify-content: space-evenly;
-  align-items: center;
+  justify-content: space-between;
+  align-items: flex-start;
 `;
 
 // 제목 텍스트
 export const TitleText = styled.span`
   font-weight: 600;
-  font-size: 25px;
+  font-size: 23px;
   align: center;
 `;
 

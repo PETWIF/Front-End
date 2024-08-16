@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 import { Button } from '../../components/Button';
 import { Icon } from '../../components/Icon';
@@ -37,9 +37,13 @@ export default function AgreePage() {
     }
   }, [isServiceChecked, isPrivacyChecked]);
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    // 여기에 코드 추가
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { email, password } = location.state;
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    navigate('/setNickname', { state: { email, password } })
   };
 
   return (
@@ -53,6 +57,7 @@ export default function AgreePage() {
               backIcon='true'
               titleText='이용 약관'
             />
+            <S.FormContainer onSubmit={handleSubmit}>
             <S.ExplainContainer>
               <S.MainBoldText>
                 서비스 이용을 위해 약관에 동의해 주세요.
@@ -72,7 +77,6 @@ export default function AgreePage() {
               <S.GrayText>전체 동의하기</S.GrayText>
             </S.AllAgreeContainer>
             <S.StyledHr />
-            <S.FormContainer onSubmit={handleSubmit}>
               <S.ServiceTermWrapper>
                 <S.TermTitleContainer>
                   <S.GrayText>[필수] 서비스 이용 약관</S.GrayText>
@@ -99,20 +103,20 @@ export default function AgreePage() {
                   <Privacy />
                 </S.ServiceTermContainer>
               </S.ServiceTermWrapper>
-            </S.FormContainer>
-            <Link to='/setNickname'>
               <Button 
-                width='446px' 
+              type='submit'
+                width='100%' 
                 padding='16px' 
                 buttonStyle='orange' 
-                disabled={!isAllChecked}>
+                disabled={!isAllChecked}
+                >
                 다음으로
               </Button>
-            </Link>
+              </S.FormContainer>
           </S.FormWrapper>
           <Link to='/login'>
             <Button
-              width='537px'
+              width='450px'
               padding='20px'
               borderRadius='0'
               buttonStyle='light'

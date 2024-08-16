@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { Flex } from '../../components/Common';
 
 export const Header = styled(Flex)`
-  height: 95px;
+  height: 80px;
   width: 100%;
   justify-content: center;
   align-items: center;
@@ -20,14 +20,14 @@ export const Wrapper = styled(Flex)`
   justify-content: center;
   align-items: center;
   background: ${(props) => props.theme.color.white};
-  padding: 100px 150px;
+  padding: 80px 150px;
   gap: 150px;
 `;
 
 // 가운데 블럭 전체
 export const Container = styled(Flex)`
-  width: 500px;
-  height: 500px;
+  width: 450px;
+  height: 450px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -112,20 +112,20 @@ export const StyledHr = styled.hr`
 // input label과 같이 올라가는 두꺼운 텍스트
 export const MainBoldText = styled.p`
   font-weight: 600;
-  font-size: 17px;
+  font-size: 16px;
   align: center;
 `;
 
 // MainBoldText 아래의 작은 텍스트
 export const MainNormalText = styled.p`
-  font-size: 15px;
+  font-size: 14px;
   align: center;
   color: ${(props) => props.theme.color.gray2};
 `;
 
 // 링크, 누르면 넘어가는 밑줄 친 텍스트
 export const UnderlinedText = styled(Link)`
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 500;
   text-decoration-line: underline;
   color: ${(props) => props.theme.color.gray2};
