@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 
 import { Button } from '../Button';
 import { Layout } from '../Common';
-import { Profile } from '../Profile';
+import { Avatar } from '../Avatar';
 
 import { RANDOM_FRIENDS } from '../../dummy/data';
 
@@ -19,7 +19,7 @@ export default function RandomFriend() {
           <S.FriendItem key={userId}>
             <div>
               <Link to={`/album/${userId}`}>
-                <Profile src={image} size='66px' />
+                <Avatar src={image} size='66px' />
               </Link>
               <span>{name}</span>
             </div>

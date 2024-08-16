@@ -2,6 +2,13 @@ import styled, { css } from 'styled-components';
 
 export const Button = styled.button`
   ${(props) => {
+    if (props.$style === 'white') {
+      return css`
+        background-color: ${props.theme.color.white};
+        color: ${props.theme.color.primary};
+      `;
+    }
+
     if (props.$style === 'light') {
       return css`
         background-color: ${props.theme.color.secondary};
@@ -11,7 +18,7 @@ export const Button = styled.button`
 
     if (props.$style === 'gray') {
       return css`
-        background-color: ${props.theme.color.gray4};
+        background-color: ${props.theme.color.gray5};
         color: ${props.theme.color.gray};
       `;
     }
@@ -24,7 +31,7 @@ export const Button = styled.button`
 
   width: ${(props) => props.$width || '100%'};
   border-radius: ${(props) => props.$borderRadius || '10px'};
-  font-weight: 600;
+  font-weight: 400;
   line-height: 29px;
   text-align: center;
   padding: ${(props) => `${props.$padding || 0} 0`};
@@ -33,7 +40,7 @@ export const Button = styled.button`
   font-size: ${(props) => props.$fontSize || '16px'};
 
   &:disabled {
-    background: ${(props) => props.theme.color.gray3};
+    background: ${(props) => props.theme.color.gray4};
     color: ${(props) => props.theme.color.gray2};
     cursor: auto;
   }

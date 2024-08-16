@@ -8,7 +8,8 @@ export const SidebarWrapper = styled.aside`
   position: fixed;
   top: 0;
   left: 0;
-  background: ${(props) => props.theme.color.gray4};
+  z-index: 2;
+  background: ${(props) => props.theme.color.gray5};
   filter: drop-shadow(3px 3px 9px rgba(0, 0, 0, 0.1));
 `;
 
