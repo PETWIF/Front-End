@@ -101,7 +101,7 @@ export default function PwdSearchPage() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    navigate('/changePwd');
+    navigate('/changePwd', { state: { email: email }});
   };
 
   const handleCodeSubmit = (e) => {

@@ -88,3 +88,13 @@ export const mockPostAddInfo = async (email, formData) => {
   Object.assign(user, formData); 
   return user;
 };
+
+export const mockPostChangePassword = async (email, newPassword) => {
+  const user = users.find((user) => user.email === email);
+  if (!user) {
+    throw new Error('User not found');
+  }
+
+  user.password = newPassword;
+  return { email: user.email, name: user.name };
+};

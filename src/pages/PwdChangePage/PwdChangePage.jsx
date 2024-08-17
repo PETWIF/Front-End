@@ -1,6 +1,9 @@
 import { useState } from 'react';
+import { useLocation } from 'react-router-dom';
 
 import { Button } from '../../components/Button';
+
+import { mockPostChangePassword } from '../../dummy/data/user.js';
 
 import useLoginModal from '../../hooks/useLoginModal.jsx';
 
@@ -17,6 +20,9 @@ export default function PwdChangePage() {
 
   const [isRightPwd, setIsRightPwd] = useState(false);
   const [isRightPwdRe, setIsRightPwdRe] = useState(false);
+
+  const location = useLocation();
+  const { email } = location.state;
 
   const validatePassword = (value) =>
     value.length >= 4 &&
@@ -68,10 +74,19 @@ export default function PwdChangePage() {
     }
   };
 
-  // const formData = { password: pwd, passwordCheck: pwdRe };
+  const formData = { password: pwd };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!(isRightPwd && isRightPwdRe)) return;
+
+    try {
+      console.log('Form data submitted:', formData);
+      await mockPostChangePassword({ email }, formData);
+    } catch (error) {
+      console.error('Error:', error);
+    }
   };
 
 
