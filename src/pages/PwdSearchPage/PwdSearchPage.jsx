@@ -1,16 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-
+import { debounce } from 'lodash';
 import { Button } from '../../components/Button';
-
 import LoginHeader from '../../components/LoginComponents/LoginHeader';
 import TitleContainer from '../../components/LoginComponents/TitleContainer';
-
 import * as S from './PwdSearchPage.style.jsx';
 import { mockPostPwdSearch } from '../../dummy/data/user.js';
 
-// 추후 유효성 검사 통과 여부에 따라 경고 텍스트 글씨 바뀌도록 설정 필요
 export default function PwdSearchPage() {
+  const navigate = useNavigate();
+
   const [email, setEmail] = useState('');
   const [code, setCode] = useState('');
 
@@ -21,7 +20,7 @@ export default function PwdSearchPage() {
   const [isRightCode, setIsRightCode] = useState(false);
 
   const validateEmail = (value) => /\S+@\S+\.\S+/.test(value);
-  const validateCode = (value) => /^[0-9]{6}$/.test(value) // 일단 숫자 n자리로 상정
+  const validateCode = (value) => /^[0-9]{6}$/.test(value); // 6자리 숫자
 
   const [isTimerActive, setIsTimerActive] = useState(false);
   const [timeLeft, setTimeLeft] = useState(0);
@@ -44,71 +43,74 @@ export default function PwdSearchPage() {
   }, [isTimerActive]);
 
   const handleSendCode = () => {
-    setTimeLeft(300); // 5 minutes in seconds
+    setTimeLeft(300); // 5분(300초)
     setIsTimerActive(true);
   };
 
-  const handleInputChange = (e) => {
+  const debouncedValidateEmail = useCallback(
+    debounce((value) => {
+      const isValidEmail = validateEmail(value);
+      setIsRightEmail(isValidEmail);
+      setEmailError(isValidEmail ? '올바른 양식입니다!' : '올바른 양식이 아닙니다.');
+    }, 300),
+    []
+  );
+
+  const debouncedValidateCode = useCallback(
+    debounce((value) => {
+      setCode(value);
+      const isValidCode = validateCode(value);
+      setIsRightCode(isValidCode);
+    }, 50),
+    []
+  );
+
+  const handleInputChange = useCallback((e) => {
     const { id, value } = e.target;
 
     switch (id) {
       case 'email':
-        console.log({ email });
         setEmail(value);
-        const isValidEmail = validateEmail(value);
-        setIsRightEmail(isValidEmail);
-        setEmailError(
-          isValidEmail ? '올바른 양식입니다!' : '올바른 양식이 아닙니다.'
-        );
+        debouncedValidateEmail(value); 
         break;
       case 'code':
-        console.log({ code });
         setCode(value);
+        debouncedValidateCode(value);
         break;
       default:
         break;
     }
-  };
+  }, [debouncedValidateEmail, debouncedValidateCode]);
 
-  const navigate = useNavigate();
-
-  const handleEmailSubmit = async (e) => {
-    e.preventDefault();
-
+  const handleEmailSubmit = async () => {
     if (!isRightEmail) {
-           return;
+      return;
     }
 
     try {
       await mockPostPwdSearch({ email });
       console.log('이메일 존재:', { email });
     } catch (error) {
-      console.log({ email });
       console.error('이메일 존재하지 않음:', error.message);
       if (error.message === 'User not found') {
-        console.log('이메일 미존재:', { email });
+        setIsRightEmail(false);
         setEmailError('가입되지 않은 이메일입니다.');
-      } 
+      }
     }
   };
 
   const handleSubmit = (e) => {
-    // e.preventDefault();
+    e.preventDefault();
     navigate('/changePwd');
   };
 
   const handleCodeSubmit = (e) => {
     e.preventDefault();
-
-    // if (!isRightCode) {
-    //   return;
-    // } -> 해당 코드가 이메일에서는 잘 작동하는데, 코드는 disabled의 length 제한과 onChange 적용 시점 등이 얽혀서 제대로 작동하지 않음
-        
-    const isValidCode = validateCode(code);
-    setIsRightCode(isValidCode);
-    setCodeError(
-      isRightCode ? '인증번호가 일치합니다!' : '인증번호가 일치하지 않습니다.'
-    );
+    if (!isRightCode) {
+      setCodeError('인증번호가 일치하지 않습니다.');
+    } else {
+      setCodeError('인증번호가 일치합니다!');
+    }
   };
 
   const formatTime = (seconds) => {
@@ -141,9 +143,9 @@ export default function PwdSearchPage() {
                   buttonStyle='light'
                   onClick={(e) => {
                     e.preventDefault();
-                    handleSendCode;
+                    handleSendCode(); // 함수 호출
+                    handleEmailSubmit(); // 함수 호출
                     setEmailError('인증번호가 전송되었습니다.');
-                    handleEmailSubmit(e);
                   }}
                   fontSize='14px'
                   disabled={!isRightEmail}
@@ -170,19 +172,18 @@ export default function PwdSearchPage() {
                   width='150px' 
                   buttonStyle='light'
                   fontSize='14px'
-                  disabled={code.length !== 6}
                   onClick={handleCodeSubmit}
                   >
                   인증번호 확인
                 </Button>
                 </S.InputContainer>
                 <S.WarningText className={isRightCode ? 'success' : 'error'}>
-                {codeError}
-                    </S.WarningText>
+                  {codeError}
+                </S.WarningText>
               </S.InputWrapper>
-              {isTimerActive && (
+              { isRightEmail ? isTimerActive && (
                 <S.TimerDisplay>{formatTime(timeLeft)}</S.TimerDisplay>
-              )}
+              ) : "" }
                 <Button 
                   type='submit'
                   width='100%' 
@@ -192,9 +193,7 @@ export default function PwdSearchPage() {
                   >
                   인증 완료
                 </Button>
-            <S.UnderlinedText 
-              //to={'/changePwd'}
-              >
+            <S.UnderlinedText>
                 <br />
               비밀번호를 재설정할 수 없나요?
             </S.UnderlinedText>

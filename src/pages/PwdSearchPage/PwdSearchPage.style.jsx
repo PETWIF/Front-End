@@ -141,6 +141,7 @@ export const InputStyle = styled.input`
 
 export const TimerDisplay = styled.div`
   font-size: 20px;
+  margin: 0 0 10px 0;
   align-self: center;
   color: ${(props) => props.theme.color.primary};
 `;
