@@ -148,7 +148,6 @@ export default function PwdSearchPage() {
                     setEmailError('인증번호가 전송되었습니다.');
                   }}
                   fontSize='14px'
-                  disabled={!isRightEmail}
                 >
                   인증번호 전송
                 </Button>

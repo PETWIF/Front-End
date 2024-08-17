@@ -1,7 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { mockPostSignup } from '../../dummy/data/user.js';
+import { debounce } from 'lodash';
+
+import { mockPostSignup, mockPostCheckEmail } from '../../dummy/data/user.js';
 
 import { Button } from '../../components/Button';
 
@@ -30,7 +32,7 @@ export default function SignUpPage() {
 
   const validateName = (value) => value.trim().length >= 2 && value.trim().length <= 6;
   const validateEmail = (value) => /\S+@\S+\.\S+/.test(value);
-  const validateCode = (value) => /^[0-9]{6}$/.test(value) // 일단 숫자 n자리로 상정
+  const validateCode = (value) => /^[0-9]{6}$/.test(value); // 일단 숫자 n자리로 상정
   const validatePassword = (value) =>
     value.length >= 4 &&
     value.length <= 12 &&
@@ -43,65 +45,140 @@ export default function SignUpPage() {
   const [pwdError, setPwdError] = useState('');
   const [pwdReError, setPwdReError] = useState('');
 
-  const handleInputChange = (e) => {
-    const { id, value } = e.target;
+  const [isTimerActive, setIsTimerActive] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(0);
 
-    switch (id) {
-      case 'name':
-        setName(value);
-        const isValidName = validateName(value);
-        setIsRightName(isValidName);
-        setNameError(
-          isValidName ? '올바른 양식입니다!' : '이름은 2자 이상부터 6자 이하까지 입력 가능합니다'
-        );
-        break;
-      case 'e-mail':
-        setEmail(value);
-        const isValidEmail = validateEmail(value);
-        setIsRightEmail(isValidEmail);
-        setEmailError(
-          isValidEmail ? '올바른 양식입니다!' : '올바른 양식이 아닙니다'
-        );
-        break;
-      case 'code':
-          console.log({ code });
-          setCode(value);
-          break;
-      case 'pwd':
-        setPwd(value);
-        setIsRightPwd(validatePassword(value));
-        setIsRightPwdRe(validatePasswordRe(pwdRe));
-        const isValidPwd = validatePassword(value);
-        setIsRightPwd(isValidPwd);
-        if (value.length < 4 || value.length > 12) {
-          if (value.length < 4) {
-            setPwdError('비밀번호를 4자리 이상 입력해 주세요');
-            break;
-          } else if (value.length > 12) {
-            setPwdError('비밀번호는 12자리까지 입력 가능합니다');
-            break;
+  useEffect(() => {
+    let timer;
+    if (isTimerActive) {
+      timer = setInterval(() => {
+        setTimeLeft((prevTime) => {
+          if (prevTime <= 0) {
+            clearInterval(timer);
+            setIsTimerActive(false);
+            return 0;
           }
-        }
-        if (!/^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*?_])/.test(value)) {
-          setPwdError(
-            '영어, 숫자, 특수문자를 모두 조합해서 비밀번호를 작성해 주세요'
-          );
-          break;
-        } else setPwdError('올바른 양식입니다!');
-        break;
-      case 'pwdRe':
-        setPwdRe(value);
-        const isValidPwdRe = validatePasswordRe(value);
-        setIsRightPwdRe(isValidPwdRe);
-        setPwdReError(
-          isValidPwdRe
-            ? '비밀번호가 일치합니다!'
-            : '비밀번호가 일치하지 않습니다'
-        );
-        break;
-      default:
-        break;
+          return prevTime - 1;
+        });
+      }, 1000);
     }
+    return () => clearInterval(timer);
+  }, [isTimerActive]);
+
+  const handleSendCode = () => {
+    setTimeLeft(300); // 5분(300초)
+    setIsTimerActive(true);
+  };
+
+  const debouncedValidateName = useCallback(
+    debounce((value) => {
+      const isValid = validateName(value);
+      setIsRightName(isValid);
+      setNameError(isValid ? '올바른 양식입니다!' : '이름은 2자 이상부터 6자 이하까지 입력 가능합니다');
+    }, 200),
+    [validateName]
+  );
+
+  const debouncedValidateEmail = useCallback(
+    debounce((value) => {
+      const isValidEmail = validateEmail(value);
+      setIsRightEmail(isValidEmail);
+      setEmailError(isValidEmail ? '올바른 양식입니다!' : '올바른 양식이 아닙니다.');
+    }, 200),
+    []
+  );
+
+  const debouncedValidateCode = useCallback(
+    debounce((value) => {
+      setCode(value);
+      const isValidCode = validateCode(value);
+      setIsRightCode(isValidCode);
+    }, 200),
+    []
+  );
+
+  const debouncedValidatePassword = useCallback(
+    debounce((value) => {
+      const isValid = validatePassword(value);
+      setIsRightPwd(isValid);
+      setPwdError(isValid ? '올바른 양식입니다!' : '영어, 숫자, 특수문자를 모두 조합해서 비밀번호를 작성해 주세요');
+    }, 200),
+    [validatePassword]
+  );
+
+  const debouncedValidatePasswordRe = useCallback(
+    debounce((value) => {
+      const isValid = validatePasswordRe(value);
+      setIsRightPwdRe(isValid);
+      setPwdReError(isValid ? '비밀번호가 일치합니다!' : '비밀번호가 일치하지 않습니다');
+    }, 200),
+    [validatePasswordRe]
+  );
+
+  const handleInputChange = useCallback(
+    (e) => {
+      const { id, value } = e.target;
+
+      switch (id) {
+        case 'name':
+          setName(value);
+          debouncedValidateName(value);
+          break;
+        case 'e-mail':
+          setEmail(value);
+          debouncedValidateEmail(value);
+          break;
+        case 'code':
+          setCode(value);
+          debouncedValidateCode(value);
+          break;
+        case 'pwd':
+          setPwd(value);
+          debouncedValidatePassword(value);
+          break;
+        case 'pwdRe':
+          setPwdRe(value);
+          debouncedValidatePasswordRe(value);
+          break;
+        default:
+          break;
+      }
+    },
+    [
+      debouncedValidateName,
+      debouncedValidateEmail,
+      debouncedValidateCode,
+      debouncedValidatePassword,
+      debouncedValidatePasswordRe,
+    ]
+  );
+
+  const handleEmailSubmit = async () => {
+    try {
+      await mockPostCheckEmail({ email });
+      console.log('가입 가능한 이메일:', { email });
+    } catch (error) {
+      console.error('오류 발생:', error.message);
+      if (error.message === 'User already exists') {
+        setIsRightEmail(false);
+        setEmailError('이미 가입된 이메일입니다.');
+      }
+    }
+  };
+
+  const handleCodeSubmit = (e) => {
+    e.preventDefault();
+    if (!isRightCode) {
+      setCodeError('인증번호가 일치하지 않습니다.');
+    } else {
+      setCodeError('인증번호가 일치합니다!');
+    }
+  };
+
+  const formatTime = (seconds) => {
+    const minutes = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
   };
 
   const navigate = useNavigate();
@@ -110,32 +187,15 @@ export default function SignUpPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-  if (!(isRightEmail && isRightPwd && isRightPwdRe)) return;
+    if (!(isRightEmail && isRightPwd && isRightPwdRe)) return;
 
     try {
       console.log('Form data submitted:', formData);
       await mockPostSignup(formData);
       navigate('/agree', { state: { email, password: pwd } });
     } catch (error) {
-      if (error.message === 'User already exists') {
-        setEmailError('이미 가입된 이메일입니다.');
-        setIsRightEmail(false);
-      }
+      console.error('Error:', error);
     }
-  };
-
-  const handleCodeSubmit = (e) => {
-    e.preventDefault();
-
-    // if (!isRightCode) {
-    //   return;
-    // } -> 해당 코드가 이메일에서는 잘 작동하는데, 코드는 disabled의 length 제한과 onChange 적용 시점 등이 얽혀서 제대로 작동하지 않음
-        
-    const isValidCode = validateCode(code);
-    setIsRightCode(isValidCode);
-    setCodeError(
-      isRightCode ? '인증번호가 일치합니다!' : '인증번호가 일치하지 않습니다.'
-    );
   };
 
   return (
@@ -147,8 +207,8 @@ export default function SignUpPage() {
             <TitleContainer backIcon='true' titleText='회원 가입' />
             <S.FormContainer onSubmit={handleSubmit}>
               <S.InputWrapper>
-                  <S.MainBoldText>이름</S.MainBoldText>
-                  <S.InputContainer>
+                <S.MainBoldText>이름</S.MainBoldText>
+                <S.InputContainer>
                   <S.InputStyle
                     id='name'
                     type='text'
@@ -156,13 +216,13 @@ export default function SignUpPage() {
                     placeholder='이름을 입력해 주세요'
                     onChange={handleInputChange}
                   />
-                  </S.InputContainer>
-                  <S.WarningText className={isRightName ? 'success' : 'error'}>
-                    {nameError}
-                  </S.WarningText>
+                </S.InputContainer>
+                <S.WarningText className={isRightName ? 'success' : 'error'}>
+                  {nameError}
+                </S.WarningText>
               </S.InputWrapper>
               <S.InputWrapper>
-              <S.MainBoldText>이메일</S.MainBoldText>
+                <S.MainBoldText>이메일</S.MainBoldText>
                 <S.InputContainer>
                   <S.InputStyle
                     id='e-mail'
@@ -171,27 +231,28 @@ export default function SignUpPage() {
                     placeholder='이메일을 입력해 주세요'
                     onChange={handleInputChange}
                   />
-                <Button 
-                width='150px' 
-                padding='11px' 
-                fontSize='15px'
-                buttonStyle='light'
-                onClick={(e) => {
-                  e.preventDefault();
-                  // handleSendCode 
-                  setEmailError('인증번호가 전송되었습니다.');
-                  handleSubmit
-                }}
-                disabled={!isRightEmail}>
-                  인증번호 전송
-                </Button>
+                  <Button
+                    width='150px'
+                    padding='11px'
+                    fontSize='15px'
+                    buttonStyle='light'
+                    onClick={(e) => {
+                      e.preventDefault();
+                      //handleSendCode(); 
+                      handleEmailSubmit();
+                      setEmailError('인증번호가 전송되었습니다.');
+                    }}
+                    disabled={!isRightEmail}
+                  >
+                    인증번호 전송
+                  </Button>
                 </S.InputContainer>
                 <S.WarningText className={isRightEmail ? 'success' : 'error'}>
-                    {emailError}
-                  </S.WarningText>
+                  {emailError}
+                </S.WarningText>
               </S.InputWrapper>
               <S.InputWrapper>
-              <S.MainBoldText>인증번호 입력</S.MainBoldText>
+                <S.MainBoldText>인증번호 입력</S.MainBoldText>
                 <S.InputContainer>
                   <S.InputStyle
                     type='text'
@@ -200,46 +261,46 @@ export default function SignUpPage() {
                     placeholder='인증번호를 입력해 주세요'
                     onChange={handleInputChange}
                   />
-                <Button 
-                  width='150px' 
-                  padding='11px'
-                  fontSize='15px'
-                  buttonStyle='light'
-                  disabled={code.length !== 6}
-                  onClick={handleCodeSubmit}
+                  <Button
+                    width='150px'
+                    padding='11px'
+                    fontSize='15px'
+                    buttonStyle='light'
+                    disabled={code.length !== 6}
+                    onClick={handleCodeSubmit}
                   >
-                  인증번호 확인
-                </Button>
+                    인증번호 확인
+                  </Button>
                 </S.InputContainer>
                 <S.WarningText className={isRightCode ? 'success' : 'error'}>
-                {codeError}
-                    </S.WarningText>
+                  {codeError}
+                </S.WarningText>
               </S.InputWrapper>
               <S.InputWrapper>
-                  <S.MainBoldText>비밀번호</S.MainBoldText>
-                  <S.InputStyle
-                    id='pwd'
-                    type='password'
-                    className='pwd'
-                    placeholder='비밀번호를 입력해 주세요'
-                    onChange={handleInputChange}
-                  />
-                  <S.WarningText className={isRightPwd ? 'success' : 'error'}>
-                    {pwdError}
-                  </S.WarningText>
+                <S.MainBoldText>비밀번호</S.MainBoldText>
+                <S.InputStyle
+                  id='pwd'
+                  type='password'
+                  className='pwd'
+                  placeholder='비밀번호를 입력해 주세요'
+                  onChange={handleInputChange}
+                />
+                <S.WarningText className={isRightPwd ? 'success' : 'error'}>
+                  {pwdError}
+                </S.WarningText>
               </S.InputWrapper>
               <S.InputWrapper>
-                  <S.MainBoldText>비밀번호 확인</S.MainBoldText>
-                  <S.InputStyle
-                    id='pwdRe'
-                    type='password'
-                    className='pwdRe'
-                    placeholder='위의 비밀번호를 다시 입력해 주세요'
-                    onChange={handleInputChange}
-                  />
-                  <S.WarningText className={isRightPwdRe ? 'success' : 'error'}>
-                    {pwdReError}
-                  </S.WarningText>
+                <S.MainBoldText>비밀번호 확인</S.MainBoldText>
+                <S.InputStyle
+                  id='pwdRe'
+                  type='password'
+                  className='pwdRe'
+                  placeholder='위의 비밀번호를 다시 입력해 주세요'
+                  onChange={handleInputChange}
+                />
+                <S.WarningText className={isRightPwdRe ? 'success' : 'error'}>
+                  {pwdReError}
+                </S.WarningText>
               </S.InputWrapper>
               <br />
               <Button

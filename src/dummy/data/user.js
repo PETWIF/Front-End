@@ -34,6 +34,16 @@ export const mockPostSignup = async (formData) => {
   return { email: formData.email };
 };
 
+
+export const mockPostCheckEmail = async (formData) => {
+  const existingUser = users.find((user) => user.email === formData.email);
+  if (existingUser) {
+    throw new Error('User already exists');
+  }
+
+  return null;
+};
+
 export const mockPostLogin = async (formData) => {
   // 로그인 - 이메일과 비밀번호 확인
   const user = users.find((user) => user.email === formData.email);
