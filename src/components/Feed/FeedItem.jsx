@@ -49,7 +49,7 @@ const FeedItem = ({ data }) => {
         <S.StyledLink key={data.id} to={`/album/detail/${data.id}`}>
           <S.AlbumImage src={albumThumbnail} alt="앨범 이미지" />
         </S.StyledLink>
-      </S.FeedZone> 
+      </S.FeedZone>
 
 
       <S.MainContent>
@@ -77,35 +77,35 @@ const FeedItem = ({ data }) => {
 
         <S.CommentSectionContainer>
           <S.CommentSection>
-          <CommentSection
-            comments={comments.map((comment) => ({
-              ...comment,
-              createdAt: formatDate(comment.createdAt),
-              replies: comment.replies
-                ? comment.replies.map((reply) => ({
-                    ...reply,
-                    createdAt: formatDate(reply.createdAt),
-                  }))
-                : [],
-            }))}
-            onReport={handleReport} // 신고 기능 처리 함수 전달
-          /> 
-          </S.CommentSection>
+            <CommentSection
+              comments={comments.map((comment) => ({
+                ...comment,
+                createdAt: formatDate(comment.createdAt),
+                replies: comment.replies
+                  ? comment.replies.map((reply) => ({
+                      ...reply,
+                      createdAt: formatDate(reply.createdAt),
+                    }))
+                  : [],
+              }))}
+              onReport={handleReport} // 신고 기능 처리 함수 전달
+            /> 
+            </S.CommentSection>
           
-          <S.CommentInputWrapper>
-            <S.CommentInputSection>
-              <S.UserProfileImage src={profileImage} alt="현재 로그인된 사용자 프로필" />
-              <S.CommentInput
-                type="text"
-                value={newComment}
-                onChange={handleCommentChange}
-                placeholder="댓글을 입력하세요..."
-              />
-              <S.CommentButton onClick={handleCommentSubmit}>등록</S.CommentButton>
-            </S.CommentInputSection>
-          </S.CommentInputWrapper>
+            <S.CommentInputWrapper>
+              <S.CommentInputSection>
+                <S.UserProfileImage src={profileImage} alt="현재 로그인된 사용자 프로필" />
+                <S.CommentInput
+                  type="text"
+                  value={newComment}
+                  onChange={handleCommentChange}
+                  placeholder="댓글을 입력하세요..."
+                />
+                <S.CommentButton onClick={handleCommentSubmit}>등록</S.CommentButton>
+              </S.CommentInputSection>
+            </S.CommentInputWrapper>
 
-        </S.CommentSectionContainer>
+          </S.CommentSectionContainer>
         </S.MainContent>
     </S.FeedItem>
   );

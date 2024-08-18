@@ -5,6 +5,7 @@ export const FeedContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 20px;
+  align-items: stretch; /* 자식 요소들이 동일한 높이를 가지도록 설정 */
 `;
 
 export const FeedItem = styled.div`
@@ -13,9 +14,10 @@ export const FeedItem = styled.div`
   padding: 20px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   display: flex;
-  flex-direction: flex-inline;
+  flex-direction: row; /* FeedZone과 MainContent를 나란히 배치 */
   gap: 20px;
-  height: auto; /* 높이를 자동으로 조정 */
+  height: auto; /* 높이가 자동으로 조정되도록 설정 */
+  align-items: stretch; /* 자식 요소들이 동일한 높이를 가지도록 설정 */
 `;
 
 export const FeedZone = styled.div`
@@ -26,9 +28,20 @@ export const FeedZone = styled.div`
   display: flex;
   flex-direction: column;
   gap: 20px;
-  height: auto; /* 높이를 자동으로 조정 */
+  height: auto; /* 높이가 자동으로 조정되도록 설정 */
+  flex-grow: 1; /* 공간을 채울 수 있도록 설정 */
 `;
 
+export const MainContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 30%;
+  height: auto; /* 높이가 자동으로 조정되도록 설정 */
+  flex-grow: 1; /* 공간을 채울 수 있도록 설정 */
+  height: 1000px; /* StyledLink와 동일한 높이로 설정 */
+  max-height: none; /* max-height를 없애서 height로 고정 */
+`;
 
 export const Header = styled.div`
   width: 100%;
@@ -38,18 +51,35 @@ export const Header = styled.div`
   align-items: center;
 `;
 
-
 export const AlbumImage = styled.img`
   width: 100%;
-  height: 100%
+  height: 100%;
 `;
 
 export const StyledLink = styled(Link)`
   display: block;
   width: auto;
-  max-height: 1100px;
+  height: 900px; /* max-height 대신 height로 고정 */
   border-radius: 10px;
   display: block;
+`;
+
+export const CommentSection = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
+  width: 100%;
+  overflow-y: auto;
+  flex-grow: 1;
+  
+  /* 스크롤 바 숨김 */
+  ::-webkit-scrollbar {
+    display: none; /* 웹킷 브라우저에서 스크롤 바 숨김 */
+  }
+
+  -ms-overflow-style: none;  /* IE 및 Edge에서 스크롤 바 숨김 */
+  scrollbar-width: none;  /* Firefox에서 스크롤 바 숨김 */
 `;
 
 export const Profile = styled.div`
@@ -81,14 +111,6 @@ export const Actions = styled.div`
   svg {
     cursor: pointer;
   }
-`;
-
-export const MainContent = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  width: 30%;
-  height: auto; /* 높이를 자동으로 조정 */
 `;
 
 export const Spacer = styled.div`
@@ -136,25 +158,6 @@ export const CommentSectionContainer = styled.div`
   padding-top: 10px;
   box-sizing: border-box; /* 패딩과 경계도 크기에 포함 */
   
-  /* 스크롤 바 숨김 */
-  ::-webkit-scrollbar {
-    display: none; /* 웹킷 브라우저에서 스크롤 바 숨김 */
-  }
-
-  -ms-overflow-style: none;  /* IE 및 Edge에서 스크롤 바 숨김 */
-  scrollbar-width: none;  /* Firefox에서 스크롤 바 숨김 */
-`;
-
-export const CommentSection = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  padding: 10px;
-  width: 100%;
-  overflow-y: auto; /* 스크롤 기능을 유지 */
-  flex-grow: 1;
-  max-height: 900px;
-
   /* 스크롤 바 숨김 */
   ::-webkit-scrollbar {
     display: none; /* 웹킷 브라우저에서 스크롤 바 숨김 */

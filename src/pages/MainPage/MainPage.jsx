@@ -2,11 +2,11 @@
 import React from 'react';
 import Header from '../../components/Header/Header';
 import Profile from '../../components/Profile/Profile';
-import RandomFriend from '../../components/RandomFriend/RandomFriend';
+import { RandomFriend } from '../../components/RandomFriend';
 import Modal from '../../components/Modal/Modal';
-import AdComponent from '../../components/AdComponent/AdComponent';
-import AlbumUpdates from '../../components/AlbumUpdates/AlbumUpdates';
-import Feed from '../../components/Feed/Feed';
+import { AdComponent } from '../../components/AdComponent';
+import { AlbumUpdates } from '../../components/AlbumUpdates';
+import { Feed } from '../../components/Feed';
 import { MainContainer, Content, WhiteBox, AlbumUpdatesFeedContainer } from './MainPage.style';
 
 const MainPage = () => {

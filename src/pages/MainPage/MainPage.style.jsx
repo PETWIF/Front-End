@@ -29,4 +29,5 @@ export const AlbumUpdatesFeedContainer = styled.div`
   box-sizing: border-box;
   overflow: hidden;
   flex-grow: 1;
+  max-height:1500px;
 `;

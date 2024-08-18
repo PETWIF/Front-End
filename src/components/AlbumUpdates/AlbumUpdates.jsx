@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import * as S from './AlbumUpdates.style';
-import { ALBUM_UPDATES} from '../../dummy/data/albumupdates'; 
+import { ALBUM_UPDATES } from '../../dummy/data';
 
 const AlbumUpdates = () => {
   return (
