@@ -7,18 +7,18 @@ export const MainContainer = styled.main`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: ${(props) => (props.$isCoverEditing ? '#000' : '#fff')};
+  background-color: #FFF;
   border-radius: 10px;
 `;
 
 export const Paragraph1 = styled.p`
-  color: ${(props) => (props.$isCoverEditing ? '#fff' : '#000')};
+  color: '#000';
   font-weight: bold;
   font-size: 28px;
 `;
 
 export const Paragraph2 = styled.p`
-  color: ${(props) => (props.$isCoverEditing ? '#fff' : '#000')};
+  color: '#000';
   font-weight: bold;
   font-size: 16px;
 `;
@@ -29,13 +29,12 @@ export const Button = styled.button`
   padding: 10px;
   border: 1px solid #f87f28;
   border-radius: 10px;
-  color: ${(props) => (props.$isCoverEditing ? '#000' : '#f87f28')};
+  color: '#f87f28';
   font-size: 20px;
   cursor: pointer;
-  background-color: ${(props) => (props.$isCoverEditing ? '#fff' : '#FFF0D4')};
+  background-color: #FFF0D4;
   &:hover {
-    background-color: ${(props) =>
-      props.$isCoverEditing ? '#CACACC' : '#ffdcb6'};
+    background-color: #ffdcb6;
   }
 `;
 
@@ -48,7 +47,7 @@ export const MainTitleContainer = styled.div`
   justify-content: center;
   align-itmes: center;
   border-radius: 10px;
-  background-color: ${(props) => (props.$isCoverEditing ? '#000' : '#fff')};
+  background-color: #FFF;
 `;
 
 export const MainContnetContainer = styled.div`
@@ -60,7 +59,7 @@ export const MainContnetContainer = styled.div`
   align-items: center;
   border-radius: 10px;
   gap: 10%;
-  background-color: ${(props) => (props.$isCoverEditing ? '#000' : '#fff')};
+  background-color: #FFF;
   overflow-y: auto;
 `;
 

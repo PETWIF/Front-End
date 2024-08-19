@@ -1,21 +1,30 @@
 import App from './App.jsx';
+import { AddInfoPage } from './pages/AddInfoPage';
+import { AgreePage } from './pages/AgreePage';
 import { AlbumDetailPage } from './pages/AlbumDetailPage';
 import { AlbumPage } from './pages/AlbumPage';
 import { AlbumPostPage } from './pages/AlbumPostPage';
+import { AlbumMakingPage } from './pages/AlbumMakingPage';
 import { BookmarkPage } from './pages/BookmarkPage';
 import { ChattingPage } from './pages/ChattingPage';
 import { ExplorePage } from './pages/ExplorePage';
 import { FriendPage } from './pages/FriendPage';
-import { MainPage } from './pages/MainPage';
 import { LoginPage } from './pages/LoginPage';
-import { PwdSearchPage } from './pages/PwdSearchPage';
+import { MainPage } from './pages/MainPage';
 import { PwdChangePage } from './pages/PwdChangePage';
-import { SignUpPage } from './pages/SignUpPage';
-import { AgreePage } from './pages/AgreePage';
-import { SetNicknamePage } from './pages/SetNicknamePage';
-import { AddInfoPage } from './pages/AddInfoPage';
+import { PwdSearchPage } from './pages/PwdSearchPage';
 import { RegisteredPage } from './pages/RegisteredPage';
-import AlbumMakingPage from './pages/AlbumMakingPage/AlbumMakingPage';
+import { SetNicknamePage } from './pages/SetNicknamePage';
+import {
+  BlockListPage,
+  DeleteAccountPage,
+  SettingPage,
+  UpdateBlockListPage,
+  HelpPage,
+  VisibilityPreferencePage,
+} from './pages/SettingPage';
+import { SignUpPage } from './pages/SignUpPage';
+import { UserProfilePage } from './pages/UserProfilePage';
 
 export const routeList = [
   {
@@ -107,6 +116,40 @@ export const routeList = [
       {
         path: '/chatting',
         element: <ChattingPage />,
+      },
+      {
+        path: '/user-profile',
+        element: <UserProfilePage />,
+      },
+      {
+        path: '/setting',
+        element: <SettingPage />,
+        children: [
+          {
+            index: true,
+            element: <VisibilityPreferencePage />,
+          },
+          {
+            path: '/setting/visivility',
+            element: <VisibilityPreferencePage />,
+          },
+          {
+            path: '/setting/block-list',
+            element: <BlockListPage />,
+          },
+          {
+            path: '/setting/update-block-list',
+            element: <UpdateBlockListPage />,
+          },
+          {
+            path: '/setting/help',
+            element: <HelpPage />,
+          },
+          {
+            path: '/setting/delete-account',
+            element: <DeleteAccountPage />,
+          },
+        ],
       },
     ],
   },
