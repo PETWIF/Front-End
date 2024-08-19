@@ -4,12 +4,15 @@ import MainArea from '../../components/AlbumMaking/MainArea';
 import { PageContainer } from './AlbumMakingPage.style';
 
 export default function AlbumMakingPage() {
-  const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedImages, setSelectedImages] = useState([]);
 
   return (
     <PageContainer>
-      <MainArea selectedImage={selectedImage} setSelectedImage={setSelectedImage}/>
-      <Side setSelectedImage={setSelectedImage}/>
+      <MainArea
+        selectedImages={selectedImages}
+        setSelectedImages={setSelectedImages}
+      />
+      <Side setSelectedImages={setSelectedImages} />
     </PageContainer>
   );
 }

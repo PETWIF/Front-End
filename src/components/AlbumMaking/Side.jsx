@@ -38,7 +38,7 @@ import Image10 from '/src/assets/icons/image/10.png';
 import Image11 from '/src/assets/icons/image/11.png';
 import Image12 from '/src/assets/icons/image/12.png';
 
-export default function Side({ setSelectedImage }) {
+export default function Side({ setSelectedImages }) {
   const {
     isStickerSelected,
     isMineSelected,
@@ -53,7 +53,6 @@ export default function Side({ setSelectedImage }) {
     toggleTextEditing,
   } = useStore();
 
-  
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const fileInputRef = useRef(null);
@@ -63,10 +62,14 @@ export default function Side({ setSelectedImage }) {
   };
 
   const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      setSelectedImage(imageUrl); // 선택한 이미지의 URL을 상태로 저장
+    const files = event.target.files;
+    if (files.length > 0) {
+      const imageUrls = Array.from(files).map((file) =>
+        URL.createObjectURL(file)
+      );
+      setSelectedImages((prevImages) => {
+        return [...prevImages, ...imageUrls];
+      });
     }
   };
 
@@ -101,11 +104,12 @@ export default function Side({ setSelectedImage }) {
 
       {/* 숨겨진 파일 입력 요소 */}
       <input
-        type="file"
+        type='file'
         ref={fileInputRef}
         style={{ display: 'none' }}
         onChange={handleFileChange}
-        accept="image/*" // 이미지 파일만 선택 가능
+        accept='image/*'
+        multiple // 다중 파일 선택 가능
       />
 
       {isStickerSelected && (

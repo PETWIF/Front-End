@@ -144,8 +144,11 @@ export const ImagePreview = styled.img`
 export const ResizableBoxContainer = styled(ResizableBox)`
   position: absolute;
   padding: 10px;
-  &:active {
-    border: 1px solid black;
+  border: ${({ selected }) => (selected ? '2px solid grey' : 'none')};
+
+  .react-resizable-handle {
+    display: ${({ selected }) => (selected ? 'block' : 'none')};
+    background-color: transparent;
   }
 
   .react-resizable-handle-n {

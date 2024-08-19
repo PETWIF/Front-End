@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { useStore } from '../../store/store';
 import {
   Button,
@@ -19,123 +19,130 @@ import {
 import 'react-resizable/css/styles.css';
 import { Icon } from '../Icon';
 
-export default function MainArea({ selectedImage, setSelectedImage }) {
+export default function MainArea({ selectedImages, setSelectedImages }) {
   const { isCoverEditing, isTextEditing } = useStore();
   const fileInputRef = useRef(null);
-  const imageRef = useRef(null);
-  const [size, setSize] = useState({
-    width: 200,
-    height: 200,
-    top: 0,
-    left: 0,
-  });
-  const [dragging, setDragging] = useState(false);
-  const [currentX, setCurrentX] = useState(0);
-  const [currentY, setCurrentY] = useState(0);
-  const [initialX, setInitialX] = useState(0);
-  const [initialY, setInitialY] = useState(0);
-  const [xOffset, setXOffset] = useState(0);
-  const [yOffset, setYOffset] = useState(0);
+  const [draggingIndex, setDraggingIndex] = useState(null);
+  const [positions, setPositions] = useState([]);
+  const [selectedIndex, setSelectedIndex] = useState(null);
+
+  useEffect(() => {
+    if (selectedImages.length > positions.length) {
+      setPositions((prevPositions) => [
+        ...prevPositions,
+        ...Array(selectedImages.length - prevPositions.length).fill({
+          width: 200,
+          height: 200,
+          top: 0,
+          left: 0,
+          dragging: false,
+          currentX: 0,
+          currentY: 0,
+          initialX: 0,
+          initialY: 0,
+          xOffset: 0,
+          yOffset: 0,
+        }),
+      ]);
+    }
+  }, [selectedImages, positions.length]);
+
+  const handleImageClick = (index, event) => {
+    event.stopPropagation(); // 이벤트 버블링 방지
+    setSelectedIndex(index);
+  };
+
+  const handleContainerClick = () => {
+    setSelectedIndex(null); // 다른 영역 클릭 시 선택 해제
+  };
 
   const handleButtonClick = () => {
     fileInputRef.current.click();
   };
 
   const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      setSelectedImage(imageUrl);
+    const files = event.target.files;
+    if (files.length > 0) {
+      const imageUrls = Array.from(files).map((file) =>
+        URL.createObjectURL(file)
+      );
+      setSelectedImages((prevImages) => [...prevImages, ...imageUrls]);
     }
   };
 
-  const handleResize = (event, { size, handle }) => {
-    setSize((prevState) => {
-      let newTop = prevState.top;
-      let newLeft = prevState.left;
+  const handleResize = (index, event, { size, handle }) => {
+    setPositions((prevPositions) => {
+      const newPositions = [...prevPositions];
+      const position = newPositions[index];
 
-      if (handle === 'e') {
-        return { ...prevState, width: size.width };
-      } else if (handle === 'w') {
-        newLeft = prevState.left + (prevState.width - size.width);
-        return {
-          ...prevState,
-          width: size.width,
-          left: newLeft >= 0 ? newLeft : 0,
-        };
-      } else if (handle === 'n') {
-        newTop = prevState.top + (prevState.height - size.height);
-        return {
-          ...prevState,
-          height: size.height,
-          top: newTop >= 0 ? newTop : 0,
-        };
-      } else if (handle === 's') {
-        return { ...prevState, height: size.height };
-      } else if (handle === 'ne') {
-        newTop = prevState.top + (prevState.height - size.height);
-        return {
-          ...prevState,
-          width: size.width,
-          height: size.height,
-          top: newTop >= 0 ? newTop : 0,
-        };
-      } else if (handle === 'nw') {
-        newTop = prevState.top + (prevState.height - size.height);
-        newLeft = prevState.left + (prevState.width - size.width);
-        return {
-          ...prevState,
-          width: size.width,
-          height: size.height,
-          top: newTop >= 0 ? newTop : 0,
-          left: newLeft >= 0 ? newLeft : 0,
-        };
-      } else if (handle === 'se') {
-        return { ...prevState, width: size.width, height: size.height };
-      } else if (handle === 'sw') {
-        newLeft = prevState.left + (prevState.width - size.width);
-        return {
-          ...prevState,
-          width: size.width,
-          height: size.height,
-          left: newLeft >= 0 ? newLeft : 0,
-        };
+      if (!position) return newPositions;
+
+      const deltaHeight = position.height - size.height;
+      const deltaWidth = position.width - size.width;
+
+      if (handle.includes('n')) {
+        position.top += deltaHeight;
+        if (position.top < 0) {
+          position.top = 0; // 상단 경계 제한
+        }
       }
-      return prevState;
+      if (handle.includes('w')) {
+        position.left += deltaWidth;
+      }
+
+      position.width = size.width;
+      position.height = size.height;
+
+      return newPositions;
     });
   };
 
-  const handleDragStart = (event) => {
-    setDragging(true);
-
-    // 현재 이미지의 위치를 계산하여 오프셋을 설정
-    const rect = imageRef.current.getBoundingClientRect();
-    setInitialX(event.clientX - xOffset);
-    setInitialY(event.clientY - yOffset);
+  const handleDragStart = (index, event) => {
+    if (index >= 0 && index < positions.length) {
+      setDraggingIndex(index);
+      setPositions((prevPositions) => {
+        const newPositions = [...prevPositions];
+        newPositions[index].dragging = true;
+        const rect = event.target.getBoundingClientRect();
+        newPositions[index].initialX =
+          event.clientX - newPositions[index].xOffset;
+        newPositions[index].initialY =
+          event.clientY - newPositions[index].yOffset;
+        return newPositions;
+      });
+    }
   };
 
-  const handleDragOver = (event) => {
+  const handleDragOver = (index, event) => {
     event.preventDefault();
+    setPositions((prevPositions) => {
+      const newPositions = [...prevPositions];
+      const position = newPositions[index];
 
-    // 드래그 중 실시간으로 마우스 위치를 기반으로 이미지 위치를 계산
-    setCurrentX(event.clientX - initialX);
-    setCurrentY(event.clientY - initialY);
+      if (!position || !position.dragging) return newPositions;
 
-    setXOffset(currentX >= 0 ? currentX : 0);
-    setYOffset(currentY >= 0 ? currentY : 0);
+      position.currentX = event.clientX - position.initialX;
+      position.currentY = event.clientY - position.initialY;
 
-    setSize((prevState) => ({
-      ...prevState,
-      left: currentX >= 0 ? currentX : 0,
-      top: currentY >= 0 ? currentY : 0,
-    }));
+      position.xOffset = position.currentX;
+      position.yOffset = position.currentY;
+
+      position.left = position.currentX >= 0 ? position.currentX : 0;
+      position.top = position.currentY >= 0 ? position.currentY : 0;
+
+      return newPositions;
+    });
   };
 
-  const handleDrop = (event) => {
-    event.preventDefault();
-    setDragging(false);
-    setInitialX(currentX);
-    setInitialY(currentY);
+  const handleDrop = (index) => {
+    setDraggingIndex(null); // 드래그 완료 후 draggingIndex 초기화
+    setPositions((prevPositions) => {
+      const newPositions = [...prevPositions];
+      newPositions[index].dragging = false;
+      newPositions[index].initialX = newPositions[index].currentX;
+      newPositions[index].initialY = newPositions[index].currentY;
+      return newPositions;
+    });
   };
 
   return (
@@ -191,32 +198,36 @@ export default function MainArea({ selectedImage, setSelectedImage }) {
       </MainTitleContainer>
       <MainContnetContainer
         $isCoverEditing={isCoverEditing}
-        onDragOver={handleDragOver}
-        onDrop={handleDrop}
+        onDragOver={(e) => handleDragOver(draggingIndex, e)}
+        onDrop={() => handleDrop(draggingIndex)}
+        onClick={handleContainerClick}
       >
-        {!isCoverEditing && selectedImage ? (
+        {!isCoverEditing && selectedImages.length > 0 ? (
           <>
-            <ResizableBoxContainer
-              width={size.width}
-              height={size.height}
-              minConstraints={[100, 100]}
-              maxConstraints={[740, Infinity]}
-              resizeHandles={['n', 's', 'e', 'w', 'ne', 'nw', 'se', 'sw']}
-              onResize={handleResize}
-              style={{
-                top: size.top,
-                left: size.left,
-                position: 'absolute',
-                cursor: dragging ? 'grabbing' : 'grab',
-              }}
-            >
-              <ImagePreview
-                ref={imageRef}
-                src={selectedImage}
-                alt='Selected Image'
-                onDragStart={handleDragStart}
-              />
-            </ResizableBoxContainer>
+            {selectedImages.map((image, index) => (
+              <ResizableBoxContainer
+                key={index}
+                width={positions[index]?.width || 200} // 기본값 200을 사용
+                height={positions[index]?.height || 200} // 기본값 200을 사용
+                minConstraints={[100, 100]}
+                maxConstraints={[740, Infinity]}
+                resizeHandles={['n', 's', 'e', 'w', 'ne', 'nw', 'se', 'sw']}
+                onResize={(e, data) => handleResize(index, e, data)}
+                selected={selectedIndex === index}
+                style={{
+                  top: positions[index]?.top,
+                  left: positions[index]?.left,
+                  position: 'absolute',
+                  cursor: positions[index]?.dragging ? 'grabbing' : 'grab',
+                }}
+                onDragStart={(e) => handleDragStart(index, e)}
+                onDragOver={(e) => handleDragOver(index, e)}
+                onDrop={() => handleDrop(index)}
+                onClick={(e) => handleImageClick(index, e)}
+              >
+                <ImagePreview src={image} alt={`Selected Image ${index + 1}`} />
+              </ResizableBoxContainer>
+            ))}
           </>
         ) : (
           <>
@@ -241,9 +252,10 @@ export default function MainArea({ selectedImage, setSelectedImage }) {
         <input
           type='file'
           ref={fileInputRef}
-          style={{ display: 'none' }} // input을 숨깁니다
+          style={{ display: 'none' }}
           onChange={handleFileChange}
-          accept='image/*' // 이미지 파일만 선택할 수 있도록 제한합니다
+          accept='image/*'
+          multiple // 다중 파일 선택 가능
         />
       </MainContnetContainer>
     </MainContainer>
