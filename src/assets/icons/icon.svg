@@ -232,4 +232,13 @@
     <circle cx="11" cy="2" r="2" fill="#585858"/>
     <circle cx="21" cy="2" r="2" fill="#585858"/>
   </symbol>
+  <symbol id="share" width="17" height="28" viewBox="0 0 17 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M12.7 4.25L3.92505 13.4145L12.7 23.75" stroke="#585858" stroke-width="2" stroke-miterlimit="10"/>
+    <path d="M12.7001 6.6875C14.3156 6.6875 15.6251 5.41431 15.6251 3.84375C15.6251 2.27319 14.3156 1 12.7001 1C11.0847 1 9.77515 2.27319 9.77515 3.84375C9.77515 5.41431 11.0847 6.6875 12.7001 6.6875Z" fill="#FEFEFE" stroke="#585858" stroke-width="2" stroke-miterlimit="10"/>
+    <path d="M3.925 16.4375C5.54043 16.4375 6.85 15.1643 6.85 13.5938C6.85 12.0232 5.54043 10.75 3.925 10.75C2.30957 10.75 1 12.0232 1 13.5938C1 15.1643 2.30957 16.4375 3.925 16.4375Z" fill="#FEFEFE" stroke="#585858" stroke-width="2" stroke-miterlimit="10"/>
+    <path d="M12.7001 27C14.3156 27 15.6251 25.7268 15.6251 24.1562C15.6251 22.5857 14.3156 21.3125 12.7001 21.3125C11.0847 21.3125 9.77515 22.5857 9.77515 24.1562C9.77515 25.7268 11.0847 27 12.7001 27Z" fill="#FEFEFE" stroke="#585858" stroke-width="2" stroke-miterlimit="10"/>
+  </symbol>
+  <symbol id = "backbutton" width="43" height="59" viewBox="0 0 43 59" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M25 43L10 26.5L25 10" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
 </svg>
