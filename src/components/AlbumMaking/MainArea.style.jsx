@@ -8,7 +8,7 @@ export const MainContainer = styled.main`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: #FFF;
+  background-color: #fff;
   border-radius: 10px;
 `;
 
@@ -33,7 +33,7 @@ export const Button = styled.button`
   color: '#f87f28';
   font-size: 20px;
   cursor: pointer;
-  background-color: #FFF0D4;
+  background-color: #fff0d4;
   &:hover {
     background-color: #ffdcb6;
   }
@@ -48,7 +48,7 @@ export const MainTitleContainer = styled.div`
   justify-content: center;
   align-itmes: center;
   border-radius: 10px;
-  background-color: #FFF;
+  background-color: #fff;
 `;
 
 export const MainContnetContainer = styled.div`
@@ -60,7 +60,7 @@ export const MainContnetContainer = styled.div`
   align-items: center;
   border-radius: 10px;
   gap: 10%;
-  background-color: #FFF;
+  background-color: #fff;
   overflow-y: auto;
   position: relative;
 `;
@@ -143,6 +143,10 @@ export const ImagePreview = styled.img`
 
 export const ResizableBoxContainer = styled(ResizableBox)`
   position: absolute;
+  padding: 10px;
+  &:active {
+    border: 1px solid black;
+  }
 
   .react-resizable-handle-n {
     cursor: n-resize;
