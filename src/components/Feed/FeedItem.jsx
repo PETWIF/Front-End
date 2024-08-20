@@ -4,7 +4,7 @@ import * as S from './Feed.style';
 import { Icon } from '../Icon';
 import { formatDistanceToNow } from 'date-fns';
 import { ko } from 'date-fns/locale';
-import { albumThumbnail } from '../../dummy/images';
+import { albumCover } from '../../dummy/images';
 
 const FeedItem = ({ data }) => {
   const { profileImage, profileName, albumImage, likeCount, createdAt, comments, comment, likeUsers = [] } = data;
@@ -47,7 +47,7 @@ const FeedItem = ({ data }) => {
           </S.Actions>
         </S.Header>
         <S.StyledLink key={data.id} to={`/album/detail/${data.id}`}>
-          <S.AlbumImage src={albumThumbnail} alt="앨범 이미지" />
+          <S.AlbumImage src={albumCover} alt="앨범 이미지" />
         </S.StyledLink>
       </S.FeedZone>
 

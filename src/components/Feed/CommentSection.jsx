@@ -52,11 +52,9 @@ const CommentSection = ({ comments, onReport }) => {
           <S.CommentText>{comment.text}</S.CommentText>
           <S.CommentActions>
             <Icon id='commentheart' width='14' height='12'></Icon> {comment.likeCount}
+            <Icon id='replybutton' width='13' height='12' onClick={() => toggleShowReplies(comment.id)} />
             {comment.replies && comment.replies.length > 0 && (
-              <>
-                <Icon id='replybutton' width='13' height='12' onClick={() => toggleShowReplies(comment.id)} />
-                <span>{comment.replies.length}</span>
-              </>
+              <span>{comment.replies.length}</span>
             )}
             <S.CommentCreatedAt>{comment.createdAt}</S.CommentCreatedAt>
           </S.CommentActions>
