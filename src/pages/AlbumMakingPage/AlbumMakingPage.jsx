@@ -5,14 +5,17 @@ import { PageContainer } from './AlbumMakingPage.style';
 
 export default function AlbumMakingPage() {
   const [selectedImages, setSelectedImages] = useState([]);
+  const [emoticons, setEmoticons] = useState([]);
 
   return (
     <PageContainer>
       <MainArea
         selectedImages={selectedImages}
         setSelectedImages={setSelectedImages}
+        emoticons={emoticons}
+        setEmoticons={setEmoticons}
       />
-      <Side setSelectedImages={setSelectedImages} />
+      <Side setSelectedImages={setSelectedImages} setEmoticons={setEmoticons} />
     </PageContainer>
   );
 }

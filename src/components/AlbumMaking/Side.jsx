@@ -38,7 +38,7 @@ import Image10 from '/src/assets/icons/image/10.png';
 import Image11 from '/src/assets/icons/image/11.png';
 import Image12 from '/src/assets/icons/image/12.png';
 
-export default function Side({ setSelectedImages }) {
+export default function Side({ setSelectedImages, setEmoticons }) {
   const {
     isStickerSelected,
     isMineSelected,
@@ -71,6 +71,10 @@ export default function Side({ setSelectedImages }) {
         return [...prevImages, ...imageUrls];
       });
     }
+  };
+
+  const handleEmoticonClick = (src) => {
+    setEmoticons((prevEmoticons) => [...prevEmoticons, src]);
   };
 
   const openModal = () => setIsModalOpen(true);
@@ -139,52 +143,46 @@ export default function Side({ setSelectedImages }) {
               {isMineSelected && (
                 <StickerSContainer>
                   <Sticker>
-                    <Emoticon>
+                    <Emoticon onClick={() => handleEmoticonClick(Image1)}>
                       <img
                         src={Image1}
                         alt='My Image'
-                        width='100'
-                        height='100'
+                        style={{ width: '100%', height: '100%' }}
                       />
                     </Emoticon>
-                    <Emoticon>
+                    <Emoticon onClick={() => handleEmoticonClick(Image4)}>
                       <img
                         src={Image4}
                         alt='My Image'
-                        width='100'
-                        height='100'
+                        style={{ width: '100%', height: '100%' }}
                       />
                     </Emoticon>
-                    <Emoticon>
+                    <Emoticon onClick={() => handleEmoticonClick(Image6)}>
                       <img
                         src={Image6}
                         alt='My Image'
-                        width='100'
-                        height='100'
+                        style={{ width: '100%', height: '100%' }}
                       />
                     </Emoticon>
-                    <Emoticon>
+                    <Emoticon onClick={() => handleEmoticonClick(Image7)}>
                       <img
                         src={Image7}
                         alt='My Image'
-                        width='100'
-                        height='100'
+                        style={{ width: '100%', height: '100%' }}
                       />
                     </Emoticon>
-                    <Emoticon>
+                    <Emoticon onClick={() => handleEmoticonClick(Image11)}>
                       <img
                         src={Image11}
                         alt='My Image'
-                        width='100'
-                        height='100'
+                        style={{ width: '100%', height: '100%' }}
                       />
                     </Emoticon>
-                    <Emoticon>
+                    <Emoticon onClick={() => handleEmoticonClick(Image12)}>
                       <img
                         src={Image12}
                         alt='My Image'
-                        width='100'
-                        height='100'
+                        style={{ width: '100%', height: '100%' }}
                       />
                     </Emoticon>
                   </Sticker>
@@ -198,48 +196,42 @@ export default function Side({ setSelectedImages }) {
                       <img
                         src={Image2}
                         alt='My Image'
-                        width='100'
-                        height='100'
+                        style={{ width: '100%', height: '100%' }}
                       />
                     </Emoticon>
                     <Emoticon>
                       <img
                         src={Image3}
                         alt='My Image'
-                        width='100'
-                        height='100'
+                        style={{ width: '100%', height: '100%' }}
                       />
                     </Emoticon>
                     <Emoticon>
                       <img
                         src={Image5}
                         alt='My Image'
-                        width='100'
-                        height='100'
+                        style={{ width: '100%', height: '100%' }}
                       />
                     </Emoticon>
                     <Emoticon>
                       <img
                         src={Image8}
                         alt='My Image'
-                        width='100'
-                        height='100'
+                        style={{ width: '100%', height: '100%' }}
                       />
                     </Emoticon>
                     <Emoticon>
                       <img
                         src={Image9}
                         alt='My Image'
-                        width='100'
-                        height='100'
+                        style={{ width: '100%', height: '100%' }}
                       />
                     </Emoticon>
                     <Emoticon>
                       <img
                         src={Image10}
                         alt='My Image'
-                        width='100'
-                        height='100'
+                        style={{ width: '100%', height: '100%' }}
                       />
                     </Emoticon>
                   </Sticker>
