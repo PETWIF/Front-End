@@ -31,6 +31,7 @@ export default function MainArea({
   const [positions, setPositions] = useState([]);
   const [selectedIndex, setSelectedIndex] = useState(null);
   const [emoticonPositions, setEmoticonPositions] = useState([]);
+  const [textPositions, setTextPositions] = useState([]);
   const [inputText, setInputText] = useState(''); // 추가된 상태
   const [texts, setTexts] = useState([]);
 
@@ -76,6 +77,27 @@ export default function MainArea({
     }
   }, [emoticons, emoticonPositions.length]);
 
+  useEffect(() => {
+    if (texts.length > textPositions.length) {
+      setTextPositions((prevPositions) => [
+        ...prevPositions,
+        ...Array(texts.length - prevPositions.length).fill({
+          width: 200,
+          height: 50,
+          top: 0,
+          left: 0,
+          dragging: false,
+          currentX: 0,
+          currentY: 0,
+          initialX: 0,
+          initialY: 0,
+          xOffset: 0,
+          yOffset: 0,
+        }),
+      ]);
+    }
+  }, [texts, textPositions.length]);
+
   const handleImageClick = (index, event) => {
     event.stopPropagation(); // 이벤트 버블링 방지
     setSelectedIndex(index);
@@ -100,17 +122,25 @@ export default function MainArea({
   };
 
   const handleResize = (index, event, { size, handle }) => {
-    const isEmoticon = index >= selectedImages.length;
-    const positionsArray = isEmoticon ? emoticonPositions : positions;
+    let positionsArray;
+    if (index < selectedImages.length) {
+      positionsArray = positions;
+    } else if (index < selectedImages.length + emoticons.length) {
+      positionsArray = emoticonPositions;
+    } else {
+      positionsArray = textPositions;
+    }
 
-    // 인덱스가 배열 길이 내에 있는지 확인
-    const positionIndex = isEmoticon ? index - selectedImages.length : index;
+    const positionIndex = index - (positionsArray === positions
+      ? 0
+      : positionsArray === emoticonPositions
+      ? selectedImages.length
+      : selectedImages.length + emoticons.length);
 
     if (positionIndex < 0 || positionIndex >= positionsArray.length) {
       return; // 유효하지 않은 인덱스는 무시
     }
 
-    // 새로운 배열을 만들어서 변경된 값을 업데이트
     const newPositions = [...positionsArray];
     const position = newPositions[positionIndex];
 
@@ -119,7 +149,6 @@ export default function MainArea({
     const deltaHeight = position.height - size.height;
     const deltaWidth = position.width - size.width;
 
-    // 크기 조정 핸들이 포함된 방향에 따라 위치를 업데이트
     if (handle.includes('n')) {
       position.top += deltaHeight;
       if (position.top < 0) position.top = 0; // 상단 경계 제한
@@ -129,62 +158,77 @@ export default function MainArea({
       if (position.left < 0) position.left = 0; // 좌측 경계 제한
     }
 
-    // 비율을 유지하지 않도록 크기만 업데이트
     position.width = size.width;
     position.height = size.height;
 
-    // 업데이트된 상태를 반영
-    if (isEmoticon) {
+    if (positionsArray === positions) {
+      setPositions(newPositions);
+    } else if (positionsArray === emoticonPositions) {
       setEmoticonPositions(newPositions);
     } else {
-      setPositions(newPositions);
+      setTextPositions(newPositions);
     }
   };
 
   const handleDragStart = (index, event) => {
-    const isEmoticon = index >= selectedImages.length;
-    const positionsArray = isEmoticon ? emoticonPositions : positions;
-
-    // 인덱스가 배열 길이 내에 있는지 확인
-    const adjustedIndex = isEmoticon ? index - selectedImages.length : index;
-
-    if (adjustedIndex < 0 || adjustedIndex >= positionsArray.length) {
-      return; // 인덱스가 유효하지 않으면 함수 종료
+    let positionsArray;
+    if (index < selectedImages.length) {
+      positionsArray = positions;
+    } else if (index < selectedImages.length + emoticons.length) {
+      positionsArray = emoticonPositions;
+    } else {
+      positionsArray = textPositions;
     }
 
-    // 새로운 배열을 만들어서 변경된 값을 업데이트
+    const adjustedIndex = index - (positionsArray === positions
+      ? 0
+      : positionsArray === emoticonPositions
+      ? selectedImages.length
+      : selectedImages.length + emoticons.length);
+
+    if (adjustedIndex < 0 || adjustedIndex >= positionsArray.length) {
+      return;
+    }
+
     const newPositions = [...positionsArray];
     const position = newPositions[adjustedIndex];
 
-    // position 객체가 존재하는지 확인
-    if (!position) {
-      return; // position이 존재하지 않으면 함수 종료
-    }
+    if (!position) return;
 
     position.dragging = true;
     position.initialX = event.clientX - position.xOffset;
     position.initialY = event.clientY - position.yOffset;
 
-    if (isEmoticon) {
+    if (positionsArray === positions) {
+      setPositions(newPositions);
+    } else if (positionsArray === emoticonPositions) {
       setEmoticonPositions(newPositions);
     } else {
-      setPositions(newPositions);
+      setTextPositions(newPositions);
     }
   };
 
   const handleDragOver = (index, event) => {
     event.preventDefault();
-    const isEmoticon = index >= selectedImages.length;
-    const positionsArray = isEmoticon ? emoticonPositions : positions;
-
-    // 인덱스가 배열 길이 내에 있는지 확인
-    const adjustedIndex = isEmoticon ? index - selectedImages.length : index;
-
-    if (adjustedIndex < 0 || adjustedIndex >= positionsArray.length) {
-      return; // 유효하지 않은 인덱스는 무시
+    let positionsArray;
+    if (index < selectedImages.length) {
+      positionsArray = positions;
+    } else if (index < selectedImages.length + emoticons.length) {
+      positionsArray = emoticonPositions;
+    } else {
+      positionsArray = textPositions;
     }
 
-    // 새로운 배열을 만들어서 변경된 값을 업데이트
+    const adjustedIndex = index - (positionsArray === positions
+      ? 0
+      : positionsArray === emoticonPositions
+      ? selectedImages.length
+      : selectedImages.length + emoticons.length);
+
+    if (adjustedIndex < 0 || adjustedIndex >= positionsArray.length) {
+      return;
+    }
+
     const newPositions = [...positionsArray];
     const position = newPositions[adjustedIndex];
 
@@ -199,30 +243,39 @@ export default function MainArea({
     position.left = position.currentX >= 0 ? position.currentX : 0;
     position.top = position.currentY >= 0 ? position.currentY : 0;
 
-    if (isEmoticon) {
+    if (positionsArray === positions) {
+      setPositions(newPositions);
+    } else if (positionsArray === emoticonPositions) {
       setEmoticonPositions(newPositions);
     } else {
-      setPositions(newPositions);
+      setTextPositions(newPositions);
     }
   };
 
   const handleDrop = (index) => {
-    const isEmoticon = index >= selectedImages.length;
-    const positionsArray = isEmoticon ? emoticonPositions : positions;
+    let positionsArray;
+    if (index < selectedImages.length) {
+      positionsArray = positions;
+    } else if (index < selectedImages.length + emoticons.length) {
+      positionsArray = emoticonPositions;
+    } else {
+      positionsArray = textPositions;
+    }
 
-    // 인덱스가 배열 길이 내에 있는지 확인
-    const adjustedIndex = isEmoticon ? index - selectedImages.length : index;
+    const adjustedIndex = index - (positionsArray === positions
+      ? 0
+      : positionsArray === emoticonPositions
+      ? selectedImages.length
+      : selectedImages.length + emoticons.length);
 
     if (adjustedIndex < 0 || adjustedIndex >= positionsArray.length) {
-      return; // 유효하지 않은 인덱스는 무시
+      return;
     }
 
     const newPositions = [...positionsArray];
     const position = newPositions[adjustedIndex];
 
-    if (!position) {
-      return; // position이 존재하지 않으면 함수 종료
-    }
+    if (!position) return;
 
     position.dragging = false;
     position.initialX = position.currentX;
@@ -230,17 +283,24 @@ export default function MainArea({
 
     setDraggingIndex(null);
 
-    if (isEmoticon) {
+    if (positionsArray === positions) {
+      setPositions(newPositions);
+    } else if (positionsArray === emoticonPositions) {
       setEmoticonPositions(newPositions);
     } else {
-      setPositions(newPositions);
+      setTextPositions(newPositions);
     }
   };
 
   const handleDelete = (index) => {
-    const isEmoticon = index >= selectedImages.length;
-
-    if (isEmoticon) {
+    if (index < selectedImages.length) {
+      setPositions((prevPositions) =>
+        prevPositions.filter((_, i) => i !== index)
+      );
+      setSelectedImages((prevImages) =>
+        prevImages.filter((_, i) => i !== index)
+      );
+    } else if (index < selectedImages.length + emoticons.length) {
       setEmoticonPositions((prevPositions) =>
         prevPositions.filter((_, i) => i !== index - selectedImages.length)
       );
@@ -248,11 +308,15 @@ export default function MainArea({
         prevEmoticons.filter((_, i) => i !== index - selectedImages.length)
       );
     } else {
-      setPositions((prevPositions) =>
-        prevPositions.filter((_, i) => i !== index)
+      setTextPositions((prevPositions) =>
+        prevPositions.filter(
+          (_, i) => i !== index - selectedImages.length - emoticons.length
+        )
       );
-      setSelectedImages((prevImages) =>
-        prevImages.filter((_, i) => i !== index)
+      setTexts((prevTexts) =>
+        prevTexts.filter(
+          (_, i) => i !== index - selectedImages.length - emoticons.length
+        )
       );
     }
   };
@@ -460,18 +524,82 @@ export default function MainArea({
               </ResizableBoxContainer>
             ))}
             {texts.map((text, index) => (
-              <div
-                key={`text-${index}`}
+              <ResizableBoxContainer
+                key={selectedImages.length + emoticons.length + index}
+                width={textPositions[index]?.width || 200}
+                height={textPositions[index]?.height || 50}
+                minConstraints={[100, 30]}
+                maxConstraints={[740, Infinity]}
+                resizeHandles={['n', 's', 'e', 'w', 'ne', 'nw', 'se', 'sw']}
+                onResize={(e, data) =>
+                  handleResize(
+                    selectedImages.length + emoticons.length + index,
+                    e,
+                    data
+                  )
+                }
+                selected={selectedIndex === selectedImages.length + emoticons.length + index}
                 style={{
+                  top: textPositions[index]?.top,
+                  left: textPositions[index]?.left,
                   position: 'absolute',
-                  top: `${index * 30}px`, // 간격을 위해 약간의 offset 추가
-                  left: '10px',
-                  color: 'black',
-                  fontSize: '18px',
+                  cursor: textPositions[index]?.dragging ? 'grabbing' : 'grab',
                 }}
+                onDragStart={(e) =>
+                  handleDragStart(selectedImages.length + emoticons.length + index, e)
+                }
+                onDragOver={(e) =>
+                  handleDragOver(selectedImages.length + emoticons.length + index, e)
+                }
+                onDrop={() => handleDrop(selectedImages.length + emoticons.length + index)}
+                onClick={(e) =>
+                  handleImageClick(selectedImages.length + emoticons.length + index, e)
+                }
               >
-                {text}
-              </div>
+                <>
+                <div
+  id={`text-${selectedImages.length + emoticons.length + index}`} // 고유한 id 설정
+  style={{
+    width: '100%',
+    height: '100%',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontSize: '18px',
+    color: 'black',
+    textAlign: 'center',
+    wordWrap: 'break-word',
+    objectFit: 'fill',
+    border: '1px solid red',
+  }}
+>
+  {text}
+</div>
+
+                  {selectedIndex === selectedImages.length + emoticons.length + index && (
+                    <button
+                      style={{
+                        position: 'absolute',
+                        bottom: '-25px',
+                        left: '47%',
+                        backgroundColor: 'grey',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '50%',
+                        width: '20px',
+                        height: '20px',
+                        cursor: 'pointer',
+                      }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDelete(selectedImages.length + emoticons.length + index);
+                      }}
+                    >
+                      X
+                    </button>
+                  )}
+                </>
+              </ResizableBoxContainer>
             ))}
           </>
         ) : (
