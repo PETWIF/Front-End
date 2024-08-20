@@ -235,6 +235,26 @@ export default function MainArea({
     }
   };
 
+  const handleDelete = (index) => {
+    const isEmoticon = index >= selectedImages.length;
+
+    if (isEmoticon) {
+      setEmoticonPositions((prevPositions) =>
+        prevPositions.filter((_, i) => i !== index - selectedImages.length)
+      );
+      setEmoticons((prevEmoticons) =>
+        prevEmoticons.filter((_, i) => i !== index - selectedImages.length)
+      );
+    } else {
+      setPositions((prevPositions) =>
+        prevPositions.filter((_, i) => i !== index)
+      );
+      setSelectedImages((prevImages) =>
+        prevImages.filter((_, i) => i !== index)
+      );
+    }
+  };
+
   return (
     <MainContainer $isCoverEditing={isCoverEditing}>
       <MainTitleContainer $isCoverEditing={isCoverEditing}>
@@ -315,7 +335,34 @@ export default function MainArea({
                 onDrop={() => handleDrop(index)}
                 onClick={(e) => handleImageClick(index, e)}
               >
-                <ImagePreview src={image} alt={`Selected Image ${index + 1}`} />
+                <>
+                  <ImagePreview
+                    src={image}
+                    alt={`Selected Image ${index + 1}`}
+                  />
+                  {selectedIndex === index && (
+                    <button
+                      style={{
+                        position: 'absolute',
+                        bottom: '-25px',
+                        left: '47%',
+                        backgroundColor: 'grey',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '50%',
+                        width: '20px',
+                        height: '20px',
+                        cursor: 'pointer',
+                      }}
+                      onClick={(e) => {
+                        e.stopPropagation(); // 클릭 이벤트가 다른 요소에 전달되지 않도록 방지
+                        handleDelete(index); // 삭제 핸들러 호출
+                      }}
+                    >
+                      X
+                    </button>
+                  )}
+                </>
               </ResizableBoxContainer>
             ))}
             {emoticons.map((emoticon, index) => (
@@ -349,11 +396,35 @@ export default function MainArea({
                   handleImageClick(selectedImages.length + index, e)
                 }
               >
-                <img
-                  src={emoticon}
-                  alt={`Emoticon ${index + 1}`}
-                  style={{ width: '100%', height: '100%', objectFit: 'fill' }}
-                />
+                <>
+                  <img
+                    src={emoticon}
+                    alt={`Emoticon ${index + 1}`}
+                    style={{ width: '100%', height: '100%', objectFit: 'fill' }}
+                  />
+                  {selectedIndex === selectedImages.length + index && (
+                    <button
+                      style={{
+                        position: 'absolute',
+                        bottom: '-25px',
+                        left: '47%',
+                        backgroundColor: 'red',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '50%',
+                        width: '20px',
+                        height: '20px',
+                        cursor: 'pointer',
+                      }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDelete(selectedImages.length + index);
+                      }}
+                    >
+                      X
+                    </button>
+                  )}
+                </>
               </ResizableBoxContainer>
             ))}
           </>
