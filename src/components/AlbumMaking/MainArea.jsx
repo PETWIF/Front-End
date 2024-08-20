@@ -31,6 +31,8 @@ export default function MainArea({
   const [positions, setPositions] = useState([]);
   const [selectedIndex, setSelectedIndex] = useState(null);
   const [emoticonPositions, setEmoticonPositions] = useState([]);
+  const [inputText, setInputText] = useState(''); // 추가된 상태
+  const [texts, setTexts] = useState([]);
 
   useEffect(() => {
     if (selectedImages.length > positions.length) {
@@ -255,6 +257,23 @@ export default function MainArea({
     }
   };
 
+  const handleTextChange = (event) => {
+    setInputText(event.target.value); // 입력된 텍스트를 상태로 업데이트
+  };
+
+  const handleTextSubmit = () => {
+    if (inputText.trim() !== '') {
+      setTexts([...texts, inputText]); // 입력된 텍스트를 texts 배열에 추가
+      setInputText(''); // InputField 초기화
+    }
+  };
+
+  const handleKeyPress = (event) => {
+    if (event.key === 'Enter') {
+      handleTextSubmit(); // 엔터 키를 누르면 텍스트 추가
+    }
+  };
+
   return (
     <MainContainer $isCoverEditing={isCoverEditing}>
       <MainTitleContainer $isCoverEditing={isCoverEditing}>
@@ -302,7 +321,20 @@ export default function MainArea({
                 <Icon id='mdicolor' width='28' height='28' />
               </ToolbarItem>
             </ToolbarContainer>
-            <InputField placeholder='여기에 텍스트 입력...' />
+            <div style={{ display: 'flex', alignItems: 'center', width: '100%', height: '50%' }}>
+              <InputField
+                placeholder='여기에 텍스트 입력...'
+                value={inputText}
+                onChange={handleTextChange} 
+                onKeyPress={handleKeyPress}
+              />
+              <button
+                onClick={handleTextSubmit}
+                style={{ padding: '5px 10px', width: '15%', height: '100%', borderRadius: '0 0 5px 0', border: '1px solid black' }}
+              >
+                입 력
+              </button>
+            </div>
           </>
         )}
       </MainTitleContainer>
@@ -426,6 +458,20 @@ export default function MainArea({
                   )}
                 </>
               </ResizableBoxContainer>
+            ))}
+            {texts.map((text, index) => (
+              <div
+                key={`text-${index}`}
+                style={{
+                  position: 'absolute',
+                  top: `${index * 30}px`, // 간격을 위해 약간의 offset 추가
+                  left: '10px',
+                  color: 'black',
+                  fontSize: '18px',
+                }}
+              >
+                {text}
+              </div>
             ))}
           </>
         ) : (
