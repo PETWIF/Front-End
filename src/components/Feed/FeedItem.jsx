@@ -92,18 +92,21 @@ const FeedItem = ({ data }) => {
             /> 
             </S.CommentSection>
           
-            <S.CommentInputWrapper>
-              <S.CommentInputSection>
-                <S.UserProfileImage src={profileImage} alt="현재 로그인된 사용자 프로필" />
-                <S.CommentInput
-                  type="text"
-                  value={newComment}
-                  onChange={handleCommentChange}
-                  placeholder="댓글을 입력하세요..."
-                />
-                <S.CommentButton onClick={handleCommentSubmit}>등록</S.CommentButton>
-              </S.CommentInputSection>
-            </S.CommentInputWrapper>
+            <S.CommentInputContainer>
+              <S.PlusButton>
+                <Icon id="plusbutton" width="25" height="25" />
+              </S.PlusButton>
+              <S.UserProfileImage src={profileImage} alt="현재 로그인된 사용자 프로필" />
+              <S.CommentInput
+                type="text"
+                value={newComment}
+                onChange={handleCommentChange}
+                placeholder="댓글을 입력하세요..."
+              />
+              <S.CommentSendButton onClick={handleCommentSubmit}>
+                <Icon id='sendbutton' width='26' height='27' />
+              </S.CommentSendButton>
+            </S.CommentInputContainer>
 
           </S.CommentSectionContainer>
         </S.MainContent>

@@ -8,6 +8,7 @@ import { ALBUM_LIST } from '../../dummy/data';
 import { DropDown } from '../../components/DropDown';
 import { Icon } from '../../components/Icon';
 import { AlbumDetail } from '../../components/AlbumDetail';
+import { Chatting } from '../../components/Chatting';
 import { SORT_CATEGORIES } from '../../constants';
 import { feedData } from '../../dummy/data';
 import { Search } from '../../components/Search';
@@ -18,11 +19,13 @@ import * as S from './AlbumDetailPage.style.jsx';
 
 
 const myId = 'myUserId1';
+const yourId = '댕댕산책가';
 
 export default function AlbumDetailPage() {
   const navigate = useNavigate();
   const [keyword, setKeyword] = useState('');
   const [sort, setSort] = useState();
+  const [showChat, setShowChat] = useState(false);
   const params = useParams();
   const userId = params.userId || 'myUserId';
 
@@ -34,6 +37,10 @@ export default function AlbumDetailPage() {
 
   const handleBackButtonClick = () => {
     navigate(-1); // 이전 페이지로 이동
+  };
+
+  const handleToggleChat = () => {
+    setShowChat((prev) => !prev);
   };
 
   return (
@@ -54,7 +61,7 @@ export default function AlbumDetailPage() {
                 <span>BOOKMARK</span>
               </S.MenuItem>
             </Link>
-            <S.MenuItem>
+            <S.MenuItem onClick={handleToggleChat}>
               <Icon id='message' width='26' height='26' />
               <span>MESSAGE</span>
             </S.MenuItem>
@@ -63,9 +70,9 @@ export default function AlbumDetailPage() {
         <AlbumViewer/>
       </S.MainContainer>
       <S.SideContainer>
-        <UserInfo/>
+        <UserInfo nickname={yourId}/>
         <AlbumInfo album={selectedAlbum} />
-        <AlbumDetail album={feedData[0]}/>
+        {showChat ? <Chatting userId={yourId} /> : <AlbumDetail album={feedData[0]}/>}
       </S.SideContainer>
     </S.MainLayout>
   );

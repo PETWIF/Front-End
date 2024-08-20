@@ -9,9 +9,7 @@ import { RANDOM_FRIENDS } from '../../dummy/data';
 
 import * as S from './UserInfo.style.jsx';
 
-const nickname = '댕댕산책가';
-
-export default function UserInfo() {
+export default function UserInfo({ nickname }) {
   return (
     <S.UserInfoLayout>
       <S.UserInfoItem>

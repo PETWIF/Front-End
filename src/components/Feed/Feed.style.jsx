@@ -167,21 +167,6 @@ export const CommentSectionContainer = styled.div`
   scrollbar-width: none;  /* Firefox에서 스크롤 바 숨김 */
 `;
 
-export const CommentInputWrapper = styled.div`
-  display: flex;
-  height: 60px; 
-  justify-content: flex-end;
-  padding-top: 10px;
-  border-top: 1px solid ${(props) => props.theme.color.gray};
-  position: relative; /* 위치를 부모 요소 내에 고정 */
-`;
-
-export const CommentInputSection = styled.div`
-  display: flex;
-  align-items: center;
-  width: 100%;
-`;
-
 export const UserProfileImage = styled.img`
   width: 30px;
   height: 30px;
@@ -189,32 +174,71 @@ export const UserProfileImage = styled.img`
   border-radius: 50%;
 `;
 
-export const CommentInput = styled.input`
-  width: 70%;
-  padding: 10px;
-  border-radius: 20px;
-  margin: 5px;
-  border: 1px solid ${(props) => props.theme.color.gray};
-`;
-
-export const CommentButton = styled.button`
-  padding: 10px 20px;
-  width: 80px;
-  margin: 5px;
-  border-radius: 20px;
-  background-color: ${(props) => props.theme.color.primary};
-  color: white;
-  border: none;
-  cursor: pointer;
-
-  &:hover {
-    background-color: ${(props) => props.theme.color.primaryDark};
-  }
-`;
-
 export const StyledHr = styled.hr`
   width: 100%;
   height: 1px;
   background-color: ${(props) => props.theme.color.gray3};
   border: none;
+`;
+
+
+export const CommentInputContainer = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  background-color: #FFFFFF;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+`;
+
+export const PlusButton = styled.button`
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin-right: 10px;
+
+  svg {
+    width: 24px;
+    height: 24px;
+    fill: #555; /* "+" 아이콘 색상 */
+  }
+`;
+
+export const CommentInput = styled.input`
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 9px;
+  outline: none;
+  background-color: #e8e8e8;
+  font-size: 14px;
+  color: #555;
+`;
+
+export const CommentSendButton = styled.button`
+  background-color: ${(props) => props.theme.color.primary};
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin-left: 10px;
+  padding: 0; /* 추가적인 여백 제거 */
+  box-sizing: border-box; /* 내부 요소의 크기 포함 방식 제어 */
+
+  svg {
+    width: 24px;
+    height: 24px;
+    fill: white;
+    display: block; /* 블록 레벨 요소로 설정 */
+    margin: auto; /* 중앙 배치 */
+  }
+
+  &:hover {
+    background-color: ${(props) => props.theme.color.primaryDark};
+  }
 `;

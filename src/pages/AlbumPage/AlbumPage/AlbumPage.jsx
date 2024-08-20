@@ -7,19 +7,27 @@ import { Icon } from '../../../components/Icon';
 import { Profile } from '../../../components/Profile';
 import { RandomFriend } from '../../../components/RandomFriend';
 import { Search } from '../../../components/Search';
+import { Chatting } from '../../../components/Chatting';
 
 import { SORT_CATEGORIES } from '../../../constants';
 import { ALBUM_LIST } from '../../../dummy/data';
 
 import * as S from './AlbumPage.style.jsx';
 
+
 const myId = 'myUserId1';
+const yourId = '댕댕산책가';
 
 export default function AlbumPage() {
   const [keyword, setKeyword] = useState('');
   const [sort, setSort] = useState();
+  const [showChat, setShowChat] = useState(false); // State to toggle between RandomFriend and Chat
   const params = useParams();
   const userId = params.userId || 'myUserId';
+
+  const handleToggleChat = () => {
+    setShowChat((prev) => !prev);
+  };
 
   return (
     <S.MainLayout>
@@ -36,7 +44,7 @@ export default function AlbumPage() {
                 <span>BOOKMARK</span>
               </S.MenuItem>
             </Link>
-            <S.MenuItem>
+            <S.MenuItem onClick={handleToggleChat}>
               <Icon id='message' width='26' height='26' />
               <span>MESSAGE</span>
             </S.MenuItem>
@@ -66,7 +74,7 @@ export default function AlbumPage() {
       </S.MainContainer>
       <S.SideContainer>
         <Profile userId={userId} />
-        <RandomFriend />
+        {showChat ? <Chatting userId={yourId} /> : <RandomFriend />}
       </S.SideContainer>
     </S.MainLayout>
   );
