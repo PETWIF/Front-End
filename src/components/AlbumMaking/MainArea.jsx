@@ -45,6 +45,73 @@ export default function MainArea({
   const [color, setColor] = useState('#000000');
   const [linkUrl, setLinkUrl] = useState('');
 
+  // 저장된 상태들을 위한 변수
+  const [savedImages, setSavedImages] = useState([]);
+  const [savedEmoticons, setSavedEmoticons] = useState([]);
+  const [savedTexts, setSavedTexts] = useState([]);
+  const [savedPositions, setSavedPositions] = useState([]);
+  const [savedEmoticonPositions, setSavedEmoticonPositions] = useState([]);
+  const [savedTextPositions, setSavedTextPositions] = useState([]);
+
+  // 저장된 상태들을 위한 변수
+  const [savedCoverEditingState, setSavedCoverEditingState] = useState({
+    images: [],
+    emoticons: [],
+    texts: [],
+    positions: [],
+    emoticonPositions: [],
+    textPositions: [],
+  });
+
+  const [savedDefaultState, setSavedDefaultState] = useState({
+    images: [],
+    emoticons: [],
+    texts: [],
+    positions: [],
+    emoticonPositions: [],
+    textPositions: [],
+  });
+
+  useEffect(() => {
+    if (isCoverEditing) {
+      // false 상태 저장
+      setSavedDefaultState({
+        images: selectedImages,
+        emoticons: emoticons,
+        texts: texts,
+        positions: positions,
+        emoticonPositions: emoticonPositions,
+        textPositions: textPositions,
+      });
+
+      // UI 초기화
+      setSelectedImages(savedCoverEditingState.images);
+      setEmoticons(savedCoverEditingState.emoticons);
+      setTexts(savedCoverEditingState.texts);
+      setPositions(savedCoverEditingState.positions);
+      setEmoticonPositions(savedCoverEditingState.emoticonPositions);
+      setTextPositions(savedCoverEditingState.textPositions);
+    } else {
+      // true 상태 저장
+      setSavedCoverEditingState({
+        images: selectedImages,
+        emoticons: emoticons,
+        texts: texts,
+        positions: positions,
+        emoticonPositions: emoticonPositions,
+        textPositions: textPositions,
+      });
+
+      // UI 초기화
+      setSelectedImages(savedDefaultState.images);
+      setEmoticons(savedDefaultState.emoticons);
+      setTexts(savedDefaultState.texts);
+      setPositions(savedDefaultState.positions);
+      setEmoticonPositions(savedDefaultState.emoticonPositions);
+      setTextPositions(savedDefaultState.textPositions);
+    }
+  }, [isCoverEditing]);
+
   useEffect(() => {
     if (selectedImages.length > positions.length) {
       setPositions((prevPositions) => [
@@ -749,13 +816,13 @@ export default function MainArea({
         onDrop={() => handleDrop(draggingIndex)}
         onClick={handleContainerClick}
       >
-        {!isCoverEditing && selectedImages.length > 0 ? (
+        {(isCoverEditing || selectedImages.length > 0) && (
           <>
             {selectedImages.map((image, index) => (
               <ResizableBoxContainer
                 key={index}
-                width={positions[index]?.width || 200} // 기본값 200을 사용
-                height={positions[index]?.height || 200} // 기본값 200을 사용
+                width={positions[index]?.width || 200}
+                height={positions[index]?.height || 200}
                 minConstraints={[100, 100]}
                 maxConstraints={[740, Infinity]}
                 resizeHandles={['n', 's', 'e', 'w', 'ne', 'nw', 'se', 'sw']}
@@ -794,8 +861,8 @@ export default function MainArea({
                         lineHeight: '20px',
                       }}
                       onClick={(e) => {
-                        e.stopPropagation(); // 클릭 이벤트가 다른 요소에 전달되지 않도록 방지
-                        handleDelete(index); // 삭제 핸들러 호출
+                        e.stopPropagation();
+                        handleDelete(index);
                       }}
                     >
                       X
@@ -947,7 +1014,8 @@ export default function MainArea({
               </div>
             ))}
           </>
-        ) : (
+        )}
+        {!isCoverEditing && selectedImages.length === 0 && (
           <>
             <Paragraph1 $isCoverEditing={isCoverEditing}>
               {isCoverEditing
