@@ -43,6 +43,7 @@ export default function MainArea({
   const [isParagraph, setIsParagraph] = useState(false);
   const [textAlign, setTextAlign] = useState('left');
   const [color, setColor] = useState('#000000');
+  const [linkUrl, setLinkUrl] = useState('');
 
   useEffect(() => {
     if (selectedImages.length > positions.length) {
@@ -107,25 +108,22 @@ export default function MainArea({
     }
   }, [texts, textPositions.length]);
 
-  useEffect(() => {
-    if (
-      selectedIndex !== null &&
-      selectedIndex >= selectedImages.length + emoticons.length
-    ) {
-      const textIndex =
-        selectedIndex - selectedImages.length - emoticons.length;
-      if (textIndex >= 0 && textIndex < texts.length) {
-        const selectedText = texts[textIndex];
-        setFontSize(selectedText.fontSize);
-        setFontFamily(selectedText.fontFamily);
-        setIsBold(selectedText.fontWeight === 'bold');
-        setIsItalic(selectedText.fontStyle === 'italic');
-        setIsUnderline(selectedText.textDecoration === 'underline');
-        setTextAlign(selectedText.textAlign);
-        setColor(selectedText.color || '#000000');
-      }
+  const handleTextClick = (index, event) => {
+    event.stopPropagation(); // 이벤트 버블링 방지
+    setSelectedIndex(index);
+
+    const textIndex = index - selectedImages.length - emoticons.length;
+    if (textIndex >= 0 && textIndex < texts.length) {
+      const selectedText = texts[textIndex];
+      setFontSize(selectedText.fontSize);
+      setFontFamily(selectedText.fontFamily);
+      setIsBold(selectedText.fontWeight === 'bold');
+      setIsItalic(selectedText.fontStyle === 'italic');
+      setIsUnderline(selectedText.textDecoration === 'underline');
+      setTextAlign(selectedText.textAlign);
+      setColor(selectedText.color || '#000000');
     }
-  }, [selectedIndex]);
+  };
 
   const handleImageClick = (index, event) => {
     event.stopPropagation(); // 이벤트 버블링 방지
@@ -133,7 +131,16 @@ export default function MainArea({
   };
 
   const handleContainerClick = () => {
-    setSelectedIndex(null); // 다른 영역 클릭 시 선택 해제
+    setSelectedIndex(null);
+    // 툴바 상태 초기화
+    setFontSize(18);
+    setFontFamily('MyCustomFont1');
+    setIsBold(false);
+    setIsItalic(false);
+    setIsUnderline(false);
+    setTextAlign('left');
+    setColor('#000000');
+    setLinkUrl('');
   };
 
   const handleButtonClick = () => {
@@ -600,6 +607,27 @@ export default function MainArea({
     }
   };
 
+  const handleAddLink = () => {
+    const url = prompt('Enter the URL:', 'https://');
+    if (
+      url &&
+      selectedIndex !== null &&
+      selectedIndex >= selectedImages.length + emoticons.length
+    ) {
+      const textIndex =
+        selectedIndex - selectedImages.length - emoticons.length;
+      if (textIndex >= 0 && textIndex < texts.length) {
+        const updatedTexts = [...texts];
+        updatedTexts[textIndex] = {
+          ...updatedTexts[textIndex],
+          text: `<a href="${url}" target="_blank">${updatedTexts[textIndex].text}</a>`,
+        };
+        setTexts(updatedTexts);
+        setLinkUrl(url);
+      }
+    }
+  };
+
   return (
     <MainContainer $isCoverEditing={isCoverEditing}>
       <MainTitleContainer $isCoverEditing={isCoverEditing}>
@@ -671,7 +699,7 @@ export default function MainArea({
               >
                 <Icon id='textright' width='24' height='24' />
               </ToolbarItem>
-              <ToolbarItem>
+              <ToolbarItem onClick={handleAddLink}>
                 <Icon id='addlink' width='24' height='24' />
               </ToolbarItem>
               <ToolbarItem>
@@ -878,13 +906,17 @@ export default function MainArea({
                   handleDrop(selectedImages.length + emoticons.length + index)
                 }
                 onClick={(e) =>
-                  handleImageClick(
+                  handleTextClick(
                     selectedImages.length + emoticons.length + index,
                     e
                   )
                 }
               >
-                {textObj.text}
+                {textObj.text.includes('<a') ? (
+                  <span dangerouslySetInnerHTML={{ __html: textObj.text }} />
+                ) : (
+                  textObj.text
+                )}
                 {selectedIndex ===
                   selectedImages.length + emoticons.length + index && (
                   <button
