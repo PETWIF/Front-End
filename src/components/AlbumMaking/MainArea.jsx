@@ -27,6 +27,7 @@ export default function MainArea({
 }) {
   const { isCoverEditing, isTextEditing } = useStore();
   const fileInputRef = useRef(null);
+  const inputFieldRef = useRef(null);
   const [draggingIndex, setDraggingIndex] = useState(null);
   const [positions, setPositions] = useState([]);
   const [selectedIndex, setSelectedIndex] = useState(null);
@@ -39,6 +40,8 @@ export default function MainArea({
   const [isBold, setIsBold] = useState(false);
   const [isItalic, setIsItalic] = useState(false);
   const [isUnderline, setIsUnderline] = useState(false);
+  const [isParagraph, setIsParagraph] = useState(false);
+
 
   useEffect(() => {
     if (selectedImages.length > positions.length) {
@@ -340,10 +343,11 @@ export default function MainArea({
 
   const handleTextSubmit = () => {
     if (inputText.trim() !== '') {
+      const newText = isParagraph ? inputText + '\n' : inputText;
       setTexts([
         ...texts,
         {
-          text: inputText,
+          text: newText,
           fontSize,
           fontFamily,
           fontWeight: isBold ? 'bold' : 'normal',
@@ -369,16 +373,19 @@ export default function MainArea({
     setFontFamily(event.target.value);
   };
 
+  const handleParagraphClick = () => {
+    setInputText((prevText) => prevText + '\n');
+    inputFieldRef.current.focus(); // 줄 바꿈 후에 InputField에 포커스 유지
+  };
+
   return (
     <MainContainer $isCoverEditing={isCoverEditing}>
       <MainTitleContainer $isCoverEditing={isCoverEditing}>
         {isTextEditing && (
           <>
             <ToolbarContainer>
-              <ToolbarItem>
-                <StyledSelect>
-                  <StyledOption>단락</StyledOption>
-                </StyledSelect>
+              <ToolbarItem onClick={handleParagraphClick}>
+                단락
               </ToolbarItem>
               <ToolbarItem>
                 <StyledSelect
@@ -457,6 +464,7 @@ export default function MainArea({
               }}
             >
               <InputField
+                ref={inputFieldRef}
                 placeholder='여기에 텍스트 입력...'
                 value={inputText}
                 onChange={handleTextChange}
@@ -605,103 +613,73 @@ export default function MainArea({
               </ResizableBoxContainer>
             ))}
             {texts.map((textObj, index) => (
-              <ResizableBoxContainer
-                key={selectedImages.length + emoticons.length + index}
-                width={textPositions[index]?.width || 200}
-                height={textPositions[index]?.height || 50}
-                minConstraints={[100, 30]}
-                maxConstraints={[740, Infinity]}
-                resizeHandles={['n', 's', 'e', 'w', 'ne', 'nw', 'se', 'sw']}
-                onResize={(e, data) =>
-                  handleResize(
-                    selectedImages.length + emoticons.length + index,
-                    e,
-                    data
-                  )
-                }
-                selected={
-                  selectedIndex ===
-                  selectedImages.length + emoticons.length + index
-                }
-                style={{
-                  top: textPositions[index]?.top,
-                  left: textPositions[index]?.left,
-                  position: 'absolute',
-                  cursor: textPositions[index]?.dragging ? 'grabbing' : 'grab',
-                }}
-                onDragStart={(e) =>
-                  handleDragStart(
-                    selectedImages.length + emoticons.length + index,
-                    e
-                  )
-                }
-                onDragOver={(e) =>
-                  handleDragOver(
-                    selectedImages.length + emoticons.length + index,
-                    e
-                  )
-                }
-                onDrop={() =>
-                  handleDrop(selectedImages.length + emoticons.length + index)
-                }
-                onClick={(e) =>
-                  handleImageClick(
-                    selectedImages.length + emoticons.length + index,
-                    e
-                  )
-                }
-              >
-                <div
-                  id={`text-${selectedImages.length + emoticons.length + index}`} // 고유한 id 설정
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontSize: `${textObj.fontSize}px`, // 텍스트 객체에 저장된 폰트 크기 사용
-                    fontFamily: textObj.fontFamily,
-                    color: 'black',
-                    textAlign: 'center',
-                    wordWrap: 'break-word',
-                    objectFit: 'fill',
-                    border: '1px solid red',
-                    fontWeight: textObj.fontWeight,
-                    fontStyle: textObj.fontStyle,
-                    textDecoration: textObj.textDecoration,
-                  }}
-                >
-                  {textObj.text} {/* 텍스트 내용 */}
-                  {selectedIndex ===
-                    selectedImages.length + emoticons.length + index && (
-                    <button
-                      style={{
-                        position: 'absolute',
-                        bottom: '-25px',
-                        left: '47%',
-                        backgroundColor: 'grey',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '50%',
-                        width: '20px',
-                        height: '20px',
-                        fontSize: '12px',
-                        lineHeight: '20px',
-                        cursor: 'pointer',
-                      }}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleDelete(
-                          selectedImages.length + emoticons.length + index
-                        );
-                      }}
-                    >
-                      X
-                    </button>
-                  )}
-                </div>
-              </ResizableBoxContainer>
-            ))}
+  <div
+    key={selectedImages.length + emoticons.length + index}
+    style={{
+      position: 'absolute',
+      top: textPositions[index]?.top,
+      left: textPositions[index]?.left,
+      cursor: textPositions[index]?.dragging ? 'grabbing' : 'grab',
+      border: selectedIndex === selectedImages.length + emoticons.length + index ? '2px solid blue' : 'none',
+      whiteSpace: 'pre-wrap',
+      fontSize: `${textObj.fontSize}px`,
+      fontFamily: textObj.fontFamily,
+      fontWeight: textObj.fontWeight,
+      fontStyle: textObj.fontStyle,
+      textDecoration: textObj.textDecoration,
+    }}
+    onDragStart={(e) =>
+      handleDragStart(
+        selectedImages.length + emoticons.length + index,
+        e
+      )
+    }
+    onDragOver={(e) =>
+      handleDragOver(
+        selectedImages.length + emoticons.length + index,
+        e
+      )
+    }
+    onDrop={() =>
+      handleDrop(selectedImages.length + emoticons.length + index)
+    }
+    onClick={(e) =>
+      handleImageClick(
+        selectedImages.length + emoticons.length + index,
+        e
+      )
+    }
+  >
+    {textObj.text}
+    {selectedIndex === selectedImages.length + emoticons.length + index && (
+      <button
+        style={{
+          position: 'absolute',
+          bottom: '-25px',
+          left: '47%',
+          backgroundColor: 'grey',
+          color: 'white',
+          border: 'none',
+          borderRadius: '50%',
+          width: '20px',
+          height: '20px',
+          cursor: 'pointer',
+          fontSize: '12px',
+          lineHeight: '20px',
+        }}
+        onClick={(e) => {
+          e.stopPropagation();
+          handleDelete(
+            selectedImages.length + emoticons.length + index
+          );
+        }}
+      >
+        X
+      </button>
+    )}
+  </div>
+))}
+
           </>
         ) : (
           <>

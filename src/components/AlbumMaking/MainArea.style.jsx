@@ -116,13 +116,14 @@ export const ToolbarItem = styled.div`
   }
 `;
 
-export const InputField = styled.input`
+export const InputField = styled.textarea`
   width: 100%;
   height: 100%;
   padding: 0 10px;
   border: 1px solid #191919;
   border-radius: 0 0 0 5px;
   font-size: 20px;
+  overflow-y: auto;
 `;
 
 export const StyledSelect = styled.select`
