@@ -11,7 +11,7 @@ import { Search } from '../../../components/Search';
 import { SORT_CATEGORIES } from '../../../constants';
 import { ALBUM_LIST } from '../../../dummy/data';
 
-import { getAblumList } from '../../../apis/album.js';
+import { getAlbumList } from '../../../apis/album.js';
 
 import * as S from './AlbumPage.style.jsx';
 
@@ -24,7 +24,7 @@ export default function AlbumPage() {
   const [keyword, setKeyword] = useState('');
   const { data } = useQuery({
     queryKey: ['albumList', userId, sort?.value],
-    queryFn: () => getAblumList({ userId, sortBy: sort?.value }),
+    queryFn: () => getAlbumList({ userId, sortBy: sort?.value }),
     staleTime: 1000 * 60 * 5,
   });
   // const userId = params.userId || 'myUserId';
