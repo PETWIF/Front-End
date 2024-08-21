@@ -1,12 +1,16 @@
 import { useParams, Link } from 'react-router-dom';
 
+import useAuth from '../../../hooks/useAuth.jsx';
+
 import { AlbumButton } from '../index.js';
 import { Icon } from '../../../components/Icon';
 
 import * as S from './AlbumItem.style.jsx';
 
 export default function AlbumItem({ album }) {
-  const { userId } = useParams();
+  const { userId } = useAuth();
+  const params = useParams();
+  const currentUserId = Number(params?.userId) || userId;
   const { albumId, coverImageUrl, likeCount, commentCount, bookmarkCount } =
     album;
 
