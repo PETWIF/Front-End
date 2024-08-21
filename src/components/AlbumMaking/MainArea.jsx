@@ -36,6 +36,9 @@ export default function MainArea({
   const [texts, setTexts] = useState([]);
   const [fontSize, setFontSize] = useState(18);
   const [fontFamily, setFontFamily] = useState('MyCustomFont1');
+  const [isBold, setIsBold] = useState(false);
+  const [isItalic, setIsItalic] = useState(false);
+  const [isUnderline, setIsUnderline] = useState(false);
 
   useEffect(() => {
     if (selectedImages.length > positions.length) {
@@ -337,7 +340,17 @@ export default function MainArea({
 
   const handleTextSubmit = () => {
     if (inputText.trim() !== '') {
-      setTexts([...texts, { text: inputText, fontSize, fontFamily }]);
+      setTexts([
+        ...texts,
+        {
+          text: inputText,
+          fontSize,
+          fontFamily,
+          fontWeight: isBold ? 'bold' : 'normal',
+          fontStyle: isItalic ? 'italic' : 'normal',
+          textDecoration: isUnderline ? 'underline' : 'none',
+        },
+      ]);
       setInputText(''); // InputField 초기화
     }
   };
@@ -404,13 +417,19 @@ export default function MainArea({
                   <StyledOption value={48}>48px</StyledOption>
                 </StyledSelect>
               </ToolbarItem>
-              <ToolbarItem>
+              <ToolbarItem $active={isBold} onClick={() => setIsBold(!isBold)}>
                 <Icon id='textbold' width='24' height='24' />
               </ToolbarItem>
-              <ToolbarItem>
+              <ToolbarItem
+                $active={isItalic}
+                onClick={() => setIsItalic(!isItalic)}
+              >
                 <Icon id='textitalic' width='19' height='19' />
               </ToolbarItem>
-              <ToolbarItem>
+              <ToolbarItem
+                $active={isUnderline}
+                onClick={() => setIsUnderline(!isUnderline)}
+              >
                 <Icon id='textunderline' width='24' height='24' />
               </ToolbarItem>
               <ToolbarItem>
@@ -647,6 +666,9 @@ export default function MainArea({
                     wordWrap: 'break-word',
                     objectFit: 'fill',
                     border: '1px solid red',
+                    fontWeight: textObj.fontWeight,
+                    fontStyle: textObj.fontStyle,
+                    textDecoration: textObj.textDecoration,
                   }}
                 >
                   {textObj.text} {/* 텍스트 내용 */}

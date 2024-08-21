@@ -88,6 +88,7 @@ export const ToolbarItem = styled.div`
   transition: background-color 0.3s ease;
   border-radius: 3px;
   border-right: 2px solid #363636;
+  background-color: ${({ $active }) => ($active ? '#555' : 'transparent')};
 
   &:last-child {
     margin-right: 0;
