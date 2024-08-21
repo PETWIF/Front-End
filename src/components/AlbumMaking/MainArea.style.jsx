@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { ResizableBox } from 'react-resizable';
+import { createGlobalStyle } from 'styled-components';
 
 export const MainContainer = styled.main`
   flex: 1;
@@ -181,5 +182,77 @@ export const ResizableBoxContainer = styled(ResizableBox)`
 
   .react-resizable-handle-sw {
     cursor: sw-resize;
+  }
+`;
+
+export const GlobalStyles = createGlobalStyle`
+  @font-face {
+    font-family: 'MyCustomFont1';
+    src: url('src/components/AlbumMaking/font/CK_tc04170000414.ttf') format('truetype');
+  }
+  
+  @font-face {
+    font-family: 'MyCustomFont2';
+    src: url('src/components/AlbumMaking/font/CK_tc04170000069.ttf') format('truetype');
+  }
+
+  @font-face {
+    font-family: 'MyCustomFont3';
+    src: url('src/components/AlbumMaking/font/CK_tc04170000070.ttf') format('truetype');
+  }
+  
+  @font-face {
+    font-family: 'MyCustomFont4';
+    src: url('src/components/AlbumMaking/font/CK_tc04170000180.ttf') format('truetype');
+  }
+  
+  @font-face {
+    font-family: 'MyCustomFont5';
+    src: url('src/components/AlbumMaking/font/CK_tc04170000267.ttf') format('truetype');
+  }
+
+  @font-face {
+    font-family: 'MyCustomFont6';
+    src: url('src/components/AlbumMaking/font/CK_tc04170000269.ttf') format('truetype');
+  }
+
+  @font-face {
+    font-family: 'MyCustomFont7';
+    src: url('src/components/AlbumMaking/font/CK_tc04170000271.ttf') format('truetype');
+  }
+  
+  @font-face {
+    font-family: 'MyCustomFont8';
+    src: url('src/components/AlbumMaking/font/CK_tc04170000272.ttf') format('truetype');
+  }
+
+  @font-face {
+    font-family: 'MyCustomFont10';
+    src: url('src/components/AlbumMaking/font/CK_tc04170000279.ttf') format('truetype');
+  }
+  
+  @font-face {
+    font-family: 'MyCustomFont11';
+    src: url('src/components/AlbumMaking/font/CK_tc04170000281.ttf') format('truetype');
+  }
+
+  @font-face {
+    font-family: 'MyCustomFont12';
+    src: url('src/components/AlbumMaking/font/CK_tc04170000282.ttf') format('truetype');
+  }
+
+  @font-face {
+    font-family: 'MyCustomFont13';
+    src: url('src/components/AlbumMaking/font/CK_tc04170000283.ttf') format('truetype');
+  }
+  
+  @font-face {
+    font-family: 'MyCustomFont14';
+    src: url('src/components/AlbumMaking/font/CK_tc04170000286.ttf') format('truetype');
+  }
+
+  @font-face {
+    font-family: 'MyCustomFont15';
+    src: url('src/components/AlbumMaking/font/CK_tc04170000288.ttf') format('truetype');
   }
 `;

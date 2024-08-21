@@ -35,6 +35,7 @@ export default function MainArea({
   const [inputText, setInputText] = useState(''); // 추가된 상태
   const [texts, setTexts] = useState([]);
   const [fontSize, setFontSize] = useState(18);
+  const [fontFamily, setFontFamily] = useState('MyCustomFont1');
 
   useEffect(() => {
     if (selectedImages.length > positions.length) {
@@ -336,7 +337,7 @@ export default function MainArea({
 
   const handleTextSubmit = () => {
     if (inputText.trim() !== '') {
-      setTexts([...texts, { text: inputText, fontSize }]);
+      setTexts([...texts, { text: inputText, fontSize, fontFamily }]);
       setInputText(''); // InputField 초기화
     }
   };
@@ -351,6 +352,10 @@ export default function MainArea({
     setFontSize(event.target.value); // 선택된 옵션 값을 상태에 저장
   };
 
+  const handleFontFamilyChange = (event) => {
+    setFontFamily(event.target.value);
+  };
+
   return (
     <MainContainer $isCoverEditing={isCoverEditing}>
       <MainTitleContainer $isCoverEditing={isCoverEditing}>
@@ -363,8 +368,28 @@ export default function MainArea({
                 </StyledSelect>
               </ToolbarItem>
               <ToolbarItem>
-                <StyledSelect>
-                  <StyledOption>Helvetica</StyledOption>
+                <StyledSelect
+                  onChange={handleFontFamilyChange}
+                  value={fontFamily}
+                >
+                  <StyledOption value='MyCustomFont1'>어그로체</StyledOption>
+                  <StyledOption value='MyCustomFont2'>
+                    Decoschool(영)
+                  </StyledOption>
+                  <StyledOption value='MyCustomFont3'>
+                    Decoshadow(영)
+                  </StyledOption>
+                  <StyledOption value='MyCustomFont4'>갈무리</StyledOption>
+                  <StyledOption value='MyCustomFont5'>가을소풍</StyledOption>
+                  <StyledOption value='MyCustomFont6'>곧은제목</StyledOption>
+                  <StyledOption value='MyCustomFont7'>꾸러기</StyledOption>
+                  <StyledOption value='MyCustomFont8'>돌담</StyledOption>
+                  <StyledOption value='MyCustomFont10'>바른바탕</StyledOption>
+                  <StyledOption value='MyCustomFont11'>봄방학</StyledOption>
+                  <StyledOption value='MyCustomFont12'>분필</StyledOption>
+                  <StyledOption value='MyCustomFont13'>붓펜</StyledOption>
+                  <StyledOption value='MyCustomFont14'>산뜻돋움</StyledOption>
+                  <StyledOption value='MyCustomFont15'>산뜻바탕</StyledOption>
                 </StyledSelect>
               </ToolbarItem>
               <ToolbarItem>
@@ -482,7 +507,7 @@ export default function MainArea({
                         width: '20px',
                         height: '20px',
                         cursor: 'pointer',
-                        fontSize: '12px', 
+                        fontSize: '12px',
                         lineHeight: '20px',
                       }}
                       onClick={(e) => {
@@ -546,7 +571,7 @@ export default function MainArea({
                         width: '20px',
                         height: '20px',
                         cursor: 'pointer',
-                        fontSize: '12px', 
+                        fontSize: '12px',
                         lineHeight: '20px',
                       }}
                       onClick={(e) => {
@@ -616,6 +641,7 @@ export default function MainArea({
                     alignItems: 'center',
                     justifyContent: 'center',
                     fontSize: `${textObj.fontSize}px`, // 텍스트 객체에 저장된 폰트 크기 사용
+                    fontFamily: textObj.fontFamily,
                     color: 'black',
                     textAlign: 'center',
                     wordWrap: 'break-word',
@@ -637,7 +663,7 @@ export default function MainArea({
                         borderRadius: '50%',
                         width: '20px',
                         height: '20px',
-                        fontSize: '12px', 
+                        fontSize: '12px',
                         lineHeight: '20px',
                         cursor: 'pointer',
                       }}
