@@ -34,6 +34,7 @@ export default function MainArea({
   const [textPositions, setTextPositions] = useState([]);
   const [inputText, setInputText] = useState(''); // 추가된 상태
   const [texts, setTexts] = useState([]);
+  const [fontSize, setFontSize] = useState(18);
 
   useEffect(() => {
     if (selectedImages.length > positions.length) {
@@ -131,11 +132,13 @@ export default function MainArea({
       positionsArray = textPositions;
     }
 
-    const positionIndex = index - (positionsArray === positions
-      ? 0
-      : positionsArray === emoticonPositions
-      ? selectedImages.length
-      : selectedImages.length + emoticons.length);
+    const positionIndex =
+      index -
+      (positionsArray === positions
+        ? 0
+        : positionsArray === emoticonPositions
+          ? selectedImages.length
+          : selectedImages.length + emoticons.length);
 
     if (positionIndex < 0 || positionIndex >= positionsArray.length) {
       return; // 유효하지 않은 인덱스는 무시
@@ -180,11 +183,13 @@ export default function MainArea({
       positionsArray = textPositions;
     }
 
-    const adjustedIndex = index - (positionsArray === positions
-      ? 0
-      : positionsArray === emoticonPositions
-      ? selectedImages.length
-      : selectedImages.length + emoticons.length);
+    const adjustedIndex =
+      index -
+      (positionsArray === positions
+        ? 0
+        : positionsArray === emoticonPositions
+          ? selectedImages.length
+          : selectedImages.length + emoticons.length);
 
     if (adjustedIndex < 0 || adjustedIndex >= positionsArray.length) {
       return;
@@ -219,11 +224,13 @@ export default function MainArea({
       positionsArray = textPositions;
     }
 
-    const adjustedIndex = index - (positionsArray === positions
-      ? 0
-      : positionsArray === emoticonPositions
-      ? selectedImages.length
-      : selectedImages.length + emoticons.length);
+    const adjustedIndex =
+      index -
+      (positionsArray === positions
+        ? 0
+        : positionsArray === emoticonPositions
+          ? selectedImages.length
+          : selectedImages.length + emoticons.length);
 
     if (adjustedIndex < 0 || adjustedIndex >= positionsArray.length) {
       return;
@@ -262,11 +269,13 @@ export default function MainArea({
       positionsArray = textPositions;
     }
 
-    const adjustedIndex = index - (positionsArray === positions
-      ? 0
-      : positionsArray === emoticonPositions
-      ? selectedImages.length
-      : selectedImages.length + emoticons.length);
+    const adjustedIndex =
+      index -
+      (positionsArray === positions
+        ? 0
+        : positionsArray === emoticonPositions
+          ? selectedImages.length
+          : selectedImages.length + emoticons.length);
 
     if (adjustedIndex < 0 || adjustedIndex >= positionsArray.length) {
       return;
@@ -327,7 +336,7 @@ export default function MainArea({
 
   const handleTextSubmit = () => {
     if (inputText.trim() !== '') {
-      setTexts([...texts, inputText]); // 입력된 텍스트를 texts 배열에 추가
+      setTexts([...texts, { text: inputText, fontSize }]);
       setInputText(''); // InputField 초기화
     }
   };
@@ -336,6 +345,10 @@ export default function MainArea({
     if (event.key === 'Enter') {
       handleTextSubmit(); // 엔터 키를 누르면 텍스트 추가
     }
+  };
+
+  const handleFontSizeChange = (event) => {
+    setFontSize(event.target.value); // 선택된 옵션 값을 상태에 저장
   };
 
   return (
@@ -355,9 +368,15 @@ export default function MainArea({
                 </StyledSelect>
               </ToolbarItem>
               <ToolbarItem>
-                <StyledSelect>
-                  <StyledOption>20</StyledOption>
-                  <StyledOption>18</StyledOption>
+                <StyledSelect onChange={handleFontSizeChange} value={fontSize}>
+                  <StyledOption value={12}>12px</StyledOption>
+                  <StyledOption value={14}>14px</StyledOption>
+                  <StyledOption value={16}>16px</StyledOption>
+                  <StyledOption value={18}>18px</StyledOption>
+                  <StyledOption value={20}>20px</StyledOption>
+                  <StyledOption value={24}>24px</StyledOption>
+                  <StyledOption value={32}>32px</StyledOption>
+                  <StyledOption value={48}>48px</StyledOption>
                 </StyledSelect>
               </ToolbarItem>
               <ToolbarItem>
@@ -385,16 +404,30 @@ export default function MainArea({
                 <Icon id='mdicolor' width='28' height='28' />
               </ToolbarItem>
             </ToolbarContainer>
-            <div style={{ display: 'flex', alignItems: 'center', width: '100%', height: '50%' }}>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                width: '100%',
+                height: '50%',
+              }}
+            >
               <InputField
                 placeholder='여기에 텍스트 입력...'
                 value={inputText}
-                onChange={handleTextChange} 
+                onChange={handleTextChange}
                 onKeyPress={handleKeyPress}
+                style={{ fontSize: `18px` }}
               />
               <button
                 onClick={handleTextSubmit}
-                style={{ padding: '5px 10px', width: '15%', height: '100%', borderRadius: '0 0 5px 0', border: '1px solid black' }}
+                style={{
+                  padding: '5px 10px',
+                  width: '15%',
+                  height: '100%',
+                  borderRadius: '0 0 5px 0',
+                  border: '1px solid black',
+                }}
               >
                 입 력
               </button>
@@ -449,6 +482,8 @@ export default function MainArea({
                         width: '20px',
                         height: '20px',
                         cursor: 'pointer',
+                        fontSize: '12px', 
+                        lineHeight: '20px',
                       }}
                       onClick={(e) => {
                         e.stopPropagation(); // 클릭 이벤트가 다른 요소에 전달되지 않도록 방지
@@ -504,13 +539,15 @@ export default function MainArea({
                         position: 'absolute',
                         bottom: '-25px',
                         left: '47%',
-                        backgroundColor: 'red',
+                        backgroundColor: 'grey',
                         color: 'white',
                         border: 'none',
                         borderRadius: '50%',
                         width: '20px',
                         height: '20px',
                         cursor: 'pointer',
+                        fontSize: '12px', 
+                        lineHeight: '20px',
                       }}
                       onClick={(e) => {
                         e.stopPropagation();
@@ -523,7 +560,7 @@ export default function MainArea({
                 </>
               </ResizableBoxContainer>
             ))}
-            {texts.map((text, index) => (
+            {texts.map((textObj, index) => (
               <ResizableBoxContainer
                 key={selectedImages.length + emoticons.length + index}
                 width={textPositions[index]?.width || 200}
@@ -538,7 +575,10 @@ export default function MainArea({
                     data
                   )
                 }
-                selected={selectedIndex === selectedImages.length + emoticons.length + index}
+                selected={
+                  selectedIndex ===
+                  selectedImages.length + emoticons.length + index
+                }
                 style={{
                   top: textPositions[index]?.top,
                   left: textPositions[index]?.left,
@@ -546,37 +586,46 @@ export default function MainArea({
                   cursor: textPositions[index]?.dragging ? 'grabbing' : 'grab',
                 }}
                 onDragStart={(e) =>
-                  handleDragStart(selectedImages.length + emoticons.length + index, e)
+                  handleDragStart(
+                    selectedImages.length + emoticons.length + index,
+                    e
+                  )
                 }
                 onDragOver={(e) =>
-                  handleDragOver(selectedImages.length + emoticons.length + index, e)
+                  handleDragOver(
+                    selectedImages.length + emoticons.length + index,
+                    e
+                  )
                 }
-                onDrop={() => handleDrop(selectedImages.length + emoticons.length + index)}
+                onDrop={() =>
+                  handleDrop(selectedImages.length + emoticons.length + index)
+                }
                 onClick={(e) =>
-                  handleImageClick(selectedImages.length + emoticons.length + index, e)
+                  handleImageClick(
+                    selectedImages.length + emoticons.length + index,
+                    e
+                  )
                 }
               >
-                <>
                 <div
-  id={`text-${selectedImages.length + emoticons.length + index}`} // 고유한 id 설정
-  style={{
-    width: '100%',
-    height: '100%',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    fontSize: '18px',
-    color: 'black',
-    textAlign: 'center',
-    wordWrap: 'break-word',
-    objectFit: 'fill',
-    border: '1px solid red',
-  }}
->
-  {text}
-</div>
-
-                  {selectedIndex === selectedImages.length + emoticons.length + index && (
+                  id={`text-${selectedImages.length + emoticons.length + index}`} // 고유한 id 설정
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: `${textObj.fontSize}px`, // 텍스트 객체에 저장된 폰트 크기 사용
+                    color: 'black',
+                    textAlign: 'center',
+                    wordWrap: 'break-word',
+                    objectFit: 'fill',
+                    border: '1px solid red',
+                  }}
+                >
+                  {textObj.text} {/* 텍스트 내용 */}
+                  {selectedIndex ===
+                    selectedImages.length + emoticons.length + index && (
                     <button
                       style={{
                         position: 'absolute',
@@ -588,17 +637,21 @@ export default function MainArea({
                         borderRadius: '50%',
                         width: '20px',
                         height: '20px',
+                        fontSize: '12px', 
+                        lineHeight: '20px',
                         cursor: 'pointer',
                       }}
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleDelete(selectedImages.length + emoticons.length + index);
+                        handleDelete(
+                          selectedImages.length + emoticons.length + index
+                        );
                       }}
                     >
                       X
                     </button>
                   )}
-                </>
+                </div>
               </ResizableBoxContainer>
             ))}
           </>
