@@ -6,28 +6,29 @@ import { Icon } from '../../../components/Icon';
 import * as S from './AlbumItem.style.jsx';
 
 export default function AlbumItem({ album }) {
-  const { coverImage, title, like, comment, bookmark } = album;
+  const { albumId, coverImageUrl, likeCount, commentCount, bookmarkCount } =
+    album;
 
   return (
     <S.AlbumItem>
-      <S.Img src={coverImage} alt={title} />
+      <S.Img src={coverImageUrl} alt={albumId} />
       <S.AlbumHover>
         <S.IconContainer>
           <S.IconBox>
             <Icon id='heart' width='24' />
-            <span>{like}</span>
+            <span>{likeCount}</span>
           </S.IconBox>
           <S.IconBox>
             <Icon id='comment' width='24' />
-            <span>{comment}</span>
+            <span>{commentCount}</span>
           </S.IconBox>
           <S.IconBox>
             <Icon id='bookmark-fill' width='24' />
-            <span>{bookmark}</span>
+            <span>{bookmarkCount}</span>
           </S.IconBox>
         </S.IconContainer>
         <S.ButtonContainer>
-          <Link key={album.id} to={`/album/detail/${album.id}`}>
+          <Link key={albumId} to={`/album/detail/${albumId}`}>
             <AlbumButton>내 앨범 구경하기</AlbumButton>
           </Link>
           <AlbumButton onClick={() => console.log('앨범 수정하기')}>
