@@ -56,8 +56,8 @@ export default function LoginPage() {
     const { isSuccess, code, message, data } = response;
 
     if (isSuccess) {
-      const { accessToken, refreshToken } = data.data; // ??
-      console.log('로그인 성공:', { accessToken, refreshToken });
+      const { accessToken, refreshToken } = data; 
+      // console.log('로그인 성공:', { accessToken, refreshToken });
       navigate('/home');
     } else {
       switch (message) {

@@ -5,5 +5,6 @@ export const postLogin = async ({ email, password }) => {
         email: email,
         pw: password,
     });   
+    
     return response.data;
 };
