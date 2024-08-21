@@ -6,3 +6,8 @@ export const getAlbumList = async ({ userId, sortBy }) => {
   });
   return repsponse.data.data.albums;
 };
+
+export const getAlbumDetail = async ({ albumId }) => {
+  const response = await authAxios.get(`/albums/${albumId}`);
+  return response.data.data;
+};
