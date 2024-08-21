@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { mockPostLogin } from '../../dummy/data/user.js';
+import { postLogin } from '../../apis/login.js';
 
 import { Button } from '../../components/Button';
 import { Icon } from '../../components/Icon';
@@ -13,7 +13,6 @@ import * as S from './LoginPage.style.jsx';
 export default function LoginPage() {
   const { isChecked, checking } = useCheckIcon();
   const navigate = useNavigate();
-  // 이름, 비번, 인증번호도 추가하기
 
   const [email, setEmail] = useState('');
   const [password, setPwd] = useState('');
@@ -25,14 +24,13 @@ export default function LoginPage() {
   const [isRightPwd, setIsRightPwd] = useState(false);
 
   const validateEmail = (value) => /\S+@\S+\.\S+/.test(value);
-  const validatePwd = (value) => value.length >= 4 && value.length <= 12;
+  const validatePwd = (value) => value.length >= 12;
 
   const handleInputChange = (e) => {
     const { id, value } = e.target;
 
     switch (id) {
       case 'email':
-        console.log({ email });
         setEmail(value);
         const isValidEmail = validateEmail(value);
         setIsRightEmail(isValidEmail);
@@ -50,21 +48,28 @@ export default function LoginPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // if (!isRightEmail || !isRightPwd) {
-    //       return;
-    // }
+    if (!isRightEmail || !isRightPwd) {
+      return;
+    }
 
-    try {
-      await mockPostLogin({ name, email, password });
+    const response = await postLogin({ email, password });
+    const { isSuccess, code, message, data } = response;
+
+    if (isSuccess) {
+      const { accessToken, refreshToken } = data.data; // ??
+      console.log('로그인 성공:', { accessToken, refreshToken });
       navigate('/home');
-      console.log('로그인 성공:', { name, email, password });
-    } catch (error) {
-      console.log({ email });
-      console.error('로그인 실패:', error.message);
-      if (error.message === 'User not found') {
-        setEmailError('가입되지 않은 이메일입니다.');
-      } else if (error.message === 'Incorrect password') {
-        setPwdError('비밀번호가 일치하지 않습니다.');
+    } else {
+      switch (message) {
+        case '회원이 아닙니다. 회원가입을 해주세요.':
+          setEmailError('가입되지 않은 이메일입니다.');
+          break;
+        case '비밀번호 불일치':
+          setPwdError('비밀번호가 일치하지 않습니다.');
+          break;
+        default:
+          setEmailError('로그인에 실패했습니다. 다시 시도해 주세요.');
+          break;
       }
     }
   };
@@ -133,9 +138,7 @@ export default function LoginPage() {
           <S.MainBoldText>간편 로그인</S.MainBoldText>
           <S.SocialLoginWrapper>
             <S.SocialLoginContainer id='kakao' width='62px' height='62px' />
-            {/* <S.SocialLoginContainer id='naver' width='62px' height='62px' /> */}
             <S.SocialLoginContainer id='apple' width='62px' height='62px' />
-            {/* <S.SocialLoginContainer id='google' width='62px' height='62px' /> */}
           </S.SocialLoginWrapper>
           <S.UnderlinedText to='/signup'>
             아직 회원이 아니시라면?

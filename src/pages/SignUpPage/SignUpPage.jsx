@@ -1,6 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import axios from 'axios';
+
 import { debounce } from 'lodash';
 
 import { mockPostSignup, mockPostCheckEmail } from '../../dummy/data/user.js';
@@ -20,7 +22,7 @@ export default function SignUpPage() {
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [code, setCode] = useState('');
+  //const [code, setCode] = useState('');
   const [pwd, setPwd] = useState('');
   const [pwdRe, setPwdRe] = useState('');
 
@@ -34,8 +36,7 @@ export default function SignUpPage() {
   const validateEmail = (value) => /\S+@\S+\.\S+/.test(value);
   const validateCode = (value) => /^[0-9]{6}$/.test(value); // 일단 숫자 n자리로 상정
   const validatePassword = (value) =>
-    value.length >= 4 &&
-    value.length <= 12 &&
+    value.length >= 12 &&
     /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*?_])./.test(value);
   const validatePasswordRe = (value) => value === pwd;
 
@@ -88,20 +89,20 @@ export default function SignUpPage() {
     []
   );
 
-  const debouncedValidateCode = useCallback(
-    debounce((value) => {
-      setCode(value);
-      const isValidCode = validateCode(value);
-      setIsRightCode(isValidCode);
-    }, 200),
-    []
-  );
+  // const debouncedValidateCode = useCallback(
+  //   debounce((value) => {
+  //     setCode(value);
+  //     const isValidCode = validateCode(value);
+  //     setIsRightCode(isValidCode);
+  //   }, 200),
+  //   []
+  // );
 
   const debouncedValidatePassword = useCallback(
     debounce((value) => {
       const isValid = validatePassword(value);
       setIsRightPwd(isValid);
-      setPwdError(isValid ? '올바른 양식입니다!' : '영어, 숫자, 특수문자를 모두 조합해서 비밀번호를 작성해 주세요');
+      //setPwdError(isValid ? '올바른 양식입니다!' : '영어, 숫자, 특수문자를 모두 조합해서 12자 이상의 비밀번호를 작성해 주세요');
     }, 200),
     [validatePassword]
   );
@@ -110,7 +111,7 @@ export default function SignUpPage() {
     debounce((value) => {
       const isValid = validatePasswordRe(value);
       setIsRightPwdRe(isValid);
-      setPwdReError(isValid ? '비밀번호가 일치합니다!' : '비밀번호가 일치하지 않습니다');
+      //setPwdReError(isValid ? '비밀번호가 일치합니다!' : '비밀번호가 일치하지 않습니다');
     }, 200),
     [validatePasswordRe]
   );
@@ -128,10 +129,10 @@ export default function SignUpPage() {
           setEmail(value);
           debouncedValidateEmail(value);
           break;
-        case 'code':
-          setCode(value);
-          debouncedValidateCode(value);
-          break;
+        // case 'code':
+        //   setCode(value);
+        //   debouncedValidateCode(value);
+        //   break;
         case 'pwd':
           setPwd(value);
           debouncedValidatePassword(value);
@@ -147,7 +148,7 @@ export default function SignUpPage() {
     [
       debouncedValidateName,
       debouncedValidateEmail,
-      debouncedValidateCode,
+      //debouncedValidateCode,
       debouncedValidatePassword,
       debouncedValidatePasswordRe,
     ]
@@ -155,24 +156,57 @@ export default function SignUpPage() {
 
   const handleEmailSubmit = async () => {
     try {
-      await mockPostCheckEmail({ email });
-      console.log('가입 가능한 이메일:', { email });
-    } catch (error) {
-      console.error('오류 발생:', error.message);
-      if (error.message === 'User already exists') {
-        setIsRightEmail(false);
-        setEmailError('이미 가입된 이메일입니다.');
+      const response = await axios.post('https://petwif.store/signup/email', {
+        email: email,
+      });
+
+      const { isSuccess, code, message, data } = response.data;
+
+      if (isSuccess) {
+       // const { id, email } = data;
+        console.log('인증번호 전송 성공');
+      } else if (code === 'COMMON400') {
+        console.error('인증번호 전송 실패:', message); 
+        setEmailError('잘못된 형식의 이메일입니다.'); // 유의미한가?
       }
+    } catch (error) {
+      console.error('인증번호 전송 실패:', error.message);
+      setEmailError('인증번호 전송에 실패했습니다. 다시 시도해 주세요.');
     }
   };
 
-  const handleCodeSubmit = (e) => {
-    e.preventDefault();
-    if (!isRightCode) {
-      setCodeError('인증번호가 일치하지 않습니다.');
-    } else {
-      setCodeError('인증번호가 일치합니다!');
+  const handleCodeSubmit = async (e) => {
+    //e.preventDefault();
+
+    const code2 = 'MDVOFylIx3Mn61Li2CuWxp9eXoPiIqPp1L268CEWhy9-zG4OdM7U3gAAAAQKKclgAAABkV-YVtim1x-HnlkNwQ';
+
+    try {
+      const response = await axios.post(`https://petwif.store/verify?email=${email}&code=${code}`, {
+        email: email,
+        code: code,
+      }
+    );
+      const { isSuccess, code, message, data } = response.data;
+
+      if (isSuccess) {
+        // const { email, code } = data;
+        console.log('인증 성공');
+        setCodeError('인증번호가 일치합니다!')
+      } else if (message === 'Email verify failed') {
+        console.log(code);
+        console.error('인증 실패:', message); 
+        setCodeError('인증번호가 일치하지 않습니다.');
+      }
+    } catch (error) {
+      console.log(code);
+      console.error('인증 실패:', error.message);
+      setCodeError('인증에 실패했습니다. 다시 입력해 주세요.');
     }
+    // if (!isRightCode) {
+    //   setCodeError('인증번호가 일치하지 않습니다.');
+    // } else {
+    //   setCodeError('인증번호가 일치합니다!');
+    // }
   };
 
   const formatTime = (seconds) => {
@@ -182,20 +216,56 @@ export default function SignUpPage() {
   };
 
   const navigate = useNavigate();
-  const formData = { name: name, email: email, password: pwd, passwordCheck: pwdRe };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!(isRightEmail && isRightPwd && isRightPwdRe)) return;
+    if (!(isRightEmail && isRightPwd && isRightPwdRe)) {
+      return;
+    }
 
     try {
-      console.log('Form data submitted:', formData);
-      await mockPostSignup(formData);
-      navigate('/agree', { state: { email, password: pwd } });
+      const response = await axios.post('http://43.200.75.210:8080/member/register', {
+        name: name,
+        email: email,
+        pw: pwd,
+        pw_check: pwdRe,
+      });
+
+      const { isSuccess, code, message, data } = response.data;
+
+      if (isSuccess) {
+        const { id, email } = data;
+        console.log('회원가입 성공:', data);
+        navigate('/agree', { state: { email, password: pwd } });
+      } else {
+        console.error('회원가입 실패:', message);
+        if (code === 'COMMON400') {
+          setPwdError(data.pw);
+          setPwdReError(data.pw_check);
+        } else if (code === '400') {
+          if (message === 'wrong password')
+            setPwdReError('비밀번호가 일치하지 않습니다.');
+          else
+            setEmailError('이미 가입된 이메일입니다. 다른 이메일을 이용해 주세요.');
+        }
+      }
     } catch (error) {
-      console.error('Error:', error);
+      console.error('로그인 실패:', error.message);
+      setEmailError('로그인 중 오류가 발생했습니다. 다시 시도해 주세요.');
     }
+
+    // e.preventDefault();
+
+    // if (!(isRightEmail && isRightPwd && isRightPwdRe)) return;
+
+    // try {
+    //   console.log('Form data submitted:', formData);
+    //   await mockPostSignup(formData);
+    //   navigate('/agree', { state: { email, password: pwd } });
+    // } catch (error) {
+    //   console.error('Error:', error);
+    // }
   };
 
   return (
@@ -266,13 +336,15 @@ export default function SignUpPage() {
                     padding='11px'
                     fontSize='15px'
                     buttonStyle='light'
-                    disabled={code.length !== 6}
+                    //disabled={code.length !== 6}
                     onClick={handleCodeSubmit}
                   >
                     인증번호 확인
                   </Button>
                 </S.InputContainer>
-                <S.WarningText className={isRightCode ? 'success' : 'error'}>
+                <S.WarningText 
+                //className={isRightCode ? 'success' : 'error'}
+                >
                   {codeError}
                 </S.WarningText>
               </S.InputWrapper>

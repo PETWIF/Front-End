@@ -25,8 +25,7 @@ export default function PwdChangePage() {
   const { email } = location.state;
 
   const validatePassword = (value) =>
-    value.length >= 4 &&
-    value.length <= 12 &&
+    value.length >= 12 &&
     /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*?_])./.test(value);
   const validatePasswordRe = (value) => value === pwd;
 
@@ -43,18 +42,13 @@ export default function PwdChangePage() {
         setIsRightPwdRe(validatePasswordRe(pwdRe));
         const isValidPwd = validatePassword(value);
         setIsRightPwd(isValidPwd);
-        if (value.length < 4 || value.length > 12) {
-          if (value.length < 4) {
-            setPwdError('비밀번호를 4자리 이상 입력해 주세요');
+        if (value.length < 12) {
+            setPwdError('비밀번호는 12자리 이상 입력해 주세요');
             break;
-          } else if (value.length > 12) {
-            setPwdError('비밀번호는 12자리까지 입력 가능합니다');
-            break;
-          }
         }
         if (!/^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*?_])/.test(value)) {
           setPwdError(
-            '영어, 숫자, 특수문자를 모두 조합해서 비밀번호를 작성해 주세요 '
+            '영어, 숫자, 특수문자를 모두 조합해서 비밀번호를 작성해 주세요'
           );
           break;
         } else setPwdError('올바른 양식입니다!');
@@ -66,7 +60,7 @@ export default function PwdChangePage() {
         setPwdReError(
           isValidPwdRe
             ? '비밀번호가 일치합니다!'
-            : '입력한 비밀번호가 잘못되었어요.'
+            : '입력한 비밀번호가 잘못되었습니다'
         );
         break;
       default:
