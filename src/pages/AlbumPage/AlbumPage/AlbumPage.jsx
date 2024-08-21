@@ -16,17 +16,17 @@ import { getAblumList } from '../../../apis/album.js';
 import * as S from './AlbumPage.style.jsx';
 
 const myId = 'myUserId1';
-const userId = 9;
+const userId = 46;
 
 export default function AlbumPage() {
+  const params = useParams();
+  const [sort, setSort] = useState();
+  const [keyword, setKeyword] = useState('');
   const { data } = useQuery({
-    queryKey: ['albumList', userId],
-    queryFn: () => getAblumList({ userId }),
+    queryKey: ['albumList', userId, sort?.value],
+    queryFn: () => getAblumList({ userId, sortBy: sort?.value }),
     staleTime: 1000 * 60 * 5,
   });
-  const [keyword, setKeyword] = useState('');
-  const [sort, setSort] = useState();
-  const params = useParams();
   // const userId = params.userId || 'myUserId';
 
   console.log(data);
@@ -69,7 +69,7 @@ export default function AlbumPage() {
             </S.AlbumList>
           )}
           <S.AlbumAmount>
-            <span>{ALBUM_LIST.length}</span>
+            <span>{data?.length}</span>
             <span>Albums</span>
           </S.AlbumAmount>
         </S.AlbumBox>
