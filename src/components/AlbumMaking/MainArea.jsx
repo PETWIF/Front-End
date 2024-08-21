@@ -42,6 +42,7 @@ export default function MainArea({
   const [isUnderline, setIsUnderline] = useState(false);
   const [isParagraph, setIsParagraph] = useState(false);
   const [textAlign, setTextAlign] = useState('left');
+  const [color, setColor] = useState('#000000');
 
   useEffect(() => {
     if (selectedImages.length > positions.length) {
@@ -121,6 +122,7 @@ export default function MainArea({
         setIsItalic(selectedText.fontStyle === 'italic');
         setIsUnderline(selectedText.textDecoration === 'underline');
         setTextAlign(selectedText.textAlign);
+        setColor(selectedText.color || '#000000');
       }
     }
   }, [selectedIndex]);
@@ -573,6 +575,31 @@ export default function MainArea({
     }
   };
 
+  const handleColorChange = (event) => {
+    const newColor = event.target.value;
+
+    if (
+      selectedIndex !== null &&
+      selectedIndex >= selectedImages.length + emoticons.length
+    ) {
+      const textIndex =
+        selectedIndex - selectedImages.length - emoticons.length;
+      if (textIndex >= 0 && textIndex < texts.length) {
+        const updatedTexts = [...texts];
+        updatedTexts[textIndex] = {
+          ...updatedTexts[textIndex],
+          color: newColor,
+        };
+        setTexts(updatedTexts);
+
+        // 상태가 업데이트된 후에 바로 반영
+        setColor(newColor);
+      }
+    } else {
+      setColor(newColor); // 새로운 텍스트에 적용될 기본값
+    }
+  };
+
   return (
     <MainContainer $isCoverEditing={isCoverEditing}>
       <MainTitleContainer $isCoverEditing={isCoverEditing}>
@@ -648,7 +675,12 @@ export default function MainArea({
                 <Icon id='addlink' width='24' height='24' />
               </ToolbarItem>
               <ToolbarItem>
-                <Icon id='mdicolor' width='28' height='28' />
+                <input
+                  type='color'
+                  value={color || '#000000'}
+                  onChange={handleColorChange}
+                  style={{ width: '24px', height: '24px', cursor: 'pointer' }}
+                />
               </ToolbarItem>
             </ToolbarContainer>
             <div
@@ -828,6 +860,7 @@ export default function MainArea({
                   fontStyle: textObj.fontStyle,
                   textDecoration: textObj.textDecoration,
                   textAlign: textObj.textAlign,
+                  color: textObj.color,
                 }}
                 onDragStart={(e) =>
                   handleDragStart(
