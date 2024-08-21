@@ -41,7 +41,7 @@ export default function MainArea({
   const [isItalic, setIsItalic] = useState(false);
   const [isUnderline, setIsUnderline] = useState(false);
   const [isParagraph, setIsParagraph] = useState(false);
-
+  const [textAlign, setTextAlign] = useState('left');
 
   useEffect(() => {
     if (selectedImages.length > positions.length) {
@@ -105,6 +105,25 @@ export default function MainArea({
       ]);
     }
   }, [texts, textPositions.length]);
+
+  useEffect(() => {
+    if (
+      selectedIndex !== null &&
+      selectedIndex >= selectedImages.length + emoticons.length
+    ) {
+      const textIndex =
+        selectedIndex - selectedImages.length - emoticons.length;
+      if (textIndex >= 0 && textIndex < texts.length) {
+        const selectedText = texts[textIndex];
+        setFontSize(selectedText.fontSize);
+        setFontFamily(selectedText.fontFamily);
+        setIsBold(selectedText.fontWeight === 'bold');
+        setIsItalic(selectedText.fontStyle === 'italic');
+        setIsUnderline(selectedText.textDecoration === 'underline');
+        setTextAlign(selectedText.textAlign);
+      }
+    }
+  }, [selectedIndex]);
 
   const handleImageClick = (index, event) => {
     event.stopPropagation(); // 이벤트 버블링 방지
@@ -348,11 +367,12 @@ export default function MainArea({
         ...texts,
         {
           text: newText,
-          fontSize,
-          fontFamily,
-          fontWeight: isBold ? 'bold' : 'normal',
-          fontStyle: isItalic ? 'italic' : 'normal',
-          textDecoration: isUnderline ? 'underline' : 'none',
+          fontSize, // 폰트 크기만 유지
+          fontFamily, // 폰트 패밀리만 유지
+          fontWeight: 'normal', // 기본값은 'normal'로 설정
+          fontStyle: 'normal', // 기본값은 'normal'로 설정
+          textDecoration: 'none', // 기본값은 'none'으로 설정
+          textAlign: textAlign,
         },
       ]);
       setInputText(''); // InputField 초기화
@@ -365,17 +385,192 @@ export default function MainArea({
     }
   };
 
-  const handleFontSizeChange = (event) => {
-    setFontSize(event.target.value); // 선택된 옵션 값을 상태에 저장
-  };
-
-  const handleFontFamilyChange = (event) => {
-    setFontFamily(event.target.value);
-  };
-
   const handleParagraphClick = () => {
     setInputText((prevText) => prevText + '\n');
     inputFieldRef.current.focus(); // 줄 바꿈 후에 InputField에 포커스 유지
+  };
+
+  const handleFontSizeChange = (event) => {
+    const newSize = event.target.value;
+
+    if (
+      selectedIndex !== null &&
+      selectedIndex >= selectedImages.length + emoticons.length
+    ) {
+      const textIndex =
+        selectedIndex - selectedImages.length - emoticons.length;
+      if (textIndex >= 0 && textIndex < texts.length) {
+        const updatedTexts = [...texts];
+        updatedTexts[textIndex] = {
+          ...updatedTexts[textIndex],
+          fontSize: newSize,
+        };
+        setTexts(updatedTexts);
+
+        // 상태가 업데이트된 후에 바로 반영
+        setFontSize(newSize);
+      }
+    } else {
+      setFontSize(newSize); // 새로운 텍스트에 적용될 기본값
+    }
+  };
+
+  const handleFontFamilyChange = (event) => {
+    const newFamily = event.target.value;
+
+    if (
+      selectedIndex !== null &&
+      selectedIndex >= selectedImages.length + emoticons.length
+    ) {
+      const textIndex =
+        selectedIndex - selectedImages.length - emoticons.length;
+      if (textIndex >= 0 && textIndex < texts.length) {
+        const updatedTexts = [...texts];
+        updatedTexts[textIndex] = {
+          ...updatedTexts[textIndex],
+          fontFamily: newFamily,
+        };
+        setTexts(updatedTexts);
+
+        // 상태가 업데이트된 후에 바로 반영
+        setFontFamily(newFamily);
+      }
+    } else {
+      setFontFamily(newFamily); // 새로운 텍스트에 적용될 기본값
+    }
+  };
+
+  const handleTextAlignLeft = () => {
+    if (
+      selectedIndex !== null &&
+      selectedIndex >= selectedImages.length + emoticons.length
+    ) {
+      const textIndex =
+        selectedIndex - selectedImages.length - emoticons.length;
+      if (textIndex >= 0 && textIndex < texts.length) {
+        const updatedTexts = [...texts];
+        updatedTexts[textIndex] = {
+          ...updatedTexts[textIndex],
+          textAlign: 'left',
+        };
+        setTexts(updatedTexts);
+
+        // 상태가 업데이트된 후에 바로 반영
+        setTextAlign('left');
+      }
+    }
+  };
+
+  const handleTextAlignCenter = () => {
+    if (
+      selectedIndex !== null &&
+      selectedIndex >= selectedImages.length + emoticons.length
+    ) {
+      const textIndex =
+        selectedIndex - selectedImages.length - emoticons.length;
+      if (textIndex >= 0 && textIndex < texts.length) {
+        const updatedTexts = [...texts];
+        updatedTexts[textIndex] = {
+          ...updatedTexts[textIndex],
+          textAlign: 'center',
+        };
+        setTexts(updatedTexts);
+
+        // 상태가 업데이트된 후에 바로 반영
+        setTextAlign('center');
+      }
+    }
+  };
+
+  const handleTextAlignRight = () => {
+    if (
+      selectedIndex !== null &&
+      selectedIndex >= selectedImages.length + emoticons.length
+    ) {
+      const textIndex =
+        selectedIndex - selectedImages.length - emoticons.length;
+      if (textIndex >= 0 && textIndex < texts.length) {
+        const updatedTexts = [...texts];
+        updatedTexts[textIndex] = {
+          ...updatedTexts[textIndex],
+          textAlign: 'right',
+        };
+        setTexts(updatedTexts);
+
+        // 상태가 업데이트된 후에 바로 반영
+        setTextAlign('right');
+      }
+    }
+  };
+
+  const handleBold = () => {
+    if (
+      selectedIndex !== null &&
+      selectedIndex >= selectedImages.length + emoticons.length
+    ) {
+      const textIndex =
+        selectedIndex - selectedImages.length - emoticons.length;
+      if (textIndex >= 0 && textIndex < texts.length) {
+        const updatedTexts = [...texts];
+        updatedTexts[textIndex] = {
+          ...updatedTexts[textIndex],
+          fontWeight:
+            updatedTexts[textIndex].fontWeight === 'bold' ? 'normal' : 'bold',
+        };
+        setTexts(updatedTexts);
+
+        // 상태가 업데이트된 후에 다시 한번 상태를 확인하여 툴바를 업데이트합니다.
+        setIsBold(updatedTexts[textIndex].fontWeight === 'bold');
+      }
+    }
+  };
+
+  const handleItalic = () => {
+    if (
+      selectedIndex !== null &&
+      selectedIndex >= selectedImages.length + emoticons.length
+    ) {
+      const textIndex =
+        selectedIndex - selectedImages.length - emoticons.length;
+      if (textIndex >= 0 && textIndex < texts.length) {
+        const updatedTexts = [...texts];
+        updatedTexts[textIndex] = {
+          ...updatedTexts[textIndex],
+          fontStyle:
+            updatedTexts[textIndex].fontStyle === 'italic'
+              ? 'normal'
+              : 'italic',
+        };
+        setTexts(updatedTexts);
+
+        // 상태가 업데이트된 후에 다시 한번 상태를 확인하여 툴바를 업데이트합니다.
+        setIsItalic(updatedTexts[textIndex].fontStyle === 'italic');
+      }
+    }
+  };
+
+  const handleUnderline = () => {
+    if (
+      selectedIndex !== null &&
+      selectedIndex >= selectedImages.length + emoticons.length
+    ) {
+      const textIndex =
+        selectedIndex - selectedImages.length - emoticons.length;
+      if (textIndex >= 0 && textIndex < texts.length) {
+        const updatedTexts = [...texts];
+        updatedTexts[textIndex] = {
+          ...updatedTexts[textIndex],
+          textDecoration:
+            updatedTexts[textIndex].textDecoration === 'underline'
+              ? 'none'
+              : 'underline',
+        };
+        setTexts(updatedTexts);
+
+        // 상태가 업데이트된 후에 다시 한번 상태를 확인하여 툴바를 업데이트합니다.
+        setIsUnderline(updatedTexts[textIndex].textDecoration === 'underline');
+      }
+    }
   };
 
   return (
@@ -384,9 +579,7 @@ export default function MainArea({
         {isTextEditing && (
           <>
             <ToolbarContainer>
-              <ToolbarItem onClick={handleParagraphClick}>
-                단락
-              </ToolbarItem>
+              <ToolbarItem onClick={handleParagraphClick}>단락</ToolbarItem>
               <ToolbarItem>
                 <StyledSelect
                   onChange={handleFontFamilyChange}
@@ -424,28 +617,31 @@ export default function MainArea({
                   <StyledOption value={48}>48px</StyledOption>
                 </StyledSelect>
               </ToolbarItem>
-              <ToolbarItem $active={isBold} onClick={() => setIsBold(!isBold)}>
+              <ToolbarItem $active={isBold} onClick={handleBold}>
                 <Icon id='textbold' width='24' height='24' />
               </ToolbarItem>
-              <ToolbarItem
-                $active={isItalic}
-                onClick={() => setIsItalic(!isItalic)}
-              >
+              <ToolbarItem $active={isItalic} onClick={handleItalic}>
                 <Icon id='textitalic' width='19' height='19' />
               </ToolbarItem>
-              <ToolbarItem
-                $active={isUnderline}
-                onClick={() => setIsUnderline(!isUnderline)}
-              >
+              <ToolbarItem $active={isUnderline} onClick={handleUnderline}>
                 <Icon id='textunderline' width='24' height='24' />
               </ToolbarItem>
-              <ToolbarItem>
+              <ToolbarItem
+                $active={textAlign === 'left'}
+                onClick={handleTextAlignLeft}
+              >
                 <Icon id='textleft' width='24' height='24' />
               </ToolbarItem>
-              <ToolbarItem>
+              <ToolbarItem
+                $active={textAlign === 'center'}
+                onClick={handleTextAlignCenter}
+              >
                 <Icon id='textcenter' width='24' height='24' />
               </ToolbarItem>
-              <ToolbarItem>
+              <ToolbarItem
+                $active={textAlign === 'right'}
+                onClick={handleTextAlignRight}
+              >
                 <Icon id='textright' width='24' height='24' />
               </ToolbarItem>
               <ToolbarItem>
@@ -613,73 +809,78 @@ export default function MainArea({
               </ResizableBoxContainer>
             ))}
             {texts.map((textObj, index) => (
-  <div
-    key={selectedImages.length + emoticons.length + index}
-    style={{
-      position: 'absolute',
-      top: textPositions[index]?.top,
-      left: textPositions[index]?.left,
-      cursor: textPositions[index]?.dragging ? 'grabbing' : 'grab',
-      border: selectedIndex === selectedImages.length + emoticons.length + index ? '2px solid blue' : 'none',
-      whiteSpace: 'pre-wrap',
-      fontSize: `${textObj.fontSize}px`,
-      fontFamily: textObj.fontFamily,
-      fontWeight: textObj.fontWeight,
-      fontStyle: textObj.fontStyle,
-      textDecoration: textObj.textDecoration,
-    }}
-    onDragStart={(e) =>
-      handleDragStart(
-        selectedImages.length + emoticons.length + index,
-        e
-      )
-    }
-    onDragOver={(e) =>
-      handleDragOver(
-        selectedImages.length + emoticons.length + index,
-        e
-      )
-    }
-    onDrop={() =>
-      handleDrop(selectedImages.length + emoticons.length + index)
-    }
-    onClick={(e) =>
-      handleImageClick(
-        selectedImages.length + emoticons.length + index,
-        e
-      )
-    }
-  >
-    {textObj.text}
-    {selectedIndex === selectedImages.length + emoticons.length + index && (
-      <button
-        style={{
-          position: 'absolute',
-          bottom: '-25px',
-          left: '47%',
-          backgroundColor: 'grey',
-          color: 'white',
-          border: 'none',
-          borderRadius: '50%',
-          width: '20px',
-          height: '20px',
-          cursor: 'pointer',
-          fontSize: '12px',
-          lineHeight: '20px',
-        }}
-        onClick={(e) => {
-          e.stopPropagation();
-          handleDelete(
-            selectedImages.length + emoticons.length + index
-          );
-        }}
-      >
-        X
-      </button>
-    )}
-  </div>
-))}
-
+              <div
+                key={selectedImages.length + emoticons.length + index}
+                style={{
+                  position: 'absolute',
+                  top: textPositions[index]?.top,
+                  left: textPositions[index]?.left,
+                  cursor: textPositions[index]?.dragging ? 'grabbing' : 'grab',
+                  border:
+                    selectedIndex ===
+                    selectedImages.length + emoticons.length + index
+                      ? '2px solid blue'
+                      : 'none',
+                  whiteSpace: 'pre-wrap',
+                  fontSize: `${textObj.fontSize}px`,
+                  fontFamily: textObj.fontFamily,
+                  fontWeight: textObj.fontWeight,
+                  fontStyle: textObj.fontStyle,
+                  textDecoration: textObj.textDecoration,
+                  textAlign: textObj.textAlign,
+                }}
+                onDragStart={(e) =>
+                  handleDragStart(
+                    selectedImages.length + emoticons.length + index,
+                    e
+                  )
+                }
+                onDragOver={(e) =>
+                  handleDragOver(
+                    selectedImages.length + emoticons.length + index,
+                    e
+                  )
+                }
+                onDrop={() =>
+                  handleDrop(selectedImages.length + emoticons.length + index)
+                }
+                onClick={(e) =>
+                  handleImageClick(
+                    selectedImages.length + emoticons.length + index,
+                    e
+                  )
+                }
+              >
+                {textObj.text}
+                {selectedIndex ===
+                  selectedImages.length + emoticons.length + index && (
+                  <button
+                    style={{
+                      position: 'absolute',
+                      bottom: '-25px',
+                      left: '47%',
+                      backgroundColor: 'grey',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '50%',
+                      width: '20px',
+                      height: '20px',
+                      cursor: 'pointer',
+                      fontSize: '12px',
+                      lineHeight: '20px',
+                    }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDelete(
+                        selectedImages.length + emoticons.length + index
+                      );
+                    }}
+                  >
+                    X
+                  </button>
+                )}
+              </div>
+            ))}
           </>
         ) : (
           <>
