@@ -1,8 +1,8 @@
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import * as S from './AlbumViewer.style';
 import { ALBUM_PHOTOS } from '../../dummy/data';
 
-export default function AlbumViewer() {
+export default function AlbumViewer({ albumImages, content }) {
   const imageRefs = useRef([]);
 
   const scrollToImage = (index) => {
@@ -17,24 +17,24 @@ export default function AlbumViewer() {
   return (
     <S.MainContainer>
       <S.Sidebar>
-        {ALBUM_PHOTOS.map((photo, index) => (
+        {albumImages.map((url, index) => (
           <S.Thumbnail
-            key={photo.id}
-            src={photo.coverImage}
+            key={url}
+            src={url}
             onClick={() => scrollToImage(index)}
           />
         ))}
       </S.Sidebar>
       <S.ImageContainer>
-        {ALBUM_PHOTOS.map((photo, index) => (
+        {albumImages.map((url, index) => (
           <S.ImageWrapper
-            key={photo.id}
+            key={url}
             ref={(el) => (imageRefs.current[index] = el)}
           >
-            <S.Image src={photo.coverImage} alt={photo.description} />
+            <S.Image src={url} alt={url} />
             <S.DescriptionWrapper>
-              <S.Title>{photo.id}</S.Title> {/* id를 표시 */}
-              <S.Description>{photo.description}</S.Description>
+              <S.Title>{content}</S.Title> {/* id를 표시 */}
+              <S.Description>{content}</S.Description>
             </S.DescriptionWrapper>
           </S.ImageWrapper>
         ))}

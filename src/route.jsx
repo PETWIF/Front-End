@@ -94,7 +94,7 @@ export const routeList = [
         ],
       },
       {
-        path: '/album/detail/:albumId',
+        path: '/album/:userId/detail/:albumId',
         element: <AlbumDetailPage />,
       },
       {
