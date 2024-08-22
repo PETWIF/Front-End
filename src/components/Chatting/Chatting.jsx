@@ -3,7 +3,7 @@ import * as S from './chatting.style';
 import { Profile as Img } from '../../dummy/images';
 import { Avatar } from '../Avatar';
 import { Icon } from '../../components/Icon';
-import { CHAT_DATA } from '../../dummy/data'
+import { CHAT_DATA } from '../../dummy/data';
 
 export default function Chatting({ userId }) {
   const [messages, setMessages] = useState(CHAT_DATA);
@@ -24,6 +24,13 @@ export default function Chatting({ userId }) {
       setMessages([...messages, newMessage]);
       setInputValue('');
       console.log('새 채팅:', inputValue);
+    }
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();  // 엔터 입력 시 기본 동작 방지 (폼 제출 등)
+      handleSendMessage();
     }
   };
 
@@ -63,6 +70,7 @@ export default function Chatting({ userId }) {
           type="text"
           value={inputValue}
           onChange={handleInputChange}
+          onKeyDown={handleKeyPress} // Enter 키 입력을 처리
           placeholder="상대에게 메시지 보내기"
         />
         <S.ChatSendButton onClick={handleSendMessage}>
