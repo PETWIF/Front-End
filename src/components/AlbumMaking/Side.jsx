@@ -54,7 +54,7 @@ export default function Side({ setSelectedImages, setEmoticons }) {
   } = useStore();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-
+  const [albumCoverImage, setAlbumCoverImage] = useState(null);
   const fileInputRef = useRef(null);
 
   const handleCategoryClick = () => {
@@ -79,6 +79,11 @@ export default function Side({ setSelectedImages, setEmoticons }) {
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
+
+  const handleSaveCover = (dataUrl) => {
+    setAlbumCoverImage(dataUrl);
+    openModal();
+  };
 
   return (
     <SideContainer>
@@ -245,9 +250,17 @@ export default function Side({ setSelectedImages, setEmoticons }) {
       {isCoverEditing ? (
         <>
           <SideSection3>
-            <Button1 onClick={openModal}>업로드</Button1>
+            <Button1
+              onClick={() => {
+                handleSaveCover();
+              }}
+            >
+              업로드
+            </Button1>
             <ButtonBack onClick={stopCoverEditing}>뒤로 가기</ButtonBack>
-            {isModalOpen && <MakingModal close={closeModal} />}
+            {isModalOpen && (
+              <MakingModal close={closeModal} albumCover={albumCoverImage} />
+            )}
           </SideSection3>
         </>
       ) : (

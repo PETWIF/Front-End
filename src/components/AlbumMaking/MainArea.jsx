@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
+import html2canvas from 'html2canvas';
 import { useStore } from '../../store/store';
 import {
   Button,
@@ -695,6 +696,13 @@ export default function MainArea({
     }
   };
 
+  const handleSaveAsPng = async () => {
+    const content = document.getElementById('mainContentContainer');
+    const canvas = await html2canvas(content);
+    const dataUrl = canvas.toDataURL('image/png');
+    onSaveCover(dataUrl); // 부모 컴포넌트로 전달
+  };
+
   return (
     <MainContainer $isCoverEditing={isCoverEditing}>
       <MainTitleContainer $isCoverEditing={isCoverEditing}>
@@ -811,6 +819,7 @@ export default function MainArea({
         )}
       </MainTitleContainer>
       <MainContnetContainer
+        id='mainContentContainer'
         $isCoverEditing={isCoverEditing}
         onDragOver={(e) => handleDragOver(draggingIndex, e)}
         onDrop={() => handleDrop(draggingIndex)}
