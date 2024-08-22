@@ -1,4 +1,6 @@
 import styled from 'styled-components';
+import { ResizableBox } from 'react-resizable';
+import { createGlobalStyle } from 'styled-components';
 
 export const MainContainer = styled.main`
   flex: 1;
@@ -7,7 +9,7 @@ export const MainContainer = styled.main`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: #FFF;
+  background-color: #fff;
   border-radius: 10px;
 `;
 
@@ -32,7 +34,7 @@ export const Button = styled.button`
   color: '#f87f28';
   font-size: 20px;
   cursor: pointer;
-  background-color: #FFF0D4;
+  background-color: #fff0d4;
   &:hover {
     background-color: #ffdcb6;
   }
@@ -47,7 +49,7 @@ export const MainTitleContainer = styled.div`
   justify-content: center;
   align-itmes: center;
   border-radius: 10px;
-  background-color: #FFF;
+  background-color: #fff;
 `;
 
 export const MainContnetContainer = styled.div`
@@ -59,8 +61,9 @@ export const MainContnetContainer = styled.div`
   align-items: center;
   border-radius: 10px;
   gap: 10%;
-  background-color: #FFF;
+  background-color: #fff;
   overflow-y: auto;
+  position: relative;
 `;
 
 export const ToolbarContainer = styled.div`
@@ -85,6 +88,7 @@ export const ToolbarItem = styled.div`
   transition: background-color 0.3s ease;
   border-radius: 3px;
   border-right: 2px solid #363636;
+  background-color: ${({ $active }) => ($active ? '#555' : 'transparent')};
 
   &:last-child {
     margin-right: 0;
@@ -112,13 +116,14 @@ export const ToolbarItem = styled.div`
   }
 `;
 
-export const InputField = styled.input`
+export const InputField = styled.textarea`
   width: 100%;
-  height: 50%;
+  height: 100%;
   padding: 0 10px;
   border: 1px solid #191919;
-  border-radius: 0 0 5px 5px;
-  font-size: 16px;
+  border-radius: 0 0 0 5px;
+  font-size: 20px;
+  overflow-y: auto;
 `;
 
 export const StyledSelect = styled.select`
@@ -132,4 +137,124 @@ export const StyledSelect = styled.select`
 export const StyledOption = styled.option`
   background-color: #333;
   color: #fff;
+`;
+
+export const ImagePreview = styled.img`
+  width: 100%;
+  height: 100%;
+`;
+
+export const ResizableBoxContainer = styled(ResizableBox)`
+  position: absolute;
+  padding: 10px;
+  border: ${({ selected }) => (selected ? '2px solid grey' : 'none')};
+
+  .react-resizable-handle {
+    display: ${({ selected }) => (selected ? 'block' : 'none')};
+    background-color: transparent;
+  }
+
+  .react-resizable-handle-n {
+    cursor: n-resize;
+  }
+
+  .react-resizable-handle-s {
+    cursor: s-resize;
+  }
+
+  .react-resizable-handle-e {
+    cursor: e-resize;
+  }
+
+  .react-resizable-handle-w {
+    cursor: w-resize;
+  }
+
+  .react-resizable-handle-ne {
+    cursor: ne-resize;
+  }
+
+  .react-resizable-handle-nw {
+    cursor: nw-resize;
+  }
+
+  .react-resizable-handle-se {
+    cursor: se-resize;
+  }
+
+  .react-resizable-handle-sw {
+    cursor: sw-resize;
+  }
+`;
+
+export const GlobalStyles = createGlobalStyle`
+  @font-face {
+    font-family: 'MyCustomFont1';
+    src: url('src/components/AlbumMaking/font/CK_tc04170000414.ttf') format('truetype');
+  }
+  
+  @font-face {
+    font-family: 'MyCustomFont2';
+    src: url('src/components/AlbumMaking/font/CK_tc04170000069.ttf') format('truetype');
+  }
+
+  @font-face {
+    font-family: 'MyCustomFont3';
+    src: url('src/components/AlbumMaking/font/CK_tc04170000070.ttf') format('truetype');
+  }
+  
+  @font-face {
+    font-family: 'MyCustomFont4';
+    src: url('src/components/AlbumMaking/font/CK_tc04170000180.ttf') format('truetype');
+  }
+  
+  @font-face {
+    font-family: 'MyCustomFont5';
+    src: url('src/components/AlbumMaking/font/CK_tc04170000267.ttf') format('truetype');
+  }
+
+  @font-face {
+    font-family: 'MyCustomFont6';
+    src: url('src/components/AlbumMaking/font/CK_tc04170000269.ttf') format('truetype');
+  }
+
+  @font-face {
+    font-family: 'MyCustomFont7';
+    src: url('src/components/AlbumMaking/font/CK_tc04170000271.ttf') format('truetype');
+  }
+  
+  @font-face {
+    font-family: 'MyCustomFont8';
+    src: url('src/components/AlbumMaking/font/CK_tc04170000272.ttf') format('truetype');
+  }
+
+  @font-face {
+    font-family: 'MyCustomFont10';
+    src: url('src/components/AlbumMaking/font/CK_tc04170000279.ttf') format('truetype');
+  }
+  
+  @font-face {
+    font-family: 'MyCustomFont11';
+    src: url('src/components/AlbumMaking/font/CK_tc04170000281.ttf') format('truetype');
+  }
+
+  @font-face {
+    font-family: 'MyCustomFont12';
+    src: url('src/components/AlbumMaking/font/CK_tc04170000282.ttf') format('truetype');
+  }
+
+  @font-face {
+    font-family: 'MyCustomFont13';
+    src: url('src/components/AlbumMaking/font/CK_tc04170000283.ttf') format('truetype');
+  }
+  
+  @font-face {
+    font-family: 'MyCustomFont14';
+    src: url('src/components/AlbumMaking/font/CK_tc04170000286.ttf') format('truetype');
+  }
+
+  @font-face {
+    font-family: 'MyCustomFont15';
+    src: url('src/components/AlbumMaking/font/CK_tc04170000288.ttf') format('truetype');
+  }
 `;

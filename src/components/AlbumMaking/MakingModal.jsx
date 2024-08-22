@@ -2,7 +2,7 @@ import React from 'react';
 import * as S from './MakingModal.style';
 import { Radio, RadioGroup } from '../Input';
 
-export default function AlbumModal({ close }) {
+export default function AlbumModal({ close, albumCover }) {
   return (
     <S.ModalLayout>
       <S.ModalContainer>
@@ -10,7 +10,17 @@ export default function AlbumModal({ close }) {
           <S.AlbumHeader>
             <S.B>앨범 표지</S.B>
           </S.AlbumHeader>
-          <S.AlbumCover>사아아진</S.AlbumCover>
+          <S.AlbumCover>
+            {albumCover ? (
+              <img
+                src={albumCover}
+                alt='Album Cover'
+                style={{ width: '100%' }}
+              />
+            ) : (
+              '이미지 없음'
+            )}
+          </S.AlbumCover>
         </S.AlbumContainer>
         <S.Albumcontexts>
           <div>
