@@ -1,41 +1,67 @@
-
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import CommentSection from './CommentSection';
-import { Link } from 'react-router-dom';
-
-import { Button } from '../Button/index.js';
-import { Layout } from '../Common/index.js';
-import { Avatar } from '../Avatar/index.js';
-import { Icon } from '../../components/Icon';
+import { Icon } from '../Icon';
 import { formatDistanceToNow } from 'date-fns';
 import { ko } from 'date-fns/locale';
 
-import { RANDOM_FRIENDS } from '../../dummy/data/index.js';
-
 import * as S from './AlbumDetail.style.jsx';
 
-const nickname = '펫위프';
+const AlbumDetail = ({ album }) => {
+  const { profileImage, profileName, albumImage, likeCount, createdAt, comments: initialComments, comment, likeUsers = [] } = album;
+  const [newComment, setNewComment] = useState('');
 
-export default function AlbumDetail({ album }) {
-  const { profileImage, profileName, albumImage, likeCount, createdAt, comments, comment, likeUsers = [] } = album;
-  const [newComment, setNewComment] = React.useState('');
+  const isValidDate = (date) => {
+    return !isNaN(new Date(date).getTime());
+  };
+  
+  const [comments, setComments] = useState(
+    initialComments.map((comment) => ({
+      ...comment,
+      createdAt: isValidDate(comment.createdAt)
+        ? formatDistanceToNow(new Date(comment.createdAt), { addSuffix: true, locale: ko })
+        : 'Invalid date',
+      replies: comment.replies
+        ? comment.replies.map((reply) => ({
+            ...reply,
+            createdAt: isValidDate(reply.createdAt)
+              ? formatDistanceToNow(new Date(reply.createdAt), { addSuffix: true, locale: ko })
+              : 'Invalid date',
+          }))
+        : [],
+    }))
+  );
 
   const handleCommentChange = (e) => {
     setNewComment(e.target.value);
   };
 
   const handleCommentSubmit = () => {
-    console.log('새 댓글:', newComment);
-    setNewComment('');
+    if (newComment.trim()) {
+      const newCommentData = {
+        id: Date.now(),
+        author: "현재 사용자",
+        profileImage: "/path/to/profile.jpg",
+        text: newComment,
+        likeCount: 0,
+        createdAt: '방금',
+        replies: [],
+      };
+  
+      setComments([...comments, newCommentData]);
+      setNewComment('');
+    }
   };
 
   const handleReport = (commentId) => {
     console.log(`댓글 ${commentId}가 신고되었습니다.`);
-    // 여기에 신고 처리 로직을 추가
   };
 
+
+
   const formatDate = (date) => {
-    return formatDistanceToNow(new Date(date), { addSuffix: true, locale: ko });
+    return isValidDate(date) 
+      ? formatDistanceToNow(new Date(date), { addSuffix: true, locale: ko }) 
+      : 'Invalid date';
   };
 
   return (
@@ -53,40 +79,33 @@ export default function AlbumDetail({ album }) {
       <S.StyledHr />
 
       <S.CommentSectionContainer>
-          <S.CommentSection>
+        <S.CommentSection>
           <CommentSection
-            comments={comments.map((comment) => ({
-              ...comment,
-              createdAt: formatDate(comment.createdAt),
-              replies: comment.replies
-                ? comment.replies.map((reply) => ({
-                    ...reply,
-                    createdAt: formatDate(reply.createdAt),
-                  }))
-                : [],
-            }))}
-            onReport={handleReport} // 신고 기능 처리 함수 전달
+            key={comments.length} 
+            comments={comments}
+            onReport={handleReport}
           /> 
-          </S.CommentSection>
+        </S.CommentSection>
 
-          <S.CommentInputContainer>
-              <S.PlusButton>
-                <Icon id="plusbutton" width="25" height="25" />
-              </S.PlusButton>
-              <S.UserProfileImage src={profileImage} alt="현재 로그인된 사용자 프로필" />
-              <S.CommentInput
-                type="text"
-                value={newComment}
-                onChange={handleCommentChange}
-                placeholder="댓글을 입력하세요..."
-              />
-              <S.CommentSendButton onClick={handleCommentSubmit}>
-                <Icon id='sendbutton' width='26' height='27' />
-              </S.CommentSendButton>
-            </S.CommentInputContainer>
+        <S.CommentInputContainer>
+          <S.PlusButton>
+            <Icon id="plusbutton" width="25" height="25" />
+          </S.PlusButton>
+          <S.UserProfileImage src={profileImage} alt="현재 로그인된 사용자 프로필" />
+          <S.CommentInput
+            type="text"
+            value={newComment}
+            onChange={handleCommentChange}
+            placeholder="댓글을 입력하세요..."
+          />
+          <S.CommentSendButton onClick={handleCommentSubmit}>
+            <Icon id='sendbutton' width='26' height='27' />
+          </S.CommentSendButton>
+        </S.CommentInputContainer>
 
-        </S.CommentSectionContainer>
-      
+      </S.CommentSectionContainer>
     </S.AlbumDetailLayout>
   );
 }
+
+export default AlbumDetail;

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import CommentSection from './CommentSection';
 import * as S from './Feed.style';
 import { Icon } from '../Icon';
@@ -27,11 +27,12 @@ const FeedItem = ({ data }) => {
   };
 
   const handleCommentSubmit = () => {
+    console.log('새 댓글:', newComment);
     if (newComment.trim()) {
       const newCommentData = {
-        id: Date.now(), // 임의의 고유 ID 생성
-        author: "현재 사용자", // 실제 사용자 이름으로 변경
-        profileImage: "/path/to/profile.jpg", // 실제 사용자 프로필 이미지 경로로 변경
+        id: Date.now(), 
+        author: "현재 사용자", // 실제 사용자 이름으로 변경해야함
+        profileImage: "/path/to/profile.jpg", // 실제 사용자 프로필 이미지 경로로 변경해야함
         text: newComment,
         likeCount: 0,
         createdAt: '방금',
@@ -39,8 +40,8 @@ const FeedItem = ({ data }) => {
       };
   
       const updatedComments = [
-        newCommentData,
         ...comments,
+        newCommentData,
       ];
   
       setComments(updatedComments);
@@ -50,7 +51,6 @@ const FeedItem = ({ data }) => {
 
   const handleReport = (commentId) => {
     console.log(`댓글 ${commentId}가 신고되었습니다.`);
-    // 여기에 신고 처리 로직을 추가
   };
 
   const formatDate = (date) => {
@@ -107,10 +107,11 @@ const FeedItem = ({ data }) => {
         <S.CommentSectionContainer>
           <S.CommentSection>
             <CommentSection
-              comments={comments} // 업데이트된 댓글 목록 전달
-              onReport={handleReport} // 신고 기능 처리 함수 전달
+              key={comments.length} 
+              comments={comments} 
+              onReport={handleReport}
             /> 
-            </S.CommentSection>
+          </S.CommentSection>
           
             <S.CommentInputContainer>
               <S.PlusButton>
