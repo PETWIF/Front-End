@@ -1,12 +1,10 @@
 import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 
-import { patchNickname } from '../../apis/nickname.js';
+import { patchNickname, postProfilePic } from '../../apis/nickname.js';
 
 import { Button } from '../../components/Button';
-import { Avatar } from '../../components/Avatar';
-
-import { Profile as Img } from '../../dummy/images';
+import { Icon } from '../../components/Icon';
 
 import LoginHeader from '../../components/LoginComponents/LoginHeader';
 import TitleContainer from '../../components/LoginComponents/TitleContainer';
@@ -14,9 +12,14 @@ import TitleContainer from '../../components/LoginComponents/TitleContainer';
 import * as S from './SetNicknamePage.style.jsx';
 
 export default function SetNicknamePage() {
+  const Img = <Icon id='editPic' width='212px' height='212px'></Icon>
+
   const [nickname, setNickname] = useState('');
   const [isRightNickname, setIsRightNickname] = useState(false);
   const [nicknameError, setNicknameError] = useState('');
+
+  const [profilePic, setProfilePic] = useState(null); 
+  const [preview, setPreview] = useState(Img);
 
   const validateNickname = (value) => value.trim().length >= 2 && value.trim().length <= 6;
 
@@ -36,6 +39,18 @@ export default function SetNicknamePage() {
       }
     }
 
+    const handleFileChange = (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        setProfilePic(file);
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setPreview(reader.result); // 파일을 읽어 미리보기 이미지 설정
+        };
+        reader.readAsDataURL(file);
+      }
+    };
+
     const handleSubmit = async (e, destination) => {
       e.preventDefault();
   
@@ -48,6 +63,12 @@ export default function SetNicknamePage() {
         if (isSuccess) {
           console.log('사용 가능한 닉네임:', { nickname });
           setNicknameError('사용 가능한 닉네임입니다!');
+
+          if (profilePic) 
+            await postProfilePic(profilePic); 
+          else 
+            await postProfilePic(editPic);
+
           navigate(destination, { state: { email, password, nickname: nickname } });
         } else {
           setIsRightNickname(false); 
@@ -65,9 +86,9 @@ export default function SetNicknamePage() {
         <S.Container>
           <S.FormWrapper>
             <TitleContainer to='/agree' backIcon='true' titleText='프로필' />
-            {/* // handleSubmit ?? */}
             <S.FormContainer onSubmit={(e) => handleSubmit(e, '/addInfo')}> 
-            <Avatar src={Img} size='212px' />
+            // <Icon id='editPic' width='212px' height='212px' />
+            <S.InputFileStyle type="file" accept="image/*" onChange={handleFileChange} />
             <S.InputContainer>
               <S.MainBoldText>닉네임</S.MainBoldText>
               <S.MainNormalText>

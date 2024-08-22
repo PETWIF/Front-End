@@ -89,6 +89,18 @@ export const InputStyle = styled.input`
   background: ${(props) => props.theme.color.gray5};
 `;
 
+// input
+export const InputFileStyle = styled.input`
+  width: 212px;
+  height: 212px;
+  // margin-top: 5px;
+  // padding: 15px;
+  // border: none;
+  border-radius: 100%;
+  // color: ${(props) => props.theme.color.gray1};
+  // background: ${(props) => props.theme.color.gray5};
+`;
+
 // 구분선 스타일링
 export const StyledHr = styled.hr`
   width: 100%;

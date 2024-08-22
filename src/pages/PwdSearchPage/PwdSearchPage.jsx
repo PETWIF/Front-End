@@ -121,7 +121,7 @@ export default function PwdSearchPage() {
         setCodeError('인증번호가 일치합니다!');
       } else {
         setIsRightCode(false);
-        setEmailError('인증번호가 일치하지 않습니다.');
+        setCodeError('인증번호가 일치하지 않습니다.');
       }
     } catch (error) {
       console.error('인증번호 확인 실패:', error);
