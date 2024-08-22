@@ -17,8 +17,8 @@ export const Wrapper = styled(Flex)`
 
 // 가운데 블럭 전체
 export const Container = styled(Flex)`
-  width: 537px;
-  height: 728px;
+  width: 450px;
+  height: 450px;
   display: flex;
   flex-direction: column;
   align-items: center;
