@@ -4,10 +4,13 @@ import { ALBUM_PHOTOS } from '../../dummy/data';
 
 export default function AlbumViewer() {
   const imageRefs = useRef([]);
-  
+
   const scrollToImage = (index) => {
     if (imageRefs.current[index]) {
-      imageRefs.current[index].scrollIntoView({ behavior: 'smooth', block: 'center' });
+      imageRefs.current[index].scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+      });
     }
   };
 

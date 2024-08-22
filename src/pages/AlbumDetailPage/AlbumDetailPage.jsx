@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 
-
 import { AlbumInfo } from '../../components/AlbumInfo';
 import { AlbumItem } from '../AlbumPage';
 import { ALBUM_LIST } from '../../dummy/data';
@@ -16,7 +15,6 @@ import { UserInfo } from '../../components/UserInfo';
 
 import * as S from './AlbumDetailPage.style.jsx';
 
-
 const myId = 'myUserId1';
 
 export default function AlbumDetailPage() {
@@ -30,7 +28,9 @@ export default function AlbumDetailPage() {
 
   console.log(albumId);
 
-  const selectedAlbum = ALBUM_LIST.find((album) => album.id === Number(albumId));
+  const selectedAlbum = ALBUM_LIST.find(
+    (album) => album.id === Number(albumId)
+  );
 
   const handleBackButtonClick = () => {
     navigate(-1); // 이전 페이지로 이동
@@ -40,7 +40,16 @@ export default function AlbumDetailPage() {
     <S.MainLayout>
       <S.MainContainer>
         <S.BackButton>
-          <S.StyledIcon id = 'backbutton' width='43' height='59' onClick={handleBackButtonClick}/>
+          <S.StyledIcon
+            id='backbutton'
+            width='43'
+            height='59'
+            onClick={handleBackButtonClick}
+          />
+          <S.ActoinButtons>
+            <button>수정</button>
+            <button>삭제</button>
+          </S.ActoinButtons>
         </S.BackButton>
         {myId !== userId && (
           <S.MenuList>
@@ -60,12 +69,12 @@ export default function AlbumDetailPage() {
             </S.MenuItem>
           </S.MenuList>
         )}
-        <AlbumViewer/>
+        <AlbumViewer />
       </S.MainContainer>
       <S.SideContainer>
-        <UserInfo/>
+        <UserInfo />
         <AlbumInfo album={selectedAlbum} />
-        <AlbumDetail album={feedData[0]}/>
+        <AlbumDetail album={feedData[0]} />
       </S.SideContainer>
     </S.MainLayout>
   );
