@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-
+import { useQuery } from '@tanstack/react-query';
 import { AlbumItem } from '../../AlbumPage';
 import { DropDown } from '../../../components/DropDown';
 import { Icon } from '../../../components/Icon';
@@ -12,18 +12,29 @@ import { Chatting } from '../../../components/Chatting';
 import { SORT_CATEGORIES } from '../../../constants';
 import { ALBUM_LIST } from '../../../dummy/data';
 
-import * as S from './AlbumPage.style.jsx';
+import { getAblumList } from '../../../apis/album.js';
 
+import * as S from './AlbumPage.style.jsx';
 
 const myId = 'myUserId1';
 const yourId = '댕댕산책가';
+const userId = 46;
 
 export default function AlbumPage() {
-  const [keyword, setKeyword] = useState('');
-  const [sort, setSort] = useState();
-  const [showChat, setShowChat] = useState(false); // State to toggle between RandomFriend and Chat
   const params = useParams();
-  const userId = params.userId || 'myUserId';
+  const [sort, setSort] = useState();
+
+  const { data } = useQuery({
+    queryKey: ['albumList', userId, sort?.value],
+    queryFn: () => getAblumList({ userId, sortBy: sort?.value }),
+    staleTime: 1000 * 60 * 5,
+  });
+  // const userId = params.userId || 'myUserId';
+
+  const [keyword, setKeyword] = useState('');
+  const [showChat, setShowChat] = useState(false); // State to toggle between RandomFriend and Chat
+  
+  console.log(data);
 
   const handleToggleChat = () => {
     setShowChat((prev) => !prev);
@@ -59,15 +70,15 @@ export default function AlbumPage() {
               setFn={setSort}
             />
           </S.DropDownBox>
-          {ALBUM_LIST && (
+          {data && (
             <S.AlbumList>
-              {ALBUM_LIST.map((album) => (
-                <AlbumItem key={album.id} album={album} />
+              {data.map((album) => (
+                <AlbumItem key={album.albumId} album={album} />
               ))}
             </S.AlbumList>
           )}
           <S.AlbumAmount>
-            <span>{ALBUM_LIST.length}</span>
+            <span>{data?.length}</span>
             <span>Albums</span>
           </S.AlbumAmount>
         </S.AlbumBox>
