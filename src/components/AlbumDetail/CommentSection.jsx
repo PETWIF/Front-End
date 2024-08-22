@@ -3,9 +3,9 @@ import * as S from './CommentSection.style';
 import { Icon } from '../Icon';
 
 const CommentSection = ({ comments, onReport }) => {
-  const [reply, setReply] = useState({});
   const [newReply, setNewReply] = useState({});
   const [showReplies, setShowReplies] = useState({});
+  const [showReplyInput, setShowReplyInput] = useState({});
 
   const handleReplyChange = (commentId, e) => {
     setNewReply({
@@ -16,24 +16,38 @@ const CommentSection = ({ comments, onReport }) => {
 
   const handleReplySubmit = (commentId) => {
     console.log('새 대댓글:', newReply[commentId]);
+
+    // 대댓글 등록 후 입력창만 닫습니다.
+    setShowReplyInput({
+      ...showReplyInput,
+      [commentId]: false,
+    });
+
     setNewReply({
       ...newReply,
       [commentId]: '',
     });
   };
 
-  const toggleReply = (commentId) => {
-    setReply({
-      ...reply,
-      [commentId]: !reply[commentId],
-    });
-  };
-
   const toggleShowReplies = (commentId) => {
-    setShowReplies({
-      ...showReplies,
-      [commentId]: !showReplies[commentId],
-    });
+    const newShowReplies = !showReplies[commentId];
+    setShowReplies((prevShowReplies) => ({
+      ...prevShowReplies,
+      [commentId]: newShowReplies,
+    }));
+    
+    // 대댓글 목록을 보이게 할 때 대댓글 입력란도 함께 표시
+    if (newShowReplies) {
+      setShowReplyInput((prevShowReplyInput) => ({
+        ...prevShowReplyInput,
+        [commentId]: true,
+      }));
+    } else {
+      setShowReplyInput((prevShowReplyInput) => ({
+        ...prevShowReplyInput,
+        [commentId]: false,
+      }));
+    }
   };
 
   return (
@@ -77,15 +91,18 @@ const CommentSection = ({ comments, onReport }) => {
                   ))}
                 </S.Replies>
               )}
-              <S.ReplySection>
-                <S.ReplyInput
-                  type="text"
-                  value={newReply[comment.id] || ''}
-                  onChange={(e) => handleReplyChange(comment.id, e)}
-                  placeholder="대댓글을 입력하세요..."
-                />
-                <S.ReplyButton onClick={() => handleReplySubmit(comment.id)}>등록</S.ReplyButton>
-              </S.ReplySection>
+              {/* 대댓글 입력창의 가시성은 showReplyInput 상태에 따라 결정됩니다. */}
+              {showReplyInput[comment.id] && (
+                <S.ReplySection>
+                  <S.ReplyInput
+                    type="text"
+                    value={newReply[comment.id] || ''}
+                    onChange={(e) => handleReplyChange(comment.id, e)}
+                    placeholder="대댓글을 입력하세요..."
+                  />
+                  <S.ReplyButton onClick={() => handleReplySubmit(comment.id)}>등록</S.ReplyButton>
+                </S.ReplySection>
+              )}
             </>
           )}
         </S.Comment>
