@@ -1,6 +1,11 @@
 import { useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
+import { useParams, Link } from 'react-router-dom';
+
+import { getAlbumList } from '../../../apis/album.js';
+
+import useAuth from '../../../hooks/useAuth.jsx';
+
 import { AlbumItem } from '../../AlbumPage';
 import { DropDown } from '../../../components/DropDown';
 import { Icon } from '../../../components/Icon';
@@ -11,25 +16,25 @@ import { Search } from '../../../components/Search';
 import { SORT_CATEGORIES } from '../../../constants';
 import { ALBUM_LIST } from '../../../dummy/data';
 
-import { getAblumList } from '../../../apis/album.js';
-
 import * as S from './AlbumPage.style.jsx';
 
 const myId = 'myUserId1';
-const userId = 46;
 
 export default function AlbumPage() {
+  const { userId } = useAuth();
   const params = useParams();
+  const currentUserId = Number(params?.userId) || userId;
+
   const [sort, setSort] = useState();
   const [keyword, setKeyword] = useState('');
+
   const { data } = useQuery({
-    queryKey: ['albumList', userId, sort?.value],
-    queryFn: () => getAblumList({ userId, sortBy: sort?.value }),
+    queryKey: ['albumList', currentUserId, sort?.value],
+    queryFn: () => getAlbumList({ userId: currentUserId, sortBy: sort?.value }),
     staleTime: 1000 * 60 * 5,
   });
-  // const userId = params.userId || 'myUserId';
 
-  console.log(data);
+  if (!data) return null;
 
   return (
     <S.MainLayout>
@@ -38,7 +43,7 @@ export default function AlbumPage() {
           value={keyword}
           onChange={(event) => setKeyword(event.target.value)}
         />
-        {myId !== userId && (
+        {userId !== currentUserId && (
           <S.MenuList>
             <Link to='/album/bookmark'>
               <S.MenuItem>
