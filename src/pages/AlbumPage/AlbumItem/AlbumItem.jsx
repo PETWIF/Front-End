@@ -1,4 +1,6 @@
-import { Link } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
+
+import useAuth from '../../../hooks/useAuth.jsx';
 
 import { AlbumButton } from '../index.js';
 import { Icon } from '../../../components/Icon';
@@ -6,6 +8,9 @@ import { Icon } from '../../../components/Icon';
 import * as S from './AlbumItem.style.jsx';
 
 export default function AlbumItem({ album }) {
+  const { userId } = useAuth();
+  const params = useParams();
+  const currentUserId = Number(params?.userId) || userId;
   const { albumId, coverImageUrl, likeCount, commentCount, bookmarkCount } =
     album;
 
@@ -28,8 +33,8 @@ export default function AlbumItem({ album }) {
           </S.IconBox>
         </S.IconContainer>
         <S.ButtonContainer>
-          <Link key={albumId} to={`/album/detail/${albumId}`}>
-            <AlbumButton>내 앨범 구경하기</AlbumButton>
+          <Link key={albumId} to={`/album/${currentUserId}/detail/${albumId}`}>
+            <AlbumButton>앨범 구경하기</AlbumButton>
           </Link>
           <AlbumButton onClick={() => console.log('앨범 수정하기')}>
             앨범 수정하기
