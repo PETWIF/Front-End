@@ -4,6 +4,8 @@ import { useQuery } from '@tanstack/react-query';
 
 import { getAlbumDetail } from '../../apis/album.js';
 
+import useAuth from '../../hooks/useAuth.jsx';
+
 import { AlbumDetail } from '../../components/AlbumDetail';
 import { AlbumInfo } from '../../components/AlbumInfo';
 import { AlbumItem } from '../AlbumPage';
@@ -17,7 +19,6 @@ import { SORT_CATEGORIES } from '../../constants';
 import { ALBUM_LIST, feedData } from '../../dummy/data';
 
 import * as S from './AlbumDetailPage.style.jsx';
-import useAuth from '../../hooks/useAuth.jsx';
 
 export default function AlbumDetailPage() {
   const { userId } = useAuth();
@@ -29,6 +30,7 @@ export default function AlbumDetailPage() {
 
   const [keyword, setKeyword] = useState('');
   const [sort, setSort] = useState();
+
   const navigate = useNavigate();
 
   if (!data) {
@@ -45,6 +47,10 @@ export default function AlbumDetailPage() {
             height='59'
             onClick={() => navigate(-1)}
           />
+          <S.ActoinButtons>
+            <button>수정</button>
+            <button>삭제</button>
+          </S.ActoinButtons>
         </S.BackButton>
         <S.MenuList>
           <Search
