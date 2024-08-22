@@ -56,6 +56,18 @@ export const StyledHr = styled.hr`
   border: none;
 `;
 
+export const MenuItem = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  cursor: pointer;
+
+  & > span {
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 29px;
+  }
+`;
 
 export const FriendItem = styled.li`
   display: flex;

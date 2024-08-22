@@ -72,7 +72,7 @@ export default function AlbumDetailPage() {
       <S.SideContainer>
         <UserInfo nickname={yourId}/>
         <AlbumInfo album={selectedAlbum} />
-        {showChat ? <Chatting userId={yourId} /> : <AlbumDetail album={feedData[0]}/>}
+        {showChat ? <Chatting userId={yourId} /> : <AlbumDetail album={feedData[0]} userId={yourId} albumId={albumId}/>}
       </S.SideContainer>
     </S.MainLayout>
   );
