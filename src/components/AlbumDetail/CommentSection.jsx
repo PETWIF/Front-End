@@ -3,6 +3,7 @@ import * as S from './CommentSection.style';
 import { Icon } from '../Icon';
 
 const CommentSection = ({ comments, onReport }) => {
+  const [commentList, setCommentList] = useState(comments);
   const [newReply, setNewReply] = useState({});
   const [showReplies, setShowReplies] = useState({});
   const [showReplyInput, setShowReplyInput] = useState({});
@@ -15,18 +16,42 @@ const CommentSection = ({ comments, onReport }) => {
   };
 
   const handleReplySubmit = (commentId) => {
-    console.log('새 대댓글:', newReply[commentId]);
+    const replyText = newReply[commentId];
 
-    // 대댓글 등록 후 입력창만 닫습니다.
-    setShowReplyInput({
-      ...showReplyInput,
-      [commentId]: false,
-    });
+    if (replyText.trim()) {
+      const updatedComments = commentList.map((comment) => {
+        if (comment.id === commentId) {
+          return {
+            ...comment,
+            replies: [
+              ...comment.replies,
+              {
+                id: Date.now(),
+                author: "현재 사용자", // 실제 사용자 이름으로 변경해야함
+                profileImage: "/path/to/profile.jpg", // 실제 사용자 프로필 이미지 경로로 변경해야함
+                text: replyText,
+                likeCount: 0,
+                createdAt: "방금",
+              },
+            ],
+          };
+        }
+        return comment;
+      });
 
-    setNewReply({
-      ...newReply,
-      [commentId]: '',
-    });
+      setCommentList(updatedComments);
+
+      // 대댓글 등록 후 입력창만 닫습니다.
+      setShowReplyInput({
+        ...showReplyInput,
+        [commentId]: false,
+      });
+
+      setNewReply({
+        ...newReply,
+        [commentId]: '',
+      });
+    }
   };
 
   const toggleShowReplies = (commentId) => {
@@ -52,7 +77,7 @@ const CommentSection = ({ comments, onReport }) => {
 
   return (
     <S.CommentSection>
-      {comments.map((comment) => (
+      {commentList.map((comment) => (
         <S.Comment key={comment.id}>
           <S.CommentHeader>
             <S.CommentAuthor>
@@ -91,7 +116,6 @@ const CommentSection = ({ comments, onReport }) => {
                   ))}
                 </S.Replies>
               )}
-              {/* 대댓글 입력창의 가시성은 showReplyInput 상태에 따라 결정됩니다. */}
               {showReplyInput[comment.id] && (
                 <S.ReplySection>
                   <S.ReplyInput

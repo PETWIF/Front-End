@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import CommentSection from './CommentSection';
 import * as S from './Feed.style';
 import { Icon } from '../Icon';
@@ -7,16 +7,45 @@ import { ko } from 'date-fns/locale';
 import { albumCover } from '../../dummy/images';
 
 const FeedItem = ({ data }) => {
-  const { profileImage, profileName, albumImage, likeCount, createdAt, comments, comment, likeUsers = [] } = data;
-  const [newComment, setNewComment] = React.useState('');
+  const { profileImage, profileName, albumImage, likeCount, createdAt, comments: initialComments, comment, likeUsers = [] } = data;
+  const [newComment, setNewComment] = useState('');
+  const [comments, setComments] = useState(
+    initialComments.map((comment) => ({
+      ...comment,
+      createdAt: formatDistanceToNow(new Date(comment.createdAt), { addSuffix: true, locale: ko }),
+      replies: comment.replies
+        ? comment.replies.map((reply) => ({
+            ...reply,
+            createdAt: formatDistanceToNow(new Date(reply.createdAt), { addSuffix: true, locale: ko }),
+          }))
+        : [],
+    }))
+  );
 
   const handleCommentChange = (e) => {
     setNewComment(e.target.value);
   };
 
   const handleCommentSubmit = () => {
-    console.log('새 댓글:', newComment);
-    setNewComment('');
+    if (newComment.trim()) {
+      const newCommentData = {
+        id: Date.now(), // 임의의 고유 ID 생성
+        author: "현재 사용자", // 실제 사용자 이름으로 변경
+        profileImage: "/path/to/profile.jpg", // 실제 사용자 프로필 이미지 경로로 변경
+        text: newComment,
+        likeCount: 0,
+        createdAt: '방금',
+        replies: [],
+      };
+  
+      const updatedComments = [
+        newCommentData,
+        ...comments,
+      ];
+  
+      setComments(updatedComments);
+      setNewComment('');
+    }
   };
 
   const handleReport = (commentId) => {
@@ -78,16 +107,7 @@ const FeedItem = ({ data }) => {
         <S.CommentSectionContainer>
           <S.CommentSection>
             <CommentSection
-              comments={comments.map((comment) => ({
-                ...comment,
-                createdAt: formatDate(comment.createdAt),
-                replies: comment.replies
-                  ? comment.replies.map((reply) => ({
-                      ...reply,
-                      createdAt: formatDate(reply.createdAt),
-                    }))
-                  : [],
-              }))}
+              comments={comments} // 업데이트된 댓글 목록 전달
               onReport={handleReport} // 신고 기능 처리 함수 전달
             /> 
             </S.CommentSection>
