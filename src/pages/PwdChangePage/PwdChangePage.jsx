@@ -1,9 +1,11 @@
-import { useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useState, useCallback } from 'react';
+import { useParams, useLocation } from 'react-router-dom';
+
+import { patchChangePw } from '../../apis/changePw.js';
+
+import { debounce } from 'lodash';
 
 import { Button } from '../../components/Button';
-
-import { mockPostChangePassword } from '../../dummy/data/user.js';
 
 import useLoginModal from '../../hooks/useLoginModal.jsx';
 
@@ -32,43 +34,46 @@ export default function PwdChangePage() {
   const [pwdError, setPwdError] = useState('');
   const [pwdReError, setPwdReError] = useState('');
 
-  const handleInputChange = (e) => {
-    const { id, value } = e.target;
+  const debouncedValidatePassword = useCallback(
+    debounce((value) => {
+      const isValid = validatePassword(value);
+      setIsRightPwd(isValid);
+      setPwdError(isValid ? '올바른 양식입니다!' : '영어, 숫자, 특수문자를 모두 조합해서 12자 이상의 비밀번호를 작성해 주세요');
+    }, 200),
+    [validatePassword]
+  );
 
-    switch (id) {
-      case 'pwd':
-        setPwd(value);
-        setIsRightPwd(validatePassword(value));
-        setIsRightPwdRe(validatePasswordRe(pwdRe));
-        const isValidPwd = validatePassword(value);
-        setIsRightPwd(isValidPwd);
-        if (value.length < 12) {
-            setPwdError('비밀번호는 12자리 이상 입력해 주세요');
-            break;
-        }
-        if (!/^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*?_])/.test(value)) {
-          setPwdError(
-            '영어, 숫자, 특수문자를 모두 조합해서 비밀번호를 작성해 주세요'
-          );
+  const debouncedValidatePasswordRe = useCallback(
+    debounce((value) => {
+      const isValid = validatePasswordRe(value);
+      setIsRightPwdRe(isValid);
+      setPwdReError(isValid ? '비밀번호가 일치합니다!' : '비밀번호가 일치하지 않습니다');
+    }, 200),
+    [validatePasswordRe]
+  );
+
+  const handleInputChange = useCallback(
+    (e) => {
+      const { id, value } = e.target;
+
+      switch (id) {
+        case 'pwd':
+          setPwd(value);
+          debouncedValidatePassword(value);
           break;
-        } else setPwdError('올바른 양식입니다!');
-        break;
-      case 'pwdRe':
-        setPwdRe(value);
-        const isValidPwdRe = validatePasswordRe(value);
-        setIsRightPwdRe(isValidPwdRe);
-        setPwdReError(
-          isValidPwdRe
-            ? '비밀번호가 일치합니다!'
-            : '입력한 비밀번호가 잘못되었습니다'
-        );
-        break;
-      default:
-        break;
-    }
-  };
-
-  const formData = { password: pwd };
+        case 'pwdRe':
+          setPwdRe(value);
+          debouncedValidatePasswordRe(value);
+          break;
+        default:
+          break;
+      }
+    },
+    [
+      debouncedValidatePassword,
+      debouncedValidatePasswordRe,
+    ]
+  );
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -76,10 +81,18 @@ export default function PwdChangePage() {
     if (!(isRightPwd && isRightPwdRe)) return;
 
     try {
-      console.log('Form data submitted:', formData);
-      await mockPostChangePassword({ email }, formData);
+      const response = await patchChangePw({ email, pwd, pwdRe });
+      const { isSuccess } = response;
+
+      if (isSuccess) {
+        console.log('비밀번호 변경 성공:', response);
+      } else {
+        setIsRightPwdRe(false); 
+        setPwdReError('비밀번호가 일치하지 않습니다.');
+      }
     } catch (error) {
-      console.error('Error:', error);
+      console.error('비밀번호 변경 실패:', error);
+      setIsRightPwdRe(false); 
     }
   };
 
@@ -102,7 +115,6 @@ export default function PwdChangePage() {
                     placeholder='비밀번호를 입력해 주세요'
                     onChange={handleInputChange}
                   />
-                  {/* 텍스트 바뀌도록 할 것 */}
                 </S.InputContainer>
                 <S.WarningText className={isRightPwd ? 'success' : 'error'}>
                     {pwdError}
@@ -128,7 +140,7 @@ export default function PwdChangePage() {
                 padding='15px'
                 buttonStyle='orange'
                 onClick={open}
-                disabled={!isRightPwd || !isRightPwdRe}
+                disabled={!(isRightPwd && isRightPwdRe)}
               >
                 비밀번호 변경하기
               </Button>
