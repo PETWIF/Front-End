@@ -41,6 +41,7 @@ export const ActoinButtons = styled.div`
     color: #f87f28;
     font-size: 16px;
     cursor: pointer;
+    transition: 200ms all ease;
 
     &:hover {
       background-color: #f87f28;
