@@ -6,45 +6,24 @@ import { Flex } from '../../components/Common';
 import { Icon } from '../../components/Icon';
 
 // 페이지 전체
-export const Header = styled(Flex)`
-  height: 95px;
-  width: 100%;
-  justify-content: center;
-  align-items: center;
-  background: ${(props) => props.theme.color.white};
-  border: 1px solid ${(props) => props.theme.color.gray3};
-`;
-
-// 페이지 전체
 export const Wrapper = styled(Flex)`
   height: 100%;
   width: 100%;
   justify-content: center;
   align-items: center;
   background: ${(props) => props.theme.color.white};
-  padding: 100px 150px;
+  padding: 70px 150px;
   gap: 150px;
-`;
-
-// 가운데 블럭 전체
-export const Container = styled(Flex)`
-  width: 537px;
-  height: 728px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background: ${(props) => props.theme.color.white};
 `;
 
 // 하단의 로그인 버튼을 제외한 폼 부분
 export const FormWrapper = styled(Flex)`
-  width: 100%;
-  height: 100%;
-  gap: 20px;
+  width: 450px;
+  height: 600px;
+  gap: 10px;
   background-color: #fff;
   border: 1px solid #b4b4b4;
-  padding: 37.5px;
+  padding: 35px;
   display: flex;
   align-items: center;
   justify-content: space-evenly;
@@ -59,23 +38,12 @@ export const FormContainer = styled.form`
   align-items: center;
 `;
 
-// MainBoldText, (MainBoldText,) InputStyle, Button을 묶는 컨테이너
-export const InputWrapper = styled.div`
-  width: 100%;
-  margin: 5px 0 20px 0;
-  gap: 0 10px;
-  display: flex;
-  flex-direction: flex-inline;
-  align-items: flex-end;
-  justify-content: space-evenly;
-`;
-
 // MainBoldText, (MainBoldText,) InputStyle을 묶는 컨테이너
 export const InputContainer = styled.div`
   display: flex;
   width: 100%;
   gap: 5px;
-  margin-bottom: 25px;
+  margin-bottom: 10px;
   justify-content: flex-start;
   flex-direction: column;
 `;

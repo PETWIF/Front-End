@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { Flex } from '../../components/Common';
 
 export const Header = styled(Flex)`
-  height: 95px;
+  height: 80px;
   width: 100%;
   justify-content: center;
   align-items: center;
@@ -20,12 +20,13 @@ export const Wrapper = styled(Flex)`
   justify-content: center;
   align-items: center;
   background: ${(props) => props.theme.color.white};
-  padding: 100px;
+  padding: 80px 150px;
+  gap: 150px;
 `;
 
 export const Container = styled.div`
-  width: 537px;
-  height: 728px;
+  width: 450px;
+  height: 450px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -55,18 +56,24 @@ export const UnderlinedText = styled(Link)`
   color: ${(props) => props.theme.color.gray2};
 `;
 
-// 경고 문구 -> 유효성 검사로 그린, 레드 바뀌게 할 것
 export const WarningText = styled.span`
+  &.error {
+    color: red;
+  }
+  &.success {
+    color: #f87f28;
+  }
+
+  font-size: 14px;
   font-weight: 400;
   margin-top: 5px;
-  color: #ec221f;
 `;
 
 export const StyledHr = styled.hr`
   width: 100%;
   height: 1px;
   background-color: ${(props) => props.theme.color.gray2};
-  border: none;
+  margin: 20px;
 `;
 
 // 로그인으로 돌아가기 버튼을 제외한 폼 전체 박스
@@ -78,45 +85,53 @@ export const FormWrapper = styled.div`
   border: 1px solid #b4b4b4;
   padding: 37.5px;
   display: flex;
-  align-items: center;
-  justify-content: space-evenly;
   flex-direction: column;
 `;
 
 // 이메일 입력 ~ 인증 완료 버튼까지의 부분
 export const FormContainer = styled.form`
+  height: 100%;
+  width: 100%;
   display: flex;
-  gap: 15px;
-  justify-content: flex-start;
   flex-direction: column;
-  margin: 30px 0;
+  justify-content: flex-start;
+  align-items: center;
+  overflow-y: auto;
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
+  scrollbar-width: none;
+  scrollbar-color: transparent transparent;
+
+  -ms-overflow-style: none;
 `;
 
 // MainBoldText, (MainBoldText,) InputStyle, Button을 묶는 컨테이너
 // 경고 텍스트 때문에 이 페이지의 align-items만 center로 다름 (다른 덴 flex-end)
 export const InputWrapper = styled.div`
   width: 100%;
-  margin: 5px 0 20px 0;
-  gap: 0 10px;
+  margin: 5px 0 20px;
+  gap: 10px;
   display: flex;
-  flex-direction: flex-inline;
-  align-items: center;
-  justify-content: space-evenly;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
 `;
 
 // MainBoldText, (MainBoldText,) InputStyle을 묶는 컨테이너
 export const InputContainer = styled.div`
   display: flex;
   width: 100%;
-  gap: 5px;
+  gap: 10px;
   justify-content: flex-start;
-  flex-direction: column;
+  flex-direction: flex-inline;
 `;
 
 export const InputStyle = styled.input`
-  width: ${(props) => props.$width || '100%'};
+  width: 100%;
   height: 56px;
-  margin-top: 5px;
   padding: 15px;
   border: none;
   border-radius: 10px;
@@ -126,6 +141,7 @@ export const InputStyle = styled.input`
 
 export const TimerDisplay = styled.div`
   font-size: 20px;
+  margin: 0 0 10px 0;
   align-self: center;
   color: ${(props) => props.theme.color.primary};
 `;

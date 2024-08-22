@@ -17,10 +17,10 @@ export default function TitleContainer({ to, backIcon, modal, titleText }) {
           <Icon id='back' width='35px' height='35px' />
         </Link>
       ) : (
-        ''
+        <S.Spacer />
       )}
       <S.TitleText>{titleText}</S.TitleText>
-      {backIcon ? <S.Spacer /> : ''}
+      <S.Spacer />
     </S.TitleContainer>
   );
 }

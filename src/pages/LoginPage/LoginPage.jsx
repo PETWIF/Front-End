@@ -13,6 +13,7 @@ import * as S from './LoginPage.style.jsx';
 export default function LoginPage() {
   const { isChecked, checking } = useCheckIcon();
   const navigate = useNavigate();
+  // 이름, 비번, 인증번호도 추가하기
 
   const [email, setEmail] = useState('');
   const [password, setPwd] = useState('');
@@ -54,16 +55,16 @@ export default function LoginPage() {
     // }
 
     try {
-      await mockPostLogin({ email, password });
+      await mockPostLogin({ name, email, password });
       navigate('/home');
-      console.log('로그인 성공:', { email, password });
+      console.log('로그인 성공:', { name, email, password });
     } catch (error) {
       console.log({ email });
       console.error('로그인 실패:', error.message);
       if (error.message === 'User not found') {
-        setEmailError('이메일이 등록되어 있지 않습니다.');
+        setEmailError('가입되지 않은 이메일입니다.');
       } else if (error.message === 'Incorrect password') {
-        setPwdError('비밀번호가 틀렸습니다.');
+        setPwdError('비밀번호가 일치하지 않습니다.');
       }
     }
   };
@@ -108,7 +109,7 @@ export default function LoginPage() {
             </S.InputContainer>
             <S.AutoLoginContainer>
               <Icon
-                id={isChecked ? 'check' : 'uncheck'}
+                id={isChecked ? 'checked' : 'unchecked'}
                 width='35px'
                 height='35px'
                 onClick={checking}
@@ -119,7 +120,8 @@ export default function LoginPage() {
               width='370px'
               padding='18px'
               type='submit'
-              buttonStyle={isRightEmail && isRightPwd ? 'orange' : 'gray'}
+              buttonStyle='orange'
+              disabled={!isRightEmail || !isRightPwd}
             >
               로그인
             </Button>
@@ -131,9 +133,9 @@ export default function LoginPage() {
           <S.MainBoldText>간편 로그인</S.MainBoldText>
           <S.SocialLoginWrapper>
             <S.SocialLoginContainer id='kakao' width='62px' height='62px' />
-            <S.SocialLoginContainer id='naver' width='62px' height='62px' />
+            {/* <S.SocialLoginContainer id='naver' width='62px' height='62px' /> */}
             <S.SocialLoginContainer id='apple' width='62px' height='62px' />
-            <S.SocialLoginContainer id='google' width='62px' height='62px' />
+            {/* <S.SocialLoginContainer id='google' width='62px' height='62px' /> */}
           </S.SocialLoginWrapper>
           <S.UnderlinedText to='/signup'>
             아직 회원이 아니시라면?
