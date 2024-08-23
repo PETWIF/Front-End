@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
 
-import { getSuggestedFriendList } from '../../apis/friend.js';
+import { getSuggestedFriendList, requestFriend } from '../../apis/friend.js';
 
 import usePagination from '../../hooks/usePagination.jsx';
 
@@ -19,6 +19,15 @@ export default function RandomFriend() {
   const { data, status, fetchNextPage } = usePagination({
     queryKey: ['suggestedFriendList'],
     queryFn: ({ pageParam }) => getSuggestedFriendList({ page: pageParam }),
+  });
+
+  const queryClient = useQueryClient();
+  const request = useMutation({
+    mutationFn: (nickname) => requestFriend({ nickname }),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['suggestedFriendList']);
+      queryClient.invalidateQueries(['friendSentList']);
+    },
   });
 
   if (!data) return null;
@@ -41,7 +50,7 @@ export default function RandomFriend() {
               <span>{nickname}</span>
             </div>
             <Button
-              onClick={() => console.log(`${nickname} 친구 추가`)}
+              onClick={() => request.mutate(nickname)}
               width='100px'
               padding='8px'
               borderRadius='5px'

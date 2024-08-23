@@ -13,7 +13,7 @@ import * as S from '../Common.Style.jsx';
 export default function FriendSentList() {
   const { nickname: myNickname } = useAuth();
   const { data, status, fetchNextPage } = usePagination({
-    queryKey: ['friendList'],
+    queryKey: ['friendSentList'],
     queryFn: ({ pageParam }) => getFriendSentList({ page: pageParam }),
   });
 
