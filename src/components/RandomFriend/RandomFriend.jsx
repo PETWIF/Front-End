@@ -51,7 +51,7 @@ export default function RandomFriend() {
           </S.FriendItem>
         ))}
       </S.FriendList>
-      {friendList.lenght === 0 && <S.Text>추천 친구</S.Text>}
+      {friendList.length === 0 && <S.Text>추천 친구</S.Text>}
       {friendList.length > 0 && status === 'success' && (
         <Button
           onClick={() => fetchNextPage()}

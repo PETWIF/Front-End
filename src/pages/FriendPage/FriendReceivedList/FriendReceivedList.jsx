@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { getFriendList } from '../../../apis/friend.js';
+import { getFriendReceivedList } from '../../../apis/friend.js';
 
 import useAuth from '../../../hooks/useAuth.jsx';
 import usePagination from '../../../hooks/usePagination.jsx';
@@ -14,7 +14,7 @@ export default function FriendReceivedList() {
   const { nickname: myNickname } = useAuth();
   const { data, status, fetchNextPage } = usePagination({
     queryKey: ['friendList'],
-    queryFn: ({ pageParam }) => getFriendList({ page: pageParam }),
+    queryFn: ({ pageParam }) => getFriendReceivedList({ page: pageParam }),
   });
 
   if (!data) return null;
@@ -23,6 +23,8 @@ export default function FriendReceivedList() {
     data && !data.pages.includes(undefined)
       ? data.pages.flatMap((page) => page)
       : [];
+
+  console.log(friendList);
 
   return (
     <S.FriendLayout>
@@ -54,7 +56,7 @@ export default function FriendReceivedList() {
             </S.FriendItem>
           ))}
         </S.FriendList>
-        {friendList.lenght === 0 && <S.Text>받은 친구 요청이 없습니다</S.Text>}
+        {friendList.length === 0 && <S.Text>받은 친구 요청이 없습니다</S.Text>}
         {friendList.length > 0 && status === 'success' && (
           <Button
             onClick={() => {

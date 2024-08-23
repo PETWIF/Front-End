@@ -54,7 +54,7 @@ export default function FriendList() {
             </S.FriendItem>
           ))}
         </S.FriendList>
-        {friendList.lenght === 0 && <S.Text>친구가 없습니다</S.Text>}
+        {friendList.length === 0 && <S.Text>친구가 없습니다</S.Text>}
         {friendList.length > 0 && status === 'success' && (
           <Button
             onClick={() => {

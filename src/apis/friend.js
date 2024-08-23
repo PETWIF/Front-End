@@ -7,6 +7,20 @@ export const getFriendList = async ({ page = 0 }) => {
   return repsponse.data.data.friendList;
 };
 
+export const getFriendSentList = async ({ page = 0 }) => {
+  const repsponse = await authAxios.get('/friends/status/requests', {
+    params: { page },
+  });
+  return repsponse.data.data.friendList;
+};
+
+export const getFriendReceivedList = async ({ page = 0 }) => {
+  const repsponse = await authAxios.get('/friends/status/receive-requests', {
+    params: { page },
+  });
+  return repsponse.data.data.friendList;
+};
+
 export const requestFriend = async ({ nickname }) => {
   const repsponse = await authAxios.post('/friends/requests', {
     nickname,
