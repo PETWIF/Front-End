@@ -1,4 +1,7 @@
 import { Link } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+
+import { getSuggestedFriendList } from '../../apis/friend.js';
 
 import { Button } from '../Button';
 import { Layout } from '../Common';
@@ -11,20 +14,30 @@ import * as S from './RandomFriend.style.jsx';
 const nickname = '펫위프';
 
 export default function RandomFriend() {
+  const { data } = useQuery({
+    queryKey: ['suggestedFriendList'],
+    queryFn: () => getSuggestedFriendList(),
+    staleTime: 1000 * 60 * 5,
+  });
+
+  if (!data) return null;
+
+  console.log(data);
+
   return (
     <S.RandomFriendLayout>
       <S.Title>{nickname}님을 위한 추천</S.Title>
       <S.FriendList>
-        {RANDOM_FRIENDS.map(({ userId, name, image }) => (
-          <S.FriendItem key={userId}>
+        {data.map(({ nickname, profile_url: profileUrl }) => (
+          <S.FriendItem key={nickname}>
             <div>
-              <Link to={`/album/${userId}`}>
-                <Avatar src={image} size='66px' />
-              </Link>
-              <span>{name}</span>
+              {/* <Link to={`/album/${nickname}`}> */}
+              <Avatar src={profileUrl} size='66px' />
+              {/* </Link> */}
+              <span>{nickname}</span>
             </div>
             <Button
-              onClick={() => console.log(`${name} 친구 추가`)}
+              onClick={() => console.log(`${nickname} 친구 추가`)}
               width='100px'
               padding='8px'
               borderRadius='5px'
