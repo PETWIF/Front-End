@@ -12,7 +12,7 @@ import * as S from '../Common.Style.jsx';
 
 export default function FriendSentList() {
   const { nickname: myNickname } = useAuth();
-  const { data, fetchNextPage } = usePagination({
+  const { data, status, fetchNextPage } = usePagination({
     queryKey: ['friendList'],
     queryFn: ({ pageParam }) => getFriendList({ page: pageParam }),
   });
@@ -54,7 +54,8 @@ export default function FriendSentList() {
             </S.FriendItem>
           ))}
         </S.FriendList>
-        {friendList.length > 0 ? (
+        {friendList.lenght === 0 && <S.Text>보낸 친구 요청이 없습니다</S.Text>}
+        {friendList.length > 0 && status === 'success' && (
           <Button
             onClick={() => {
               fetchNextPage();
@@ -66,8 +67,6 @@ export default function FriendSentList() {
           >
             더보기
           </Button>
-        ) : (
-          <S.Text>보낸 친구 요청이 없습니다</S.Text>
         )}
       </S.FriendContainer>
     </S.FriendLayout>
