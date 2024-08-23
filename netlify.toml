@@ -4,5 +4,5 @@
   status = 200
   
 [build]
-publish = "build"
+publish = "dist"
 command = "CI=false yarn build"
