@@ -10,29 +10,39 @@ import * as S from './Sidebar.style.jsx';
 
 export default function Sidebar({ isOpen, close }) {
   const { pathname } = useLocation();
-  const [isLogin, setIsLogin] = useState();
+  const [isLogin, setIsLogin] = useState(false); 
   const navigate = useNavigate();
 
-  // 사이드바 동작 확인을 위한 임시 기능
-  const login = () => {
-    localStorage.setItem('token', 'abcdefg');
-    setIsLogin(true);
-    console.log('로그인');
-  };
-  const logout = () => {
-    localStorage.removeItem('token');
-    setIsLogin(false);
-    console.log('로그아웃');
+  const checkLoginStatus = () => {
+    setIsLogin(!localStorage.getItem('token'));
   };
 
+  // 사이드바 열릴 때마다 로그인 확인
   useEffect(() => {
+    checkLoginStatus(); 
+
     if (isOpen) {
       document.addEventListener('click', close);
-      setIsLogin(localStorage.getItem('token') ? true : false);
     }
 
     return () => document.removeEventListener('click', close);
-  }, [isOpen]);
+  }, [isOpen, close]);
+
+  const handleLogout = () => {
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('autoLogin');
+    localStorage.removeItem('token');
+
+    setIsLogin(false);
+    console.log('로그아웃');
+    navigate('/login');
+  };
+
+  const handleLogin = () => {
+    navigate('/login');
+    console.log('로그인 페이지로 이동');
+  };
 
   if (!isOpen) {
     return null;
@@ -57,16 +67,13 @@ export default function Sidebar({ isOpen, close }) {
             borderRadius='5px'
             onClick={() => {
               if (isLogin) {
-                logout();
-                console.log('로그아웃');
+                handleLogout();
               } else {
-                navigate('/login');
-                login();
-                console.log('로그인');
+                handleLogin(); 
               }
             }}
           >
-            {isLogin ? '로그아웃 ' : '로그인'}
+            {isLogin ? '로그아웃' : '로그인'}
           </Button>
         </S.ButtonWrapper>
       </S.SidebarContainer>

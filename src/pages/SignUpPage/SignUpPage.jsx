@@ -1,9 +1,10 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { debounce } from 'lodash';
+import { postEmail, postCode } from '../../apis/certificationCode.js';
+import { postSignUp } from '../../apis/signUp.js';
 
-import { mockPostSignup, mockPostCheckEmail } from '../../dummy/data/user.js';
+import { debounce } from 'lodash';
 
 import { Button } from '../../components/Button';
 
@@ -34,8 +35,7 @@ export default function SignUpPage() {
   const validateEmail = (value) => /\S+@\S+\.\S+/.test(value);
   const validateCode = (value) => /^[0-9]{6}$/.test(value); // 일단 숫자 n자리로 상정
   const validatePassword = (value) =>
-    value.length >= 4 &&
-    value.length <= 12 &&
+    value.length >= 12 &&
     /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*?_])./.test(value);
   const validatePasswordRe = (value) => value === pwd;
 
@@ -101,7 +101,7 @@ export default function SignUpPage() {
     debounce((value) => {
       const isValid = validatePassword(value);
       setIsRightPwd(isValid);
-      setPwdError(isValid ? '올바른 양식입니다!' : '영어, 숫자, 특수문자를 모두 조합해서 비밀번호를 작성해 주세요');
+      setPwdError(isValid ? '올바른 양식입니다!' : '영어, 숫자, 특수문자를 모두 조합해서 12자 이상의 비밀번호를 작성해 주세요');
     }, 200),
     [validatePassword]
   );
@@ -154,24 +154,42 @@ export default function SignUpPage() {
   );
 
   const handleEmailSubmit = async () => {
+    if (!isRightEmail) {
+      return;
+    }
+
     try {
-      await mockPostCheckEmail({ email });
-      console.log('가입 가능한 이메일:', { email });
-    } catch (error) {
-      console.error('오류 발생:', error.message);
-      if (error.message === 'User already exists') {
-        setIsRightEmail(false);
-        setEmailError('이미 가입된 이메일입니다.');
+      const response = await postEmail({ email });
+      const { isSuccess } = response;
+
+      if (isSuccess) {
+        console.log('이메일 존재:', { email });
+        setEmailError('인증번호가 전송되었습니다.');
+      } else {
+        setIsRightEmail(false); 
+        setEmailError('이메일을 다시 한 번 확인해 주세요.');
       }
+    } catch (error) {
+      console.error('이메일 전송 실패:', error);
     }
   };
 
-  const handleCodeSubmit = (e) => {
+  const handleCodeSubmit = async (e) => {
     e.preventDefault();
-    if (!isRightCode) {
-      setCodeError('인증번호가 일치하지 않습니다.');
-    } else {
-      setCodeError('인증번호가 일치합니다!');
+
+    try {
+      const response = await postCode({ email, code });
+      const { isSuccess } = response;
+
+      if (isSuccess) {
+        console.log('인증 성공:', code);
+        setCodeError('인증번호가 일치합니다!');
+      } else {
+        setIsRightCode(false);
+        setEmailError('인증번호가 일치하지 않습니다.');
+      }
+    } catch (error) {
+      console.error('인증번호 확인 실패:', error);
     }
   };
 
@@ -182,19 +200,38 @@ export default function SignUpPage() {
   };
 
   const navigate = useNavigate();
-  const formData = { name: name, email: email, password: pwd, passwordCheck: pwdRe };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!(isRightEmail && isRightPwd && isRightPwdRe)) return;
+    if (!(isRightEmail && isRightPwd && isRightPwdRe)) {
+      return;
+    }
 
     try {
-      console.log('Form data submitted:', formData);
-      await mockPostSignup(formData);
-      navigate('/agree', { state: { email, password: pwd } });
+      const response = await postSignUp({ name, email, pwd, pwdRe });
+      const { isSuccess, message, code } = response;
+
+      if (isSuccess) {
+        console.log('회원가입 성공:', response);
+        navigate('/agree', { state: { email, password: pwd } });
+      } else {
+        switch (code) {
+          case 'COMMON400':
+            setPwdError('12자 이상의 비밀번호를 작성해 주세요');
+            break;
+          case '400':
+            if (message === 'wrong password')
+              setPwdReError('비밀번호가 일치하지 않습니다.');
+            else
+            setEmailError('이미 가입된 이메일입니다. 다른 이메일을 이용해 주세요.');
+            break;
+          default:
+            break;
+        }
+      }
     } catch (error) {
-      console.error('Error:', error);
+      console.error('회원가입 실패:', error);
     }
   };
 
@@ -205,7 +242,7 @@ export default function SignUpPage() {
         <S.Container>
           <S.FormWrapper>
             <TitleContainer backIcon='true' titleText='회원 가입' />
-            <S.FormContainer onSubmit={handleSubmit}>
+            <S.FormContainer onSubmit={(e) => {handleSubmit(e)}}>
               <S.InputWrapper>
                 <S.MainBoldText>이름</S.MainBoldText>
                 <S.InputContainer>
@@ -238,9 +275,7 @@ export default function SignUpPage() {
                     buttonStyle='light'
                     onClick={(e) => {
                       e.preventDefault();
-                      //handleSendCode(); 
-                      handleEmailSubmit();
-                      setEmailError('인증번호가 전송되었습니다.');
+                      handleEmailSubmit(e);
                     }}
                     disabled={!isRightEmail}
                   >
@@ -266,13 +301,14 @@ export default function SignUpPage() {
                     padding='11px'
                     fontSize='15px'
                     buttonStyle='light'
-                    disabled={code.length !== 6}
                     onClick={handleCodeSubmit}
                   >
                     인증번호 확인
                   </Button>
                 </S.InputContainer>
-                <S.WarningText className={isRightCode ? 'success' : 'error'}>
+                <S.WarningText 
+                className={isRightCode ? 'success' : 'error'}
+                >
                   {codeError}
                 </S.WarningText>
               </S.InputWrapper>
