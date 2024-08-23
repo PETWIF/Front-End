@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 
-import { Button } from '../../components/Button';
+import { parse } from 'date-fns';
 
-import { mockPostAddInfo } from '../../dummy/data/user.js';
+import { patchAddUserInfo, postAddPetInfo } from '../../apis/addInfo.js';
+
+import { Button } from '../../components/Button';
 
 import LoginHeader from '../../components/LoginComponents/LoginHeader';
 import TitleContainer from '../../components/LoginComponents/TitleContainer';
@@ -15,39 +17,36 @@ export default function AddInfoPage() {
   const location = useLocation();
   const navigate = useNavigate();
   
-  const { email, nickname } = location.state || {};
+  const { nickname } = location.state || {};
 
   const [gender, setGender] = useState('');
-  const [year, setYear] = useState('');
+  const [year, setYear] = useState(''); 
   const [month, setMonth] = useState('');
   const [day, setDay] = useState('');
+  const [telecom, setTelecom] = useState('');
   const [phone, setPhone] = useState('');
   const [address, setAddress] = useState('');
   const [petName, setPetName] = useState('');
   const [petGender, setPetGender] = useState('');
   const [petAge, setPetAge] = useState('');
+  const [petKind, setPetKind] = useState('');
+
+  const birthDate = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+  //parse(`${year}-${month}-${day}`, 'yyyy-MM-dd', new Date());
+  // `${year}-${month}-${day}`;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const formData = {
-      gender,
-      birthdate: `${year}-${month}-${day}`,
-      phone,
-      address,
-      petInfo: {
-        name: petName,
-        gender: petGender,
-        age: petAge,
-      },
-    };
+    const response = await patchAddUserInfo({ gender, birthDate, telecom, phone, address });
+    const { isSuccess, data } = response;
+      const petResponse = await postAddPetInfo({ petName, petGender, petAge, petKind });
 
     try {
-      console.log('Form data submitted:', formData);
-      await mockPostAddInfo(email, formData);
-      navigate('/registered', { state: { nickname } }); // 성공적으로 저장된 후 이동할 페이지
+      // const { isPetSuccess } = petResponse;
+      console.log('정보 입력 성공');
+      navigate('/registered', { state: { nickname } });
     } catch (error) {
-      console.error('Error updating user info:', error);
+      console.error('정보 입력 중 에러 발생:', error);
     }
   };
 
@@ -62,7 +61,7 @@ export default function AddInfoPage() {
               backIcon='true'
               titleText='추가 정보 입력'
             />
-            <S.FormContainer onSubmit={handleSubmit}>
+            <S.FormContainer onSubmit={(e) => handleSubmit(e)}>
               <S.MainBoldText>회원 정보</S.MainBoldText>
               <S.StyledHr />
               <S.MainBoldText>성별</S.MainBoldText>
@@ -71,7 +70,7 @@ export default function AddInfoPage() {
                   $width='20px'
                   type='radio'
                   name='gender'
-                  value='male'
+                  value='MALE'
                   onChange={(e) => setGender(e.target.value)}
                 />
                 <S.MainNormalText>남성</S.MainNormalText>
@@ -79,7 +78,7 @@ export default function AddInfoPage() {
                   $width='20px'
                   type='radio'
                   name='gender'
-                  value='female'
+                  value='FEMALE'
                   onChange={(e) => setGender(e.target.value)}
                 />
                 <S.MainNormalText>여성</S.MainNormalText>
@@ -90,21 +89,21 @@ export default function AddInfoPage() {
                   $width='92px'
                   type='text'
                   className='year'
-                  placeholder='연도'
+                  placeholder='연도(YYYY)'
                   onChange={(e) => setYear(e.target.value)}
                 />
                 <S.InputStyle
                   $width='92px'
                   type='text'
                   className='month'
-                  placeholder='월'
+                  placeholder='월(MM)'
                   onChange={(e) => setMonth(e.target.value)}
                 />
                 <S.InputStyle
                   $width='92px'
                   type='text'
                   className='day'
-                  placeholder='일'
+                  placeholder='일(DD)'
                   onChange={(e) => setDay(e.target.value)}
                 />
               </S.InputWrapper>
@@ -112,8 +111,8 @@ export default function AddInfoPage() {
               <S.InputWrapper>
                 <S.SelectStyle 
                   $width='92px' 
-                  className='mobile'
-                  onChange={(e) => setPhone(e.target.value)}
+                  className='telecom'
+                  onChange={(e) => setTelecom(e.target.value)}
                   >
                   <option value=''>통신사 선택</option>
                   <option value='skt'>SKT</option>
@@ -164,7 +163,7 @@ export default function AddInfoPage() {
                   $width='20px'
                   type='radio'
                   name='pet-gender'
-                  value='pet-male'
+                  value='MALE'
                   onChange={(e) => setPetGender(e.target.value)}
                 />
                 <S.MainNormalText>수컷</S.MainNormalText>
@@ -172,7 +171,7 @@ export default function AddInfoPage() {
                   $width='20px'
                   type='radio'
                   name='pet-gender'
-                  value='pet-female'
+                  value='FEMALE'
                   onChange={(e) => setPetGender(e.target.value)}
                 />
                 <S.MainNormalText>암컷</S.MainNormalText>
@@ -186,6 +185,18 @@ export default function AddInfoPage() {
                     className='pet-age'
                     placeholder='반려동물의 나이를 입력해 주세요'
                     onChange={(e) => setPetAge(e.target.value)}
+                  />
+                </S.InputContainer>
+              </S.InputWrapper>
+              <S.InputWrapper>
+                <S.InputContainer>
+                  <S.MainBoldText>종류</S.MainBoldText>
+                  <S.InputStyle
+                    $width='263px'
+                    type='text'
+                    className='pet-kind'
+                    placeholder='반려동물의 종류를 입력해 주세요'
+                    onChange={(e) => setPetKind(e.target.value)}
                   />
                 </S.InputContainer>
               </S.InputWrapper>
