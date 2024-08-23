@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
 
-import { getAlbumDetail } from '../../apis/album.js';
+import { getAlbumDetail, deleteAlbum } from '../../apis/album.js';
 
 import useAuth from '../../hooks/useAuth.jsx';
 
@@ -28,9 +28,20 @@ export default function AlbumDetailPage() {
   const { data } = useQuery({
     queryKey: ['albumDetail', albumId],
     queryFn: () => getAlbumDetail({ albumId }),
+    staleTime: 1000 * 60 * 5,
   });
 
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
+  const deleteA = useMutation({
+    mutationFn: () => deleteAlbum({ albumId }),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['albumDetail', albumId]);
+      navigate(-1);
+    },
+  });
+
   const [keyword, setKeyword] = useState('');
   const [showChat, setShowChat] = useState(false);
 
@@ -54,7 +65,7 @@ export default function AlbumDetailPage() {
           />
           <S.ActoinButtons>
             <button>수정</button>
-            <button>삭제</button>
+            <button onClick={() => deleteA.mutate()}>삭제</button>
           </S.ActoinButtons>
         </S.BackButton>
         {userId !== Number(currentUserId) && (
