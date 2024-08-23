@@ -36,3 +36,10 @@ export const FriendItem = styled.li`
     gap: 13px;
   }
 `;
+
+export const Text = styled.div`
+  height: 500px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;

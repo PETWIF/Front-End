@@ -8,7 +8,12 @@ import { AlbumMakingPage } from './pages/AlbumMakingPage';
 import { BookmarkPage } from './pages/BookmarkPage';
 import { ChattingPage } from './pages/ChattingPage';
 import { ExplorePage } from './pages/ExplorePage';
-import { FriendPage } from './pages/FriendPage';
+import {
+  FriendList,
+  FriendPage,
+  FriendReceivedList,
+  FriendSentList,
+} from './pages/FriendPage';
 import { LoginPage } from './pages/LoginPage';
 import { MainPage } from './pages/MainPage';
 import { PwdChangePage } from './pages/PwdChangePage';
@@ -112,6 +117,24 @@ export const routeList = [
       {
         path: '/friend',
         element: <FriendPage />,
+        children: [
+          {
+            index: true,
+            element: <FriendList />,
+          },
+          {
+            path: '/friend/list',
+            element: <FriendList />,
+          },
+          {
+            path: '/friend/sentList',
+            element: <FriendSentList />,
+          },
+          {
+            path: '/friend/receivedList',
+            element: <FriendReceivedList />,
+          },
+        ],
       },
       {
         path: '/chatting',
