@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { getFriendList } from '../../../apis/friend.js';
 
 import useAuth from '../../../hooks/useAuth.jsx';
+import usePagination from '../../../hooks/usePagination.jsx';
 
 import { Avatar } from '../../../components/Avatar';
 import { Button } from '../../../components/Button';
@@ -11,15 +12,17 @@ import * as S from './FriendList.style.jsx';
 
 export default function FriendList() {
   const { nickname } = useAuth();
-  const { data } = useQuery({
+  const { data, fetchNextPage } = usePagination({
     queryKey: ['friendList'],
-    queryFn: () => getFriendList(),
-    staleTime: 1000 * 60 * 5,
+    queryFn: ({ pageParam }) => getFriendList({ page: pageParam }),
   });
 
   if (!data) return null;
 
-  const friendList = data.filter(({ status }) => status === 'ACCEPTED');
+  const friendList =
+    data && !data.pages.includes(undefined)
+      ? data.pages.flatMap((page) => page)
+      : [];
 
   return (
     <S.FriendLayout>
@@ -51,6 +54,21 @@ export default function FriendList() {
             </S.FriendItem>
           ))}
         </S.FriendList>
+        {friendList.length > 0 ? (
+          <Button
+            onClick={() => {
+              fetchNextPage();
+            }}
+            padding='10px'
+            borderRadius='5px'
+            buttonStyle='light'
+            hasBorder
+          >
+            더보기
+          </Button>
+        ) : (
+          <S.Text>친구가 없습니다</S.Text>
+        )}
       </S.FriendContainer>
     </S.FriendLayout>
   );
