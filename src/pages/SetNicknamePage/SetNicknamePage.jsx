@@ -45,10 +45,11 @@ export default function SetNicknamePage() {
       console.log(file);
 
       setProfilePic(file);
+      //
 
       const image = window.URL.createObjectURL(file);
       setPreview(image);
-    
+    // 미리보기 이상...
       try {
         const formData = new FormData();
         formData.append('file:', file);
