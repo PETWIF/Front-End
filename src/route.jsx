@@ -98,7 +98,7 @@ export const routeList = [
         element: <AlbumDetailPage />,
       },
       {
-        path: '/album/bookmark',
+        path: '/album/bookmark/:userId',
         element: <BookmarkPage />,
       },
       {

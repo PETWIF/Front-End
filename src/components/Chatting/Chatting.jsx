@@ -5,7 +5,9 @@ import { Avatar } from '../Avatar';
 import { Icon } from '../../components/Icon';
 import { CHAT_DATA } from '../../dummy/data';
 
-export default function Chatting({ userId }) {
+const nickname = '댕댕산책가';
+
+export default function Chatting() {
   const [messages, setMessages] = useState(CHAT_DATA);
   const [inputValue, setInputValue] = useState('');
 
@@ -19,7 +21,10 @@ export default function Chatting({ userId }) {
         id: messages.length + 1,
         sender: 'me',
         text: inputValue,
-        timestamp: new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' }),
+        timestamp: new Date().toLocaleTimeString('ko-KR', {
+          hour: '2-digit',
+          minute: '2-digit',
+        }),
       };
       setMessages([...messages, newMessage]);
       setInputValue('');
@@ -29,7 +34,7 @@ export default function Chatting({ userId }) {
 
   const handleKeyPress = (e) => {
     if (e.key === 'Enter') {
-      e.preventDefault();  // 엔터 입력 시 기본 동작 방지 (폼 제출 등)
+      e.preventDefault(); // 엔터 입력 시 기본 동작 방지 (폼 제출 등)
       handleSendMessage();
     }
   };
@@ -39,7 +44,7 @@ export default function Chatting({ userId }) {
       <S.ChatHeader>
         <S.ChatTitle>채팅하기</S.ChatTitle>
         <S.NotificationButton>
-          <Icon id="notification" width="24" height="24" />
+          <Icon id='notification' width='24' height='24' />
         </S.NotificationButton>
       </S.ChatHeader>
       <S.ChatMessages>
@@ -48,7 +53,7 @@ export default function Chatting({ userId }) {
             {message.sender === 'friend' && (
               <S.ChatName>
                 <Avatar src={Img} size='24px' />
-                {userId}
+                {nickname}
               </S.ChatName>
             )}
             <S.ChatBubbleContainer isMe={message.sender === 'me'}>
@@ -64,14 +69,14 @@ export default function Chatting({ userId }) {
       </S.ChatMessages>
       <S.ChatInputContainer>
         <S.PlusButton>
-          <Icon id="plusbutton" width="25" height="25" />
+          <Icon id='plusbutton' width='25' height='25' />
         </S.PlusButton>
         <S.ChatInput
-          type="text"
+          type='text'
           value={inputValue}
           onChange={handleInputChange}
           onKeyDown={handleKeyPress} // Enter 키 입력을 처리
-          placeholder="상대에게 메시지 보내기"
+          placeholder='상대에게 메시지 보내기'
         />
         <S.ChatSendButton onClick={handleSendMessage}>
           <Icon id='sendbutton' width='26' height='27' />

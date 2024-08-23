@@ -10,37 +10,31 @@ import { AlbumDetail } from '../../components/AlbumDetail';
 import { AlbumInfo } from '../../components/AlbumInfo';
 import { AlbumItem } from '../AlbumPage';
 import { AlbumViewer } from '../../components/AlbumViewer';
+import { Chatting } from '../../components/Chatting';
 import { DropDown } from '../../components/DropDown';
 import { Icon } from '../../components/Icon';
-import { AlbumDetail } from '../../components/AlbumDetail';
-import { Chatting } from '../../components/Chatting';
-import { SORT_CATEGORIES } from '../../constants';
-import { feedData } from '../../dummy/data';
 import { Search } from '../../components/Search';
 import { UserInfo } from '../../components/UserInfo';
 
 import { SORT_CATEGORIES } from '../../constants';
 import { ALBUM_LIST, feedData } from '../../dummy/data';
 
-const myId = 'myUserId1';
-const yourId = '댕댕산책가';
 import * as S from './AlbumDetailPage.style.jsx';
+
+const myId = 'myUserId1';
 
 export default function AlbumDetailPage() {
   const { userId } = useAuth();
   const { userId: currentUserId, albumId } = useParams();
+
   const { data } = useQuery({
     queryKey: ['albumDetail', albumId],
     queryFn: () => getAlbumDetail({ albumId }),
   });
 
-  const [keyword, setKeyword] = useState('');
-  const [sort, setSort] = useState();
-  const [showChat, setShowChat] = useState(false);
-  const params = useParams();
-  const userId = params.userId || 'myUserId';
-
   const navigate = useNavigate();
+  const [keyword, setKeyword] = useState('');
+  const [showChat, setShowChat] = useState(false);
 
   if (!data) {
     return null;
@@ -71,7 +65,7 @@ export default function AlbumDetailPage() {
               value={keyword}
               onChange={(event) => setKeyword(event.target.value)}
             />
-            <Link to='/album/bookmark'>
+            <Link to={`/album/bookmark/${userId}`}>
               <S.MenuItem>
                 <Icon id='bookmark' width='26' height='27' />
                 <span>BOOKMARK</span>
@@ -81,18 +75,18 @@ export default function AlbumDetailPage() {
               <Icon id='message' width='26' height='26' />
               <span>MESSAGE</span>
             </S.MenuItem>
-          </Link>
-          <S.MenuItem>
-            <Icon id='message' width='26' height='26' />
-            <span>MESSAGE</span>
-          </S.MenuItem>
-        </S.MenuList>
+          </S.MenuList>
+        )}
         <AlbumViewer albumImages={data.albumImages} content={data.content} />
       </S.MainContainer>
       <S.SideContainer>
-        {userId !== Number(currentUserId) && <UserInfo nickname={yourId} />}
+        {userId !== Number(currentUserId) && <UserInfo />}
         <AlbumInfo data={data} />
-        {showChat ? <Chatting userId={yourId} /> : <AlbumDetail album={feedData[0]} userId={yourId} albumId={albumId}/>}
+        {showChat ? (
+          <Chatting />
+        ) : (
+          <AlbumDetail album={feedData[0]} albumId={albumId} />
+        )}
       </S.SideContainer>
     </S.MainLayout>
   );
