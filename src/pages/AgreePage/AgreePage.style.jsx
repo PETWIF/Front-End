@@ -9,13 +9,13 @@ export const Wrapper = styled(Flex)`
   justify-content: center;
   align-items: center;
   background: ${(props) => props.theme.color.white};
-  padding: 100px;
+  padding: 80px 150px;
 `;
 
 // 가운데 블럭 전체
 export const Container = styled(Flex)`
-  width: 537px;
-  height: 728px;
+  width: 450px;
+  height: 450px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -41,8 +41,21 @@ export const FormWrapper = styled(Flex)`
 export const FormContainer = styled.form`
   height: 100%;
   width: 100%;
+  gap: 10px;
+  display: flex;
+  flex-direction: column;
   justify-content: flex-start;
   align-items: center;
+  overflow-y: auto;
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
+  scrollbar-width: none;
+  scrollbar-color: transparent transparent;
+
+  -ms-overflow-style: none;
 `;
 
 // MainBoldText, (MainBoldText,) InputStyle을 묶는 컨테이너
@@ -72,7 +85,7 @@ export const StyledHr = styled.hr`
   width: 100%;
   height: 1px;
   background-color: ${(props) => props.theme.color.gray2};
-  border: none;
+  margin: 20px;
 `;
 
 // input label과 같이 올라가는 두꺼운 텍스트
@@ -101,12 +114,12 @@ export const ExplainContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
-  margin-top: 20px;
 `;
 
 // 전체 동의하기
 export const AllAgreeContainer = styled.div`
-  height: 40px;
+  margin-top: 15px;
+  height: 10px;
   width: 100%;
   display: flex;
   flex-direcion: flex-inline;
@@ -125,14 +138,15 @@ export const TermTitleContainer = styled.div`
 
 export const ServiceTermContainer = styled.div`
   width: 100%;
-  height: 86px;
+  height: 200px;
   color: ${(props) => props.theme.color.gray2};
-  background-color: ${(props) => props.theme.color.gray4};
+  background-color: ${(props) => props.theme.color.gray5};
   border: none;
   overflow: auto;
   border-radius: 10px;
   margin: 10px 0;
   padding: 10px;
+  font-size: 13px;
 
   ::-webkit-scrollbar {
     display: none;
@@ -145,7 +159,7 @@ export const ServiceTermContainer = styled.div`
 `;
 
 export const ServiceTermWrapper = styled.div`
-  width: 447px;
-  height: 115px;
-  margin: 30px 0;
+  width: 95%;
+  height: 250px;
+  margin: 10px 5px;
 `;

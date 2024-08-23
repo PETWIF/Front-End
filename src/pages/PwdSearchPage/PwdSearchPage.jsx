@@ -1,15 +1,27 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-
+import React, { useState, useEffect, useCallback } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { debounce } from 'lodash';
 import { Button } from '../../components/Button';
-
 import LoginHeader from '../../components/LoginComponents/LoginHeader';
 import TitleContainer from '../../components/LoginComponents/TitleContainer';
-
 import * as S from './PwdSearchPage.style.jsx';
+import { mockPostPwdSearch } from '../../dummy/data/user.js';
 
-// 추후 유효성 검사 통과 여부에 따라 경고 텍스트 글씨 바뀌도록 설정 필요
 export default function PwdSearchPage() {
+  const navigate = useNavigate();
+
+  const [email, setEmail] = useState('');
+  const [code, setCode] = useState('');
+
+  const [emailError, setEmailError] = useState('');
+  const [codeError, setCodeError] = useState('');
+
+  const [isRightEmail, setIsRightEmail] = useState(false);
+  const [isRightCode, setIsRightCode] = useState(false);
+
+  const validateEmail = (value) => /\S+@\S+\.\S+/.test(value);
+  const validateCode = (value) => /^[0-9]{6}$/.test(value); // 6자리 숫자
+
   const [isTimerActive, setIsTimerActive] = useState(false);
   const [timeLeft, setTimeLeft] = useState(0);
 
@@ -31,13 +43,74 @@ export default function PwdSearchPage() {
   }, [isTimerActive]);
 
   const handleSendCode = () => {
-    setTimeLeft(300); // 5 minutes in seconds
+    setTimeLeft(300); // 5분(300초)
     setIsTimerActive(true);
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    // 여기에 인증번호 확인 코드 추가
+  const debouncedValidateEmail = useCallback(
+    debounce((value) => {
+      const isValidEmail = validateEmail(value);
+      setIsRightEmail(isValidEmail);
+      setEmailError(isValidEmail ? '올바른 양식입니다!' : '올바른 양식이 아닙니다.');
+    }, 300),
+    []
+  );
+
+  const debouncedValidateCode = useCallback(
+    debounce((value) => {
+      setCode(value);
+      const isValidCode = validateCode(value);
+      setIsRightCode(isValidCode);
+    }, 50),
+    []
+  );
+
+  const handleInputChange = useCallback((e) => {
+    const { id, value } = e.target;
+
+    switch (id) {
+      case 'email':
+        setEmail(value);
+        debouncedValidateEmail(value); 
+        break;
+      case 'code':
+        setCode(value);
+        debouncedValidateCode(value);
+        break;
+      default:
+        break;
+    }
+  }, [debouncedValidateEmail, debouncedValidateCode]);
+
+  const handleEmailSubmit = async () => {
+    if (!isRightEmail) {
+      return;
+    }
+
+    try {
+      await mockPostPwdSearch({ email });
+      console.log('이메일 존재:', { email });
+    } catch (error) {
+      console.error('이메일 존재하지 않음:', error.message);
+      if (error.message === 'User not found') {
+        setIsRightEmail(false);
+        setEmailError('가입되지 않은 이메일입니다.');
+      }
+    }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    navigate('/changePwd', { state: { email: email }});
+  };
+
+  const handleCodeSubmit = (e) => {
+    e.preventDefault();
+    if (!isRightCode) {
+      setCodeError('인증번호가 일치하지 않습니다.');
+    } else {
+      setCodeError('인증번호가 일치합니다!');
+    }
   };
 
   const formatTime = (seconds) => {
@@ -55,59 +128,81 @@ export default function PwdSearchPage() {
             <TitleContainer backIcon='true' titleText='비밀번호 찾기' />
             <S.FormContainer onSubmit={handleSubmit}>
               <S.InputWrapper>
+                <S.MainBoldText>이메일</S.MainBoldText>
                 <S.InputContainer>
-                  <S.MainBoldText>이메일</S.MainBoldText>
                   <S.InputStyle
                     type='text'
+                    id='email'
                     className='email'
                     placeholder='이메일을 입력해 주세요'
+                    onChange={handleInputChange}
                   />
-                  {/* 나중에 텍스트 바뀌도록 할 것 */}
-                  <S.WarningText>
-                    * 올바른 이메일인지 확인해 주세요.
-                  </S.WarningText>
-                </S.InputContainer>
                 <Button
+                  type='button'
                   width='150px'
-                  padding='15px'
-                  buttonStyle='gray'
-                  onClick={handleSendCode}
+                  buttonStyle='light'
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleSendCode(); // 함수 호출
+                    handleEmailSubmit(); // 함수 호출
+                    setEmailError('인증번호가 전송되었습니다.');
+                  }}
+                  fontSize='14px'
                 >
                   인증번호 전송
                 </Button>
+                </S.InputContainer>
+                <S.WarningText className={isRightEmail ? 'success' : 'error'}>
+                  {emailError}
+                </S.WarningText>
               </S.InputWrapper>
               <S.InputWrapper>
+              <S.MainBoldText>인증번호 입력</S.MainBoldText>
                 <S.InputContainer>
-                  <S.MainBoldText>인증번호 입력</S.MainBoldText>
                   <S.InputStyle
                     type='text'
-                    className='certification'
+                    id='code'
+                    className='code'
                     placeholder='인증번호를 입력해 주세요'
+                    onChange={handleInputChange}
                   />
-                  <S.WarningText>* 인증번호가 잘못되었어요.</S.WarningText>
-                </S.InputContainer>
-                <Button width='150px' padding='15px' buttonStyle='gray'>
+                <Button 
+                  id='code'
+                  width='150px' 
+                  buttonStyle='light'
+                  fontSize='14px'
+                  onClick={handleCodeSubmit}
+                  >
                   인증번호 확인
                 </Button>
+                </S.InputContainer>
+                <S.WarningText className={isRightCode ? 'success' : 'error'}>
+                  {codeError}
+                </S.WarningText>
               </S.InputWrapper>
-              {isTimerActive && (
+              { isRightEmail ? isTimerActive && (
                 <S.TimerDisplay>{formatTime(timeLeft)}</S.TimerDisplay>
-              )}
-              <Link to='/changePwd'>
-                <Button width='447px' padding='15px' buttonStyle='gray'>
+              ) : "" }
+                <Button 
+                  type='submit'
+                  width='100%' 
+                  padding='15px' 
+                  buttonStyle='orange'
+                  disabled={!isRightCode || !isRightEmail}
+                  >
                   인증 완료
                 </Button>
-              </Link>
-            </S.FormContainer>
-            <S.UnderlinedText to={'/changePwd'}>
+            <S.UnderlinedText>
+                <br />
               비밀번호를 재설정할 수 없나요?
             </S.UnderlinedText>
             <S.StyledHr />
             <S.UnderlinedText to={'/signup'}>새 계정 만들기</S.UnderlinedText>
+            </S.FormContainer>
           </S.FormWrapper>
           <Link to='/login'>
             <Button
-              width='537px'
+              width='450px'
               padding='20px'
               borderRadius='0'
               hasBorder='true'

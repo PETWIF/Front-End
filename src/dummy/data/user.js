@@ -4,7 +4,7 @@ let users = [
     name: '임도이',
     email: 'doirang1@gmail.com',
     age: '24',
-    username: 'doirang1',
+    nickname: '되',
     password: 'qaz121!',
   },
   {
@@ -12,7 +12,7 @@ let users = [
     name: '일론 머스크',
     email: 'elone@gmail.com',
     age: '45',
-    username: 'elonmusk1004',
+    nickname: '테슬라',
     password: 'elon1004!',
   },
 ];
@@ -27,10 +27,21 @@ export const mockPostSignup = async (formData) => {
 
   users.push({
     ...formData,
+    name: formData.name,
     email: formData.email,
     password: formData.password,
   });
   return { email: formData.email };
+};
+
+
+export const mockPostCheckEmail = async (formData) => {
+  const existingUser = users.find((user) => user.email === formData.email);
+  if (existingUser) {
+    throw new Error('User already exists');
+  }
+
+  return null;
 };
 
 export const mockPostLogin = async (formData) => {
@@ -45,5 +56,45 @@ export const mockPostLogin = async (formData) => {
     throw new Error('Incorrect password');
   }
 
+  return { email: user.email, name: user.name };
+};
+
+export const mockPostPwdSearch = async (formData) => {
+  // 비밀번호 찾기 - 가입된 이메일인지 확인
+  const user = users.find((user) => user.email === formData.email);
+  if (!user) {
+    throw new Error('User not found');
+  }
+
+  return { email: user.email };
+};
+
+export const mockPostSetNickname = async (email, formData) => {
+  const user = users.find((user) => user.email === email);
+  if (!user) {
+    throw new Error('User not found');
+  }
+
+  Object.assign(user, formData); 
+  return user;
+};
+
+export const mockPostAddInfo = async (email, formData) => {
+  const user = users.find((user) => user.email === email);
+  if (!user) {
+    throw new Error('User not found');
+  }
+
+  Object.assign(user, formData); 
+  return user;
+};
+
+export const mockPostChangePassword = async (email, newPassword) => {
+  const user = users.find((user) => user.email === email);
+  if (!user) {
+    throw new Error('User not found');
+  }
+
+  user.password = newPassword;
   return { email: user.email, name: user.name };
 };

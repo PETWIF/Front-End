@@ -6,21 +6,20 @@ export const MainContainer = styled.div`
 `;
 
 export const Sidebar = styled.div`
+  padding: 20px;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
   gap: 10px;
-  padding: 20px;
   overflow-y: auto;
 `;
 
 export const Thumbnail = styled.img`
-  width: 60px;
-  height: 60px;
-  object-fit: cover;
-  cursor: pointer;
+  width: 80px;
+  height: 80px;
   border-radius: 8px;
+  object-fit: cover;
   transition: transform 0.2s;
+  cursor: pointer;
 
   &:hover {
     transform: scale(1.1);
@@ -42,8 +41,8 @@ export const ImageContainer = styled.div`
   &::-webkit-scrollbar {
     display: none; /* 크롬, 사파리, 엣지 */
   }
-  -ms-overflow-style: none;  /* IE 및 Edge */
-  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none; /* IE 및 Edge */
+  scrollbar-width: none; /* Firefox */
 `;
 
 export const ImageWrapper = styled.div`

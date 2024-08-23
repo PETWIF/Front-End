@@ -1,4 +1,5 @@
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 import { Button } from '../../components/Button';
 import { Icon } from '../../components/Icon';
@@ -16,9 +17,33 @@ import * as S from './AgreePage.style.jsx';
 export default function AgreePage() {
   const { isChecked, checking } = useCheckIcon();
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    // 여기에 코드 추가
+  const [isServiceChecked, setIsServiceChecked] = useState(false);
+  const [isPrivacyChecked, setIsPrivacyChecked] = useState(false);
+
+  const [isAllChecked, setIsAllChecked] = useState(false);
+
+  const handleAllAgreeClick = () => {
+    const newState = !isAllChecked;
+    setIsAllChecked(newState);
+    setIsServiceChecked(newState);
+    setIsPrivacyChecked(newState);
+  };
+
+  useEffect(() => {
+    if (isServiceChecked && isPrivacyChecked) {
+      setIsAllChecked(true);
+    } else {
+      setIsAllChecked(false);
+    }
+  }, [isServiceChecked, isPrivacyChecked]);
+
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { email, password } = location.state;
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    navigate('/setNickname', { state: { email, password } })
   };
 
   return (
@@ -32,6 +57,7 @@ export default function AgreePage() {
               backIcon='true'
               titleText='이용 약관'
             />
+            <S.FormContainer onSubmit={handleSubmit}>
             <S.ExplainContainer>
               <S.MainBoldText>
                 서비스 이용을 위해 약관에 동의해 주세요.
@@ -41,21 +67,24 @@ export default function AgreePage() {
                 있습니다.
               </S.MainNormalText>
             </S.ExplainContainer>
-            <S.FormContainer onSubmit={handleSubmit}>
-              <S.AllAgreeContainer>
-                <Icon
-                  id={isChecked ? 'check' : 'uncheck'}
-                  width='35px'
-                  height='35px'
-                  onClick={checking}
-                />
-                <S.GrayText>전체 동의하기</S.GrayText>
-              </S.AllAgreeContainer>
-              <S.StyledHr />
+            <S.AllAgreeContainer onClick={handleAllAgreeClick}>
+              <Icon
+                id={isAllChecked ? 'checked' : 'unchecked'}
+                width='35px'
+                height='35px'
+                onClick={checking}
+              />
+              <S.GrayText>전체 동의하기</S.GrayText>
+            </S.AllAgreeContainer>
+            <S.StyledHr />
               <S.ServiceTermWrapper>
                 <S.TermTitleContainer>
                   <S.GrayText>[필수] 서비스 이용 약관</S.GrayText>
-                  <input type='checkbox' />
+                  <input
+                    type='checkbox'
+                    checked={isServiceChecked}
+                    onChange={() => setIsServiceChecked(!isServiceChecked)}
+                  />
                 </S.TermTitleContainer>
                 <S.ServiceTermContainer>
                   <Service />
@@ -63,24 +92,31 @@ export default function AgreePage() {
               </S.ServiceTermWrapper>
               <S.ServiceTermWrapper>
                 <S.TermTitleContainer>
-                  {/* span 컬러 바꾸기 -> props로 받아 올 수 없나? */}
                   <S.GrayText>[필수] 개인정보 처리 약관</S.GrayText>
-                  <input type='checkbox' />
+                  <input
+                    type='checkbox'
+                    checked={isPrivacyChecked}
+                    onChange={() => setIsPrivacyChecked(!isPrivacyChecked)}
+                  />
                 </S.TermTitleContainer>
                 <S.ServiceTermContainer>
                   <Privacy />
                 </S.ServiceTermContainer>
               </S.ServiceTermWrapper>
-            </S.FormContainer>
-            <Link to='/setNickname'>
-              <Button width='446px' padding='16px' buttonStyle='gray'>
+              <Button 
+              type='submit'
+                width='100%' 
+                padding='16px' 
+                buttonStyle='orange' 
+                disabled={!isAllChecked}
+                >
                 다음으로
               </Button>
-            </Link>
+              </S.FormContainer>
           </S.FormWrapper>
           <Link to='/login'>
             <Button
-              width='537px'
+              width='450px'
               padding='20px'
               borderRadius='0'
               buttonStyle='light'
