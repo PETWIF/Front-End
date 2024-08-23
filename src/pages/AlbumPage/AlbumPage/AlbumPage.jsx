@@ -5,6 +5,7 @@ import { useParams, Link } from 'react-router-dom';
 import { getAlbumList } from '../../../apis/album.js';
 
 import useAuth from '../../../hooks/useAuth.jsx';
+import useInfiniteScroll from '../../../hooks/useInfiniteScroll.jsx';
 
 import { AlbumItem } from '../../AlbumPage';
 import { DropDown } from '../../../components/DropDown';
@@ -24,34 +25,36 @@ const yourId = '댕댕산책가';
 const userId = 46;
 
 export default function AlbumPage() {
-  const { userId } = useAuth();
+  const { nickname } = useAuth();
   const params = useParams();
-  const currentUserId = Number(params?.userId) || userId;
+  const currentNickname = decodeURIComponent(params.nickname || nickname);
 
   const [sort, setSort] = useState();
-  const [keyword, setKeyword] = useState('');
   const [showChat, setShowChat] = useState(false); // State to toggle between RandomFriend and Chat
-  
-  const { data } = useQuery({
-    queryKey: ['albumList', currentUserId, sort?.value],
-    queryFn: () => getAlbumList({ userId: currentUserId, sortBy: sort?.value }),
-    staleTime: 1000 * 60 * 5,
-  });
 
-  if (!data) return null;
+  const { data, Target, ref } = useInfiniteScroll({
+    queryKey: ['albumList', currentNickname, sort?.value],
+    queryFn: ({ pageParam }) =>
+      getAlbumList({
+        nickname: currentNickname,
+        page: pageParam,
+        sortBy: sort?.value,
+      }),
+  });
 
   const handleToggleChat = () => {
     setShowChat((prev) => !prev);
   };
 
+  const albumList =
+    data && !data.pages.includes(undefined)
+      ? data.pages.flatMap((page) => page)
+      : [];
+
   return (
     <S.MainLayout>
       <S.MainContainer>
-        <Search
-          value={keyword}
-          onChange={(event) => setKeyword(event.target.value)}
-        />
-        {userId !== currentUserId && (
+        {nickname !== currentNickname && (
           <S.MenuList>
             <Link to='/album/bookmark'>
               <S.MenuItem>
@@ -74,15 +77,15 @@ export default function AlbumPage() {
               setFn={setSort}
             />
           </S.DropDownBox>
-          {data && (
+          {albumList && (
             <S.AlbumList>
-              {data.map((album) => (
+              {albumList.map((album) => (
                 <AlbumItem key={album.albumId} album={album} />
               ))}
             </S.AlbumList>
           )}
           <S.AlbumAmount>
-            <span>{data?.length}</span>
+            <span>{albumList?.length}</span>
             <span>Albums</span>
           </S.AlbumAmount>
         </S.AlbumBox>

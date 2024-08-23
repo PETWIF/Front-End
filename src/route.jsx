@@ -88,7 +88,7 @@ export const routeList = [
         element: <AlbumPage />,
         children: [
           {
-            path: '/album/:userId',
+            path: '/album/:nickname',
             element: <AlbumPage />,
           },
         ],
