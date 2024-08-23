@@ -19,12 +19,14 @@ export default function FriendList() {
 
   if (!data) return null;
 
+  const friendList = data.filter(({ status }) => status === 'ACCEPTED');
+
   return (
     <S.FriendLayout>
       <S.FriendContainer>
         <S.Title>{nickname}님의 친구 목록</S.Title>
         <S.FriendList>
-          {data.map(({ id, nickname, profile_url: profileUrl }) => (
+          {friendList.map(({ id, nickname, profile_url: profileUrl }) => (
             <S.FriendItem
               key={id}
               onClick={() => {
