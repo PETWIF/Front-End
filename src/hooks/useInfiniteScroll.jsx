@@ -1,8 +1,8 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
 
-import { useIntersect } from '@/hooks';
+import { useIntersect } from './hooks';
 
-import { Target } from '@/components/Target';
+import { Target } from '../components/Target';
 
 export default function useInfiniteScroll({ queryKey, queryFn }) {
   const { data, hasNextPage, isFetching, status, fetchNextPage } =
