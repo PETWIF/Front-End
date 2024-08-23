@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import { Layout } from '../../../components/Common';
+import { Layout } from '../../components/Common';
 
 export const FriendLayout = styled.main`
   display: flex;

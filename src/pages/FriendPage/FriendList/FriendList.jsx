@@ -8,10 +8,10 @@ import usePagination from '../../../hooks/usePagination.jsx';
 import { Avatar } from '../../../components/Avatar';
 import { Button } from '../../../components/Button';
 
-import * as S from './FriendList.style.jsx';
+import * as S from '../Common.Style.jsx';
 
 export default function FriendList() {
-  const { nickname } = useAuth();
+  const { nickname: myNickname } = useAuth();
   const { data, fetchNextPage } = usePagination({
     queryKey: ['friendList'],
     queryFn: ({ pageParam }) => getFriendList({ page: pageParam }),
@@ -27,7 +27,7 @@ export default function FriendList() {
   return (
     <S.FriendLayout>
       <S.FriendContainer>
-        <S.Title>{nickname}님의 친구 목록</S.Title>
+        <S.Title>{myNickname}님의 친구 목록</S.Title>
         <S.FriendList>
           {friendList.map(({ id, nickname, profile_url: profileUrl }) => (
             <S.FriendItem
