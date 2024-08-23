@@ -8,3 +8,11 @@ export const postLogin = async ({ email, password }) => {
     
     return response.data;
 };
+
+export const postGoogleLogin = async ({ googleCode }) => {
+    const response = await authAxios.post(`/login/oauth2/code/google?code=${googleCode}`, {
+        code: googleCode,
+    });   
+    
+    return response.data;
+};

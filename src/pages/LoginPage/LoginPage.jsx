@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { postLogin } from '../../apis/login.js';
+import { postLogin, postGoogleLogin } from '../../apis/login.js';
 
 import { Button } from '../../components/Button';
 import { Icon } from '../../components/Icon';
@@ -41,6 +41,33 @@ export default function LoginPage() {
         break;
       default:
         break;
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+
+    // 링크를 로컬 호스트가 아닌 다른 내용으로 바꾸면 오류 발생
+    window.location.href = `https://accounts.google.com/o/oauth2/auth?client_id=928539400314-fsf7hhtt5mbqvpa8slt5iae561c99mpc.apps.googleusercontent.com&redirect_uri=http://localhost:8080/login/oauth2/code/google&response_type=code&scope=https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile`;
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const googleCode = urlParams.get('code');
+  
+    const response = await postGoogleLogin(googleCode);
+    const { isSuccess, data } = response;
+
+    if (isSuccess) {
+      const { accessToken, refreshToken } = data;
+
+      if (autoLogin) {
+        localStorage.setItem('accessToken', accessToken);
+        localStorage.setItem('refreshToken', refreshToken);
+        localStorage.setItem('autoLogin', 'true');
+      }
+
+      navigate('/home');
+    } else {
+      setEmailError('로그인에 실패했습니다. 다시 시도해 주세요.');
+      setPwdError('비밀번호가 일치하지 않습니다.');
     }
   };
 
@@ -147,8 +174,8 @@ export default function LoginPage() {
           <S.StyledHr />
           <S.MainBoldText>간편 로그인</S.MainBoldText>
           <S.SocialLoginWrapper>
-            <S.SocialLoginContainer id='kakao' width='62px' height='62px' />
-            <S.SocialLoginContainer id='apple' width='62px' height='62px' />
+            <S.SocialLoginContainer id='kakao' width='62px' height='62px'/>
+            <S.SocialLoginContainer id='google' width='62px' height='62px' onClick={handleGoogleLogin}/>
           </S.SocialLoginWrapper>
           <S.UnderlinedText to='/signup'>
             아직 회원이 아니시라면?
