@@ -38,7 +38,7 @@ const AlbumItem = forwardRef((props, ref) => {
           <Link key={albumId} to={`/album/${currentUserId}/detail/${albumId}`}>
             <AlbumButton>앨범 구경하기</AlbumButton>
           </Link>
-          <AlbumButton onClick={() => console.log('앨범 수정하기')}>
+          <AlbumButton onClick={() => navigate(`/album/edit/${albumId}`)}>
             앨범 수정하기
           </AlbumButton>
         </S.ButtonContainer>
