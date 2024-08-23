@@ -1,6 +1,6 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
 
-import { getFriendSentList } from '../../../apis/friend.js';
+import { getFriendSentList, cancelFriend } from '../../../apis/friend.js';
 
 import useAuth from '../../../hooks/useAuth.jsx';
 import usePagination from '../../../hooks/usePagination.jsx';
@@ -17,14 +17,20 @@ export default function FriendSentList() {
     queryFn: ({ pageParam }) => getFriendSentList({ page: pageParam }),
   });
 
+  const queryClient = useQueryClient();
+  const cancel = useMutation({
+    mutationFn: (nickname) => cancelFriend({ nickname }),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['friendSentList']);
+    },
+  });
+
   if (!data) return null;
 
   const friendList =
     data && !data.pages.includes(undefined)
       ? data.pages.flatMap((page) => page)
       : [];
-
-  console.log(friendList);
 
   return (
     <S.FriendLayout>
@@ -43,7 +49,7 @@ export default function FriendSentList() {
               <Button
                 onClick={(event) => {
                   event.stopPropagation();
-                  console.log(`${nickname} 친구 요청 취소`);
+                  cancel.mutate(nickname);
                 }}
                 width='100px'
                 padding='8px'

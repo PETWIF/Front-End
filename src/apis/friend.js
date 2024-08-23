@@ -7,6 +7,13 @@ export const requestFriend = async ({ nickname }) => {
   return repsponse;
 };
 
+export const cancelFriend = async ({ nickname }) => {
+  const repsponse = await authAxios.put('/friends/cancellations', {
+    nickname,
+  });
+  return repsponse;
+};
+
 export const getFriendList = async ({ page = 0 }) => {
   const repsponse = await authAxios.get('/friends', {
     params: { page },
