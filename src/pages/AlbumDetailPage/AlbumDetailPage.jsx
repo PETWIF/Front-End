@@ -21,8 +21,6 @@ import { ALBUM_LIST, feedData } from '../../dummy/data';
 
 import * as S from './AlbumDetailPage.style.jsx';
 
-const myId = 'myUserId1';
-
 export default function AlbumDetailPage() {
   const { userId } = useAuth();
   const { userId: currentUserId, albumId } = useParams();
@@ -59,7 +57,7 @@ export default function AlbumDetailPage() {
             <button>삭제</button>
           </S.ActoinButtons>
         </S.BackButton>
-        {myId !== userId && (
+        {userId !== Number(currentUserId) && (
           <S.MenuList>
             <Search
               value={keyword}
