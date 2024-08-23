@@ -90,12 +90,15 @@ export const InputStyle = styled.input`
 `;
 
 // input
-export const InputFileStyle = styled.input`
-  width: 212px;
-  height: 212px;
-  // margin-top: 5px;
-  // padding: 15px;
-  // border: none;
+export const InputFileStyle = styled.div`
+  width: auto;
+  height: 200px;
+  margin: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 60px;
+  border: 1px solid ${(props) => props.theme.color.gray1};
   border-radius: 100%;
   // color: ${(props) => props.theme.color.gray1};
   // background: ${(props) => props.theme.color.gray5};

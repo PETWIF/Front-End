@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 
-import { Button } from '../../components/Button';
+import { patchAddUserInfo, patchAddPetInfo } from '../../apis/addInfo.js';
 
-import { mockPostAddInfo } from '../../dummy/data/user.js';
+import { Button } from '../../components/Button';
 
 import LoginHeader from '../../components/LoginComponents/LoginHeader';
 import TitleContainer from '../../components/LoginComponents/TitleContainer';
@@ -18,36 +18,32 @@ export default function AddInfoPage() {
   const { email, nickname } = location.state || {};
 
   const [gender, setGender] = useState('');
-  const [year, setYear] = useState('');
+  const [year, setYear] = useState(''); 
   const [month, setMonth] = useState('');
   const [day, setDay] = useState('');
+  const [telecom, setTelecom] = useState('');
   const [phone, setPhone] = useState('');
   const [address, setAddress] = useState('');
   const [petName, setPetName] = useState('');
   const [petGender, setPetGender] = useState('');
   const [petAge, setPetAge] = useState('');
+  const [petKind, setPetKind] = useState('');
+
+  const birthDate = `${year}-${month}-${day}`;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const formData = {
-      gender,
-      birthdate: `${year}-${month}-${day}`,
-      phone,
-      address,
-      petInfo: {
-        name: petName,
-        gender: petGender,
-        age: petAge,
-      },
-    };
-
     try {
-      console.log('Form data submitted:', formData);
-      await mockPostAddInfo(email, formData);
-      navigate('/registered', { state: { nickname } }); // 성공적으로 저장된 후 이동할 페이지
+      const userResponse = await patchAddUserInfo({ gender, birthDate, telecom, phone, address });
+      // const { isUserSuccess } = userResponse;
+      const petResponse = await patchAddPetInfo({ petName, petGender, petAge, petKind });
+      // const { isPetSuccess } = petResponse;
+
+      console.log('정보 입력 성공');
+      navigate('/registered', { state: { nickname } });
     } catch (error) {
-      console.error('Error updating user info:', error);
+      console.error('정보 입력 중 에러 발생:', error);
     }
   };
 
@@ -71,7 +67,7 @@ export default function AddInfoPage() {
                   $width='20px'
                   type='radio'
                   name='gender'
-                  value='male'
+                  value='MALE'
                   onChange={(e) => setGender(e.target.value)}
                 />
                 <S.MainNormalText>남성</S.MainNormalText>
@@ -79,7 +75,7 @@ export default function AddInfoPage() {
                   $width='20px'
                   type='radio'
                   name='gender'
-                  value='female'
+                  value='FEMALE'
                   onChange={(e) => setGender(e.target.value)}
                 />
                 <S.MainNormalText>여성</S.MainNormalText>
@@ -112,8 +108,8 @@ export default function AddInfoPage() {
               <S.InputWrapper>
                 <S.SelectStyle 
                   $width='92px' 
-                  className='mobile'
-                  onChange={(e) => setPhone(e.target.value)}
+                  className='telecom'
+                  onChange={(e) => setTelecom(e.target.value)}
                   >
                   <option value=''>통신사 선택</option>
                   <option value='skt'>SKT</option>
@@ -164,7 +160,7 @@ export default function AddInfoPage() {
                   $width='20px'
                   type='radio'
                   name='pet-gender'
-                  value='pet-male'
+                  value='MALE'
                   onChange={(e) => setPetGender(e.target.value)}
                 />
                 <S.MainNormalText>수컷</S.MainNormalText>
@@ -172,7 +168,7 @@ export default function AddInfoPage() {
                   $width='20px'
                   type='radio'
                   name='pet-gender'
-                  value='pet-female'
+                  value='FEMALE'
                   onChange={(e) => setPetGender(e.target.value)}
                 />
                 <S.MainNormalText>암컷</S.MainNormalText>
@@ -186,6 +182,18 @@ export default function AddInfoPage() {
                     className='pet-age'
                     placeholder='반려동물의 나이를 입력해 주세요'
                     onChange={(e) => setPetAge(e.target.value)}
+                  />
+                </S.InputContainer>
+              </S.InputWrapper>
+              <S.InputWrapper>
+                <S.InputContainer>
+                  <S.MainBoldText>종류</S.MainBoldText>
+                  <S.InputStyle
+                    $width='263px'
+                    type='text'
+                    className='pet-kind'
+                    placeholder='반려동물의 종류를 입력해 주세요'
+                    onChange={(e) => setPetKind(e.target.value)}
                   />
                 </S.InputContainer>
               </S.InputWrapper>
