@@ -1,8 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 
-import { parse } from 'date-fns';
-
 import { patchAddUserInfo, postAddPetInfo } from '../../apis/addInfo.js';
 
 import { Button } from '../../components/Button';
@@ -32,19 +30,25 @@ export default function AddInfoPage() {
   const [petKind, setPetKind] = useState('');
 
   const birthDate = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-  //parse(`${year}-${month}-${day}`, 'yyyy-MM-dd', new Date());
-  // `${year}-${month}-${day}`;
+  const petAgeInt = parseInt(petAge, 10);  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const response = await patchAddUserInfo({ gender, birthDate, telecom, phone, address });
-    const { isSuccess, data } = response;
-      const petResponse = await postAddPetInfo({ petName, petGender, petAge, petKind });
+
+    console.log({ gender, birthDate, telecom, phone, address });
+    console.log({ petName, petGender, petAgeInt, petKind });
 
     try {
-      // const { isPetSuccess } = petResponse;
+      const userRes = await patchAddUserInfo({ gender, birthDate, telecom, phone, address });
+      const petRes = await postAddPetInfo({ petName, petGender, petAgeInt, petKind });
+
+      if (userRes && petRes) {
       console.log('정보 입력 성공');
       navigate('/registered', { state: { nickname } });
+      } else {
+        console.error('유저:', userRes);
+        console.error('펫:', petRes);
+      }
     } catch (error) {
       console.error('정보 입력 중 에러 발생:', error);
     }
@@ -115,12 +119,10 @@ export default function AddInfoPage() {
                   onChange={(e) => setTelecom(e.target.value)}
                   >
                   <option value=''>통신사 선택</option>
-                  <option value='skt'>SKT</option>
-                  <option value='kt'>KT</option>
-                  <option value='lg-uplus'>LG U+</option>
-                  <option value='skt-lite'>SKT 알뜰폰</option>
-                  <option value='kt-lite'>KT 알뜰폰</option>
-                  <option value='lg-uplus-lite'>LG U+ 알뜰폰</option>
+                  <option value='SKT'>SKT</option>
+                  <option value='KT'>KT</option>
+                  <option value='LGUPLUS'>LG U+</option>
+                  <option value='ETC'>기타</option>
                 </S.SelectStyle>
                 <S.InputStyle
                   type='text'
