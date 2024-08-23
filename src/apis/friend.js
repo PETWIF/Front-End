@@ -30,7 +30,7 @@ export const cancelFriend = async ({ nickname }) => {
 
 export const removeFriend = async ({ nickname }) => {
   const repsponse = await authAxios.delete('/friends', {
-    nickname,
+    params: { nickname },
   });
   return repsponse;
 };
