@@ -7,6 +7,20 @@ export const requestFriend = async ({ nickname }) => {
   return repsponse;
 };
 
+export const acceptFriend = async ({ nickname }) => {
+  const repsponse = await authAxios.put('/friends/acceptances', {
+    nickname,
+  });
+  return repsponse;
+};
+
+export const rejectFriend = async ({ nickname }) => {
+  const repsponse = await authAxios.put('/friends/rejections', {
+    nickname,
+  });
+  return repsponse;
+};
+
 export const cancelFriend = async ({ nickname }) => {
   const repsponse = await authAxios.put('/friends/cancellations', {
     nickname,

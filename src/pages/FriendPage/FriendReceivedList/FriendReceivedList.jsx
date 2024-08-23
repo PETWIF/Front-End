@@ -1,6 +1,10 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
 
-import { getFriendReceivedList } from '../../../apis/friend.js';
+import {
+  getFriendReceivedList,
+  acceptFriend,
+  rejectFriend,
+} from '../../../apis/friend.js';
 
 import useAuth from '../../../hooks/useAuth.jsx';
 import usePagination from '../../../hooks/usePagination.jsx';
@@ -15,6 +19,22 @@ export default function FriendReceivedList() {
   const { data, status, fetchNextPage } = usePagination({
     queryKey: ['friendReceivedList'],
     queryFn: ({ pageParam }) => getFriendReceivedList({ page: pageParam }),
+  });
+
+  const queryClient = useQueryClient();
+  const accept = useMutation({
+    mutationFn: (nickname) => acceptFriend({ nickname }),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['friendReceivedList']);
+      queryClient.invalidateQueries(['friendList']);
+    },
+  });
+
+  const reject = useMutation({
+    mutationFn: (nickname) => rejectFriend({ nickname }),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['friendReceivedList']);
+    },
   });
 
   if (!data) return null;
@@ -40,19 +60,34 @@ export default function FriendReceivedList() {
             >
               <Avatar src={profileUrl} size='66px' />
               <span>{nickname}</span>
-              <Button
-                onClick={(event) => {
-                  event.stopPropagation();
-                  console.log(`${nickname} 친구 요청 수락`);
-                }}
-                width='100px'
-                padding='8px'
-                borderRadius='5px'
-                buttonStyle='white'
-                hasBorder
-              >
-                요청 수락
-              </Button>
+              <S.Buttons>
+                <Button
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    accept.mutate(nickname);
+                  }}
+                  width='100px'
+                  padding='8px'
+                  borderRadius='5px'
+                  buttonStyle='white'
+                  hasBorder
+                >
+                  수락
+                </Button>
+                <Button
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    reject.mutate(nickname);
+                  }}
+                  width='100px'
+                  padding='8px'
+                  borderRadius='5px'
+                  buttonStyle='white'
+                  hasBorder
+                >
+                  거절
+                </Button>
+              </S.Buttons>
             </S.FriendItem>
           ))}
         </S.FriendList>

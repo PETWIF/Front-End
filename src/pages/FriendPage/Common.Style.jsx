@@ -48,3 +48,9 @@ export const Text = styled.div`
   justify-content: center;
   align-items: center;
 `;
+
+export const Buttons = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 4px;
+`;
