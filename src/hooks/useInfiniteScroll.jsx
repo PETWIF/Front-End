@@ -1,6 +1,6 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
 
-import { useIntersect } from './hooks';
+import useIntersect from './useIntersect.jsx';
 
 import { Target } from '../components/Target';
 
