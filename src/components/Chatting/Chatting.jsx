@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import * as S from './chatting.style';
+import * as S from './chatting.style.jsx';
 import { Profile as Img } from '../../dummy/images';
 import { Avatar } from '../Avatar';
 import { Icon } from '../../components/Icon';
