@@ -8,10 +8,13 @@ export const patchNickname = async ({ nickname }) => {
     return response.data;
 };
 
-export const postProfilePic = async ({ profilePic }) => {
-    const response = await authAxios.post(`/member/profile`, {
-        file: profilePic,
-    });   
-    
-    return response.data;
+export const postProfilePic = async ({ formData }) => {
+    const response = await authAxios.post('/member/profile', 
+        { //
+        headers: {
+          'Content-Type': 'multipart/form-data', // multipart/form-data로 설정
+        }}
+);
+
+  return response.data;
 };

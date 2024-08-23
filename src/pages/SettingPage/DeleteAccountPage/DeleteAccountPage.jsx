@@ -1,3 +1,7 @@
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { getMyId, deleteAccount } from '../../../apis/deleteAccount.js';
+
 import { Button } from '../../../components/Button';
 import {
   Checkbox,
@@ -10,6 +14,40 @@ import {
 import * as S from './DeleteAccountPage.style.jsx';
 
 export default function DeleteAccountPage() {
+  const navigate = useNavigate();
+  const [agree, setAgree] = useState(false);
+
+  const handleInputChange = (e) => {
+    const { value } = e.target;
+    if (value === '삭제합니다') {
+      setAgree(true);
+    } else {
+      setAgree(false);
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log(localStorage.getItem('token'));
+
+    if (!agree) {
+      return;
+    }
+
+    const userId = await getMyId();
+    console.log(userId);
+    const response = await deleteAccount({ userId });
+    const { isSuccess } = response;
+
+    if (isSuccess) {
+      console.log('탈퇴 완료');
+      // 완료 안내 모달 추가
+      navigate('/login');
+    } else {
+      console.log('탈퇴 처리 불가능');
+    }
+  };
+
   return (
     <S.SettingLayout>
       <S.Content>
@@ -21,13 +59,14 @@ export default function DeleteAccountPage() {
               정보 및 활동들이 삭제됩니다. 정말 계정을 삭제하시겠습니까? 정말
               삭제하려면 "삭제합니다" 라고 적어주시기 바랍니다.
             </S.Text>
-            <TextInput
+            <S.InputStyle
               type='text'
-              placeholder={`\"삭제합니다\"를 입력해주세요`}
+              placeholder={`\"삭제합니다\"를 입력해 주세요`}
+              onChange={handleInputChange}
             />
           </S.Field>
         </S.Fieldset>
-        <Button padding='20px'>계정 삭제하기</Button>
+        <Button padding='20px' onClick={handleSubmit} disabled={!agree}>계정 삭제하기</Button>
       </S.Content>
     </S.SettingLayout>
   );
