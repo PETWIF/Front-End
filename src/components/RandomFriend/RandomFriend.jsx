@@ -22,8 +22,6 @@ export default function RandomFriend() {
 
   if (!data) return null;
 
-  console.log(data);
-
   return (
     <S.RandomFriendLayout>
       <S.Title>{nickname}님을 위한 추천</S.Title>
