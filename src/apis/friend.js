@@ -28,6 +28,13 @@ export const cancelFriend = async ({ nickname }) => {
   return repsponse;
 };
 
+export const removeFriend = async ({ nickname }) => {
+  const repsponse = await authAxios.delete('/friends', {
+    nickname,
+  });
+  return repsponse;
+};
+
 export const getFriendList = async ({ page = 0 }) => {
   const repsponse = await authAxios.get('/friends', {
     params: { page },

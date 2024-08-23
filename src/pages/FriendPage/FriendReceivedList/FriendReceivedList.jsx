@@ -44,8 +44,6 @@ export default function FriendReceivedList() {
       ? data.pages.flatMap((page) => page)
       : [];
 
-  console.log(friendList);
-
   return (
     <S.FriendLayout>
       <S.FriendContainer>
