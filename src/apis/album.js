@@ -11,3 +11,8 @@ export const getAlbumDetail = async ({ albumId }) => {
   const response = await authAxios.get(`/albums/${albumId}`);
   return response.data.data;
 };
+
+export const deleteAlbum = async ({ albumId }) => {
+  const response = await authAxios.delete(`/albums/${albumId}`);
+  return response;
+};
