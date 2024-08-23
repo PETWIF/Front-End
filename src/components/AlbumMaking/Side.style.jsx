@@ -247,8 +247,12 @@ export const Paragraph2 = styled.p`
 `;
 
 export const Emoticon = styled.div`
+  cursor: pointer;
   width: 105px;
   height: 105px;
   background: #f3f4f6;
   border-radius: 10px;
+  &:hover {
+    background-color: #f0f0f0;
+  }
 `;

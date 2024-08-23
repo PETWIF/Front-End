@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { postLogin } from '../../apis/login.js';
@@ -6,12 +6,9 @@ import { postLogin } from '../../apis/login.js';
 import { Button } from '../../components/Button';
 import { Icon } from '../../components/Icon';
 
-import useCheckIcon from '../../hooks/useCheckIcon.jsx';
-
 import * as S from './LoginPage.style.jsx';
 
 export default function LoginPage() {
-  const { isChecked, checking } = useCheckIcon();
   const navigate = useNavigate();
 
   const [email, setEmail] = useState('');
@@ -22,6 +19,8 @@ export default function LoginPage() {
 
   const [isRightEmail, setIsRightEmail] = useState(false);
   const [isRightPwd, setIsRightPwd] = useState(false);
+
+  const [autoLogin, setAutoLogin] = useState(false); // -> 자동 로그인 체크 여부
 
   const validateEmail = (value) => /\S+@\S+\.\S+/.test(value);
   const validatePwd = (value) => value.length >= 12;
@@ -53,25 +52,36 @@ export default function LoginPage() {
     }
 
     const response = await postLogin({ email, password });
-    const { isSuccess, code, message, data } = response;
+    const { isSuccess, data } = response;
 
     if (isSuccess) {
-      const { accessToken, refreshToken } = data; 
-      // console.log('로그인 성공:', { accessToken, refreshToken });
+      const { accessToken, refreshToken } = data;
+
+      if (autoLogin) {
+        localStorage.setItem('accessToken', accessToken);
+        localStorage.setItem('refreshToken', refreshToken);
+        localStorage.setItem('autoLogin', 'true');
+      }
+
       navigate('/home');
     } else {
-      switch (message) {
-        case '회원이 아닙니다. 회원가입을 해주세요.':
-          setEmailError('가입되지 않은 이메일입니다.');
-          break;
-        case '비밀번호 불일치':
-          setPwdError('비밀번호가 일치하지 않습니다.');
-          break;
-        default:
-          setEmailError('로그인에 실패했습니다. 다시 시도해 주세요.');
-          break;
-      }
+      setEmailError('로그인에 실패했습니다. 다시 시도해 주세요.');
+      setPwdError('비밀번호가 일치하지 않습니다.');
     }
+  };
+
+  useEffect(() => {
+    // 토큰 확인
+    const storedAccessToken = localStorage.getItem('accessToken');
+    const storedAutoLogin = localStorage.getItem('autoLogin');
+
+    if (storedAccessToken && storedAutoLogin === 'true') {
+      navigate('/home');
+    }
+  }, [navigate]);
+
+  const handleAutoLoginClick = () => {
+    setAutoLogin(!autoLogin);
   };
 
   return (
@@ -114,10 +124,10 @@ export default function LoginPage() {
             </S.InputContainer>
             <S.AutoLoginContainer>
               <Icon
-                id={isChecked ? 'checked' : 'unchecked'}
+                id={autoLogin ? 'checked' : 'unchecked'}
                 width='35px'
                 height='35px'
-                onClick={checking}
+                onClick={handleAutoLoginClick} 
               />
               <span>자동 로그인</span>
             </S.AutoLoginContainer>

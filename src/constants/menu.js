@@ -28,10 +28,10 @@ export const SIDE_MENUS = Object.freeze([
   },
   {
     // 앨범 제작 페이지 이동용 임시 버튼
-    id: 'album-create',
+    id: 'rectangle',
     to: '/album-create',
-    name: '앨범 제작(임시 버튼)',
-    icon: { width: 24, height: 24 },
+    name: '앨범 제작',
+    icon: { width: 11, height: 11 },
   },
   {
     id: 'friend',

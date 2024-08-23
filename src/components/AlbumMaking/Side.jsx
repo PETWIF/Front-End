@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useStore } from '../../store/store';
 import {
   SideContainer,
@@ -25,8 +25,20 @@ import {
 } from './Side.style';
 import { Icon } from '../Icon';
 import MakingModal from './MakingModal';
+import Image1 from '/src/assets/icons/image/01.png';
+import Image2 from '/src/assets/icons/image/02.png';
+import Image3 from '/src/assets/icons/image/03.png';
+import Image4 from '/src/assets/icons/image/04.png';
+import Image5 from '/src/assets/icons/image/05.png';
+import Image6 from '/src/assets/icons/image/06.png';
+import Image7 from '/src/assets/icons/image/07.png';
+import Image8 from '/src/assets/icons/image/08.png';
+import Image9 from '/src/assets/icons/image/09.png';
+import Image10 from '/src/assets/icons/image/10.png';
+import Image11 from '/src/assets/icons/image/11.png';
+import Image12 from '/src/assets/icons/image/12.png';
 
-export default function Side() {
+export default function Side({ setSelectedImages, setEmoticons }) {
   const {
     isStickerSelected,
     isMineSelected,
@@ -40,10 +52,38 @@ export default function Side() {
     isTextEditing,
     toggleTextEditing,
   } = useStore();
+
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [albumCoverImage, setAlbumCoverImage] = useState(null);
+  const fileInputRef = useRef(null);
+
+  const handleCategoryClick = () => {
+    fileInputRef.current.click(); // 숨겨진 파일 입력을 클릭
+  };
+
+  const handleFileChange = (event) => {
+    const files = event.target.files;
+    if (files.length > 0) {
+      const imageUrls = Array.from(files).map((file) =>
+        URL.createObjectURL(file)
+      );
+      setSelectedImages((prevImages) => {
+        return [...prevImages, ...imageUrls];
+      });
+    }
+  };
+
+  const handleEmoticonClick = (src) => {
+    setEmoticons((prevEmoticons) => [...prevEmoticons, src]);
+  };
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
+
+  const handleSaveCover = (dataUrl) => {
+    setAlbumCoverImage(dataUrl);
+    openModal();
+  };
 
   return (
     <SideContainer>
@@ -52,7 +92,7 @@ export default function Side() {
           <EditTitleContainer>
             <Paragraph2>앨범 편집</Paragraph2>
           </EditTitleContainer>
-          <Category>
+          <Category onClick={handleCategoryClick}>
             <Icon id='editPic' width='42' height='42'></Icon>
             <Paragraph>사진 추가</Paragraph>
           </Category>
@@ -70,6 +110,16 @@ export default function Side() {
           </Category>
         </EditSelectContainer>
       </SideSection1>
+
+      {/* 숨겨진 파일 입력 요소 */}
+      <input
+        type='file'
+        ref={fileInputRef}
+        style={{ display: 'none' }}
+        onChange={handleFileChange}
+        accept='image/*'
+        multiple // 다중 파일 선택 가능
+      />
 
       {isStickerSelected && (
         <>
@@ -98,15 +148,48 @@ export default function Side() {
               {isMineSelected && (
                 <StickerSContainer>
                   <Sticker>
-                    <Emoticon></Emoticon>
-                    <Emoticon></Emoticon>
-                    <Emoticon></Emoticon>
-                    <Emoticon></Emoticon>
-                    <Emoticon></Emoticon>
-                    <Emoticon></Emoticon>
-                    <Emoticon></Emoticon>
-                    <Emoticon></Emoticon>
-                    <Emoticon></Emoticon>
+                    <Emoticon onClick={() => handleEmoticonClick(Image1)}>
+                      <img
+                        src={Image1}
+                        alt='My Image'
+                        style={{ width: '100%', height: '100%' }}
+                      />
+                    </Emoticon>
+                    <Emoticon onClick={() => handleEmoticonClick(Image4)}>
+                      <img
+                        src={Image4}
+                        alt='My Image'
+                        style={{ width: '100%', height: '100%' }}
+                      />
+                    </Emoticon>
+                    <Emoticon onClick={() => handleEmoticonClick(Image6)}>
+                      <img
+                        src={Image6}
+                        alt='My Image'
+                        style={{ width: '100%', height: '100%' }}
+                      />
+                    </Emoticon>
+                    <Emoticon onClick={() => handleEmoticonClick(Image7)}>
+                      <img
+                        src={Image7}
+                        alt='My Image'
+                        style={{ width: '100%', height: '100%' }}
+                      />
+                    </Emoticon>
+                    <Emoticon onClick={() => handleEmoticonClick(Image11)}>
+                      <img
+                        src={Image11}
+                        alt='My Image'
+                        style={{ width: '100%', height: '100%' }}
+                      />
+                    </Emoticon>
+                    <Emoticon onClick={() => handleEmoticonClick(Image12)}>
+                      <img
+                        src={Image12}
+                        alt='My Image'
+                        style={{ width: '100%', height: '100%' }}
+                      />
+                    </Emoticon>
                   </Sticker>
                 </StickerSContainer>
               )}
@@ -114,12 +197,48 @@ export default function Side() {
               {isMarketSelected && (
                 <StickerSContainer>
                   <Sticker>
-                    <Emoticon></Emoticon>
-                    <Emoticon></Emoticon>
-                    <Emoticon></Emoticon>
-                    <Emoticon></Emoticon>
-                    <Emoticon></Emoticon>
-                    <Emoticon></Emoticon>
+                    <Emoticon>
+                      <img
+                        src={Image2}
+                        alt='My Image'
+                        style={{ width: '100%', height: '100%' }}
+                      />
+                    </Emoticon>
+                    <Emoticon>
+                      <img
+                        src={Image3}
+                        alt='My Image'
+                        style={{ width: '100%', height: '100%' }}
+                      />
+                    </Emoticon>
+                    <Emoticon>
+                      <img
+                        src={Image5}
+                        alt='My Image'
+                        style={{ width: '100%', height: '100%' }}
+                      />
+                    </Emoticon>
+                    <Emoticon>
+                      <img
+                        src={Image8}
+                        alt='My Image'
+                        style={{ width: '100%', height: '100%' }}
+                      />
+                    </Emoticon>
+                    <Emoticon>
+                      <img
+                        src={Image9}
+                        alt='My Image'
+                        style={{ width: '100%', height: '100%' }}
+                      />
+                    </Emoticon>
+                    <Emoticon>
+                      <img
+                        src={Image10}
+                        alt='My Image'
+                        style={{ width: '100%', height: '100%' }}
+                      />
+                    </Emoticon>
                   </Sticker>
                 </StickerSContainer>
               )}
@@ -131,9 +250,17 @@ export default function Side() {
       {isCoverEditing ? (
         <>
           <SideSection3>
-            <Button1 onClick={openModal}>업로드</Button1>
+            <Button1
+              onClick={() => {
+                handleSaveCover();
+              }}
+            >
+              업로드
+            </Button1>
             <ButtonBack onClick={stopCoverEditing}>뒤로 가기</ButtonBack>
-            {isModalOpen && <MakingModal close={closeModal} />}
+            {isModalOpen && (
+              <MakingModal close={closeModal} albumCover={albumCoverImage} />
+            )}
           </SideSection3>
         </>
       ) : (

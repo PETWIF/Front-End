@@ -94,11 +94,11 @@ export const routeList = [
         ],
       },
       {
-        path: '/album/detail/:albumId',
+        path: '/album/:userId/detail/:albumId',
         element: <AlbumDetailPage />,
       },
       {
-        path: '/album/bookmark',
+        path: '/album/bookmark/:userId',
         element: <BookmarkPage />,
       },
       {

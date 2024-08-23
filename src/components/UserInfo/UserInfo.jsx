@@ -15,20 +15,20 @@ export default function UserInfo() {
   return (
     <S.UserInfoLayout>
       <S.UserInfoItem>
-      <div>
-        <Link to={`/album/${nickname}`}>
-          <Avatar src={Profile} size='66px' />
-        </Link>
-        <span>{nickname}</span>
-      </div>
-      <Button
-        onClick={() => console.log(`${nickname}를 친구 추가하였습니다.`)}
-        width='100px'
-        padding='8px'
-        borderRadius='5px'
-      >
-        친구 추가
-      </Button>
+        <div>
+          <Link to={`/album/${nickname}`}>
+            <Avatar src={Profile} size='66px' />
+          </Link>
+          <span>{nickname}</span>
+        </div>
+        <Button
+          onClick={() => console.log(`${nickname}를 친구 추가하였습니다.`)}
+          width='100px'
+          padding='8px'
+          borderRadius='5px'
+        >
+          친구 추가
+        </Button>
       </S.UserInfoItem>
     </S.UserInfoLayout>
   );

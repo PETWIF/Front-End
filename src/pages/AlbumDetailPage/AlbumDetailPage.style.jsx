@@ -16,16 +16,38 @@ export const MainContainer = styled(Layout)`
 `;
 
 export const MenuList = styled.div`
-  padding: 0 0 0 15px;
-  margin-top: 20px;
-  display: inline-flex;
+  margin: 20px 0 50px 15px;
+  display: flex;
   flex-direction: column;
   gap: 24px;
 `;
 
 export const BackButton = styled.div`
+  padding: 0 33px 20px 0;
   display: flex;
-  padding: 0 0 20px 0;
+  justify-content: space-between;
+`;
+
+export const ActoinButtons = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  & > button {
+    padding: 6px 16px;
+    border-radius: 5px;
+    border: 1px solid #f87f28;
+    background-color: transparent;
+    color: #f87f28;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 200ms all ease;
+
+    &:hover {
+      background-color: #f87f28;
+      color: white;
+    }
+  }
 `;
 
 export const StyledIcon = styled(Icon)`
@@ -97,4 +119,3 @@ export const SideContainer = styled.div`
   flex-direction: column;
   gap: 30px;
 `;
-

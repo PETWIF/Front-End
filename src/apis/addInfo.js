@@ -1,18 +1,18 @@
 import { authAxios } from '../axios/index.js';
 
 export const patchAddUserInfo = async ({ gender, birthDate, telecom, phone, address }) => {
-    const response = await authAxios.patch(`/member/add/Etc`, {
+    const response = await authAxios.patch(`/member/addEtc`, {
         gender: gender,
         birthDate: birthDate,
         telecom: telecom,
-        phone: phone,
+        phoneNum: phone,
         address: address,
     });   
     
     return response.data;
 };
 
-export const patchAddPetInfo = async ({ petName, petGender, petAge, petKind }) => {
+export const postAddPetInfo = async ({ petName, petGender, petAge, petKind }) => {
     const response = await authAxios.post(`pet/add`, {
         petName: petName,
         gender: petGender,

@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 
-import { patchAddUserInfo, patchAddPetInfo } from '../../apis/addInfo.js';
+import { parse } from 'date-fns';
+
+import { patchAddUserInfo, postAddPetInfo } from '../../apis/addInfo.js';
 
 import { Button } from '../../components/Button';
 
@@ -15,7 +17,7 @@ export default function AddInfoPage() {
   const location = useLocation();
   const navigate = useNavigate();
   
-  const { email, nickname } = location.state || {};
+  const { nickname } = location.state || {};
 
   const [gender, setGender] = useState('');
   const [year, setYear] = useState(''); 
@@ -29,17 +31,18 @@ export default function AddInfoPage() {
   const [petAge, setPetAge] = useState('');
   const [petKind, setPetKind] = useState('');
 
-  const birthDate = `${year}-${month}-${day}`;
+  const birthDate = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+  //parse(`${year}-${month}-${day}`, 'yyyy-MM-dd', new Date());
+  // `${year}-${month}-${day}`;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const response = await patchAddUserInfo({ gender, birthDate, telecom, phone, address });
+    const { isSuccess, data } = response;
+      const petResponse = await postAddPetInfo({ petName, petGender, petAge, petKind });
 
     try {
-      const userResponse = await patchAddUserInfo({ gender, birthDate, telecom, phone, address });
-      // const { isUserSuccess } = userResponse;
-      const petResponse = await patchAddPetInfo({ petName, petGender, petAge, petKind });
       // const { isPetSuccess } = petResponse;
-
       console.log('정보 입력 성공');
       navigate('/registered', { state: { nickname } });
     } catch (error) {
@@ -58,7 +61,7 @@ export default function AddInfoPage() {
               backIcon='true'
               titleText='추가 정보 입력'
             />
-            <S.FormContainer onSubmit={handleSubmit}>
+            <S.FormContainer onSubmit={(e) => handleSubmit(e)}>
               <S.MainBoldText>회원 정보</S.MainBoldText>
               <S.StyledHr />
               <S.MainBoldText>성별</S.MainBoldText>
@@ -86,21 +89,21 @@ export default function AddInfoPage() {
                   $width='92px'
                   type='text'
                   className='year'
-                  placeholder='연도'
+                  placeholder='연도(YYYY)'
                   onChange={(e) => setYear(e.target.value)}
                 />
                 <S.InputStyle
                   $width='92px'
                   type='text'
                   className='month'
-                  placeholder='월'
+                  placeholder='월(MM)'
                   onChange={(e) => setMonth(e.target.value)}
                 />
                 <S.InputStyle
                   $width='92px'
                   type='text'
                   className='day'
-                  placeholder='일'
+                  placeholder='일(DD)'
                   onChange={(e) => setDay(e.target.value)}
                 />
               </S.InputWrapper>

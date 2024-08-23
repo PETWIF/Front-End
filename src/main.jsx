@@ -21,6 +21,9 @@ const queryClient = new QueryClient({
       onError: (error) => console.error(error),
     },
   },
+  queryCache: new QueryCache({
+    onError: (error) => console.error(error),
+  }),
 });
 
 ReactDOM.createRoot(document.getElementById('root')).render(
