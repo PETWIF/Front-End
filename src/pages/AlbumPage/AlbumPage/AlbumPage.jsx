@@ -33,7 +33,7 @@ export default function AlbumPage() {
   const [showChat, setShowChat] = useState(false); // State to toggle between RandomFriend and Chat
 
   const { data, Target, ref } = useInfiniteScroll({
-    queryKey: ['albumList', currentNickname, sort?.value],
+    queryKey: ['albumList', currentNickname, sort?.value ?? 'LATEST'],
     queryFn: ({ pageParam }) =>
       getAlbumList({
         nickname: currentNickname,
@@ -50,6 +50,9 @@ export default function AlbumPage() {
     data && !data.pages.includes(undefined)
       ? data.pages.flatMap((page) => page)
       : [];
+
+  const rest = albumList.slice(0, -1); // 마지막 요소를 제외한 나머지 배열
+  const last = albumList[albumList.length - 1] ?? {};
 
   return (
     <S.MainLayout>
@@ -79,9 +82,10 @@ export default function AlbumPage() {
           </S.DropDownBox>
           {albumList && (
             <S.AlbumList>
-              {albumList.map((album) => (
+              {rest.map((album) => (
                 <AlbumItem key={album.albumId} album={album} />
               ))}
+              <AlbumItem ref={ref} key={last.albumId} album={last} />
             </S.AlbumList>
           )}
           <S.AlbumAmount>
