@@ -43,8 +43,11 @@ export const Description = styled.p`
 `;
 
 export const ProfileInfoList = styled.ul`
+  margin-top: 20px;
+  padding-top: 20px;
   display: flex;
   justify-content: space-around;
+  border-top: 0.5px solid #eeeeee;
 `;
 
 export const ProfileInfoItem = styled.li`

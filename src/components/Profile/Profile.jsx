@@ -90,7 +90,7 @@ export default function Profile() {
           </Button>
         )}
       </S.TopContainer>
-      <S.Description>짧은 소개글을 쓸 수 있는 자리입니다.</S.Description>
+      {/* <S.Description>짧은 소개글을 쓸 수 있는 자리입니다.</S.Description> */}
       <S.ProfileInfoList>
         {PROFILE_INFO_LIST.map(({ label, value }) => (
           <S.ProfileInfoItem key={label}>
