@@ -25,7 +25,10 @@ export default function AlbumPage() {
   const params = useParams();
   const currentNickname = decodeURIComponent(params.nickname || nickname);
 
-  const [sort, setSort] = useState();
+  const [sort, setSort] = useState({
+    name: '최신',
+    value: 'LATEST',
+  });
   const [showChat, setShowChat] = useState(false); // State to toggle between RandomFriend and Chat
 
   const { data, ref } = useInfiniteScroll({
@@ -49,6 +52,8 @@ export default function AlbumPage() {
 
   const rest = albumList.slice(0, -1); // 마지막 요소를 제외한 나머지 배열
   const last = albumList[albumList.length - 1] ?? {};
+
+  console.log(albumList);
 
   return (
     <S.MainLayout>

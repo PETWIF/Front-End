@@ -64,7 +64,9 @@ export default function AlbumDetailPage() {
             onClick={() => navigate(-1)}
           />
           <S.ActoinButtons>
-            <button>수정</button>
+            <button onClick={() => navigate(`/album/edit/${albumId}`)}>
+              수정
+            </button>
             <button onClick={() => deleteA.mutate()}>삭제</button>
           </S.ActoinButtons>
         </S.BackButton>
