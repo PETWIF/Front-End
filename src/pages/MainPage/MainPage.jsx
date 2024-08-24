@@ -1,16 +1,17 @@
 import { AdComponent } from '../../components/AdComponent';
 import { AlbumUpdates } from '../../components/AlbumUpdates';
+import { Feed } from '../../components/Feed';
+import { Header } from '../../components/Header';
+import { Modal } from '../../components/Modal';
+import { Profile } from '../../components/Profile';
+import { RandomFriend } from '../../components/RandomFriend';
+
 import {
   AlbumUpdatesFeedContainer,
   Content,
   MainContainer,
   WhiteBox,
 } from './MainPage.style';
-import { Feed } from '../../components/Feed';
-import { Header } from '../../components/Header';
-import { Modal } from '../../components/Modal';
-import { Profile } from '../../components/Profile';
-import { RandomFriend } from '../../components/RandomFriend';
 
 const MainPage = () => {
   const adImage = '/path/to/your/ad-image.jpg';
