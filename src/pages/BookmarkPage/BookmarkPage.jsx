@@ -14,6 +14,11 @@ export default function BookmarkPage() {
   const [keyword, setKeyword] = useState('');
   const [sort, setSort] = useState();
 
+  // keyword를 사용하여 ALBUM_LIST를 필터링
+  const filteredAlbums = ALBUM_LIST.filter(album =>
+    album.title.toLowerCase().includes(keyword.toLowerCase())
+  );
+
   return (
     <S.PageContainer>
       <S.TopContainer>
@@ -29,7 +34,7 @@ export default function BookmarkPage() {
         />
       </S.TopContainer>
       <S.AlbumContainer>
-        {ALBUM_LIST.map((album) => (
+        {filteredAlbums.map((album) => (
           <S.AlbumItem key={album.id}>
             <img src={album.coverImage} alt={album.title} />
             <Link key={album.id} to={`/album/detail/${album.id}`}>
