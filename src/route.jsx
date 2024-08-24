@@ -100,7 +100,7 @@ export const routeList = [
         ],
       },
       {
-        path: '/album/:userId/detail/:albumId',
+        path: '/album/:nickname/detail/:albumId',
         element: <AlbumDetailPage />,
       },
       {
@@ -108,7 +108,7 @@ export const routeList = [
         element: <AlbumEditPage />,
       },
       {
-        path: '/album/bookmark/:userId',
+        path: '/album/bookmark/:nickname',
         element: <BookmarkPage />,
       },
       {
