@@ -17,6 +17,10 @@ export default function usePagination({ queryKey, queryFn }) {
     initialPageParam: 0,
     getNextPageParam: (lastPage, allPages, lastPageParam) => {
       // 마지막 페이지에 대한 값이 없어 임의로 설정
+      if (lastPage?.last === true) {
+        return null;
+      }
+
       if (lastPage?.length === 0) {
         return null;
       }
