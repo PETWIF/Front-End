@@ -19,12 +19,18 @@ const queryClient = new QueryClient({
     },
     mutations: {
       onError: (error) => {
+        if (error.response.status === 404) {
+          return;
+        }
         alert(error.response.data.message);
       },
     },
   },
   queryCache: new QueryCache({
     onError: (error) => {
+      if (error.response.status === 404) {
+        return;
+      }
       alert(error.response.data.message);
     },
   }),
