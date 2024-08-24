@@ -1,8 +1,7 @@
-import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
-
-import { getFriendList, removeFriend } from '../../../apis/friend.js';
+import { getFriendList } from '../../../apis/friend.js';
 
 import useAuth from '../../../hooks/useAuth.jsx';
+import useFriend from '../../../hooks/useFriend.jsx';
 import usePagination from '../../../hooks/usePagination.jsx';
 
 import { Avatar } from '../../../components/Avatar';
@@ -12,17 +11,10 @@ import * as S from '../Common.Style.jsx';
 
 export default function FriendList() {
   const { nickname: myNickname } = useAuth();
+  const { remove } = useFriend();
   const { data, status, fetchNextPage } = usePagination({
     queryKey: ['friendList'],
     queryFn: ({ pageParam }) => getFriendList({ page: pageParam }),
-  });
-
-  const queryClient = useQueryClient();
-  const remove = useMutation({
-    mutationFn: (nickname) => removeFriend({ nickname }),
-    onSuccess: () => {
-      queryClient.invalidateQueries(['friendList']);
-    },
   });
 
   if (!data) return null;
@@ -31,8 +23,6 @@ export default function FriendList() {
     data && !data.pages.includes(undefined)
       ? data.pages.flatMap((page) => page)
       : [];
-
-  console.log(friendList);
 
   return (
     <S.FriendLayout>

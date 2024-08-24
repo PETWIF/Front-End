@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
 import { useParams, Link } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 
 import { getAlbumList } from '../../../apis/album.js';
 
@@ -20,10 +20,6 @@ import { ALBUM_LIST } from '../../../dummy/data';
 
 import * as S from './AlbumPage.style.jsx';
 
-const myId = 'myUserId1';
-const yourId = '댕댕산책가';
-const userId = 46;
-
 export default function AlbumPage() {
   const { nickname } = useAuth();
   const params = useParams();
@@ -32,7 +28,7 @@ export default function AlbumPage() {
   const [sort, setSort] = useState();
   const [showChat, setShowChat] = useState(false); // State to toggle between RandomFriend and Chat
 
-  const { data, Target, ref } = useInfiniteScroll({
+  const { data, ref } = useInfiniteScroll({
     queryKey: ['albumList', currentNickname, sort?.value ?? 'LATEST'],
     queryFn: ({ pageParam }) =>
       getAlbumList({
@@ -85,7 +81,9 @@ export default function AlbumPage() {
               {rest.map((album) => (
                 <AlbumItem key={album.albumId} album={album} />
               ))}
-              <AlbumItem ref={ref} key={last.albumId} album={last} />
+              {albumList.length > 0 && (
+                <AlbumItem ref={ref} key={last.albumId} album={last} />
+              )}
             </S.AlbumList>
           )}
           <S.AlbumAmount>
@@ -95,8 +93,8 @@ export default function AlbumPage() {
         </S.AlbumBox>
       </S.MainContainer>
       <S.SideContainer>
-        <Profile userId={userId} />
-        {showChat ? <Chatting userId={yourId} /> : <RandomFriend />}
+        <Profile />
+        {showChat ? <Chatting /> : <RandomFriend />}
       </S.SideContainer>
     </S.MainLayout>
   );
