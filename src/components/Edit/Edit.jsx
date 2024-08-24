@@ -1,4 +1,8 @@
 import { useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { useQueryClient, useMutation } from '@tanstack/react-query';
+
+import { editAlbum } from '../../apis/album.js';
 
 import { Button } from '../../components/Button';
 import { Radio, RadioGroup } from '../Input';
@@ -9,6 +13,18 @@ export default function Edit({ album }) {
   const [title, setTitle] = useState(album.title);
   const [content, setContent] = useState(album.content);
   const [scope, setScope] = useState(album.scope);
+
+  const { albumId } = useParams();
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
+
+  const edit = useMutation({
+    mutationFn: () => editAlbum({ albumId, title, content, scope }),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['albumDetail', albumId]);
+      navigate(-1);
+    },
+  });
 
   return (
     <S.EditContainer>
@@ -56,7 +72,7 @@ export default function Edit({ album }) {
           </RadioGroup>
         </div>
       </S.Fieldset>
-      <Button padding='14px' borderRadius='5px'>
+      <Button onClick={() => edit.mutate()} padding='14px' borderRadius='5px'>
         수정하기
       </Button>
     </S.EditContainer>
