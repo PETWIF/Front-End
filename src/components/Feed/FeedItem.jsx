@@ -6,6 +6,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import { albumCover } from '../../dummy/images';
 import { Link } from 'react-router-dom';
+import { writeComment, likeComment, likeReply } from '../../apis/comment.js';
 
 const FeedItem = ({ data }) => {
   const { profileImage, profileName, albumImage, likeCount, createdAt, comments: initialComments, comment, likeUsers = [] } = data;
@@ -27,28 +28,28 @@ const FeedItem = ({ data }) => {
     setNewComment(e.target.value);
   };
 
-  const handleCommentSubmit = () => {
+  const handleCommentSubmit = async () => {
     console.log('새 댓글:', newComment);
     if (newComment.trim()) {
-      const newCommentData = {
-        id: Date.now(), 
-        author: "현재 사용자", // 실제 사용자 이름으로 변경해야함
-        profileImage: "/path/to/profile.jpg", // 실제 사용자 프로필 이미지 경로로 변경해야함
-        text: newComment,
-        likeCount: 0,
-        createdAt: '방금',
-        replies: [],
-      };
-  
-      const updatedComments = [
-        ...comments,
-        newCommentData,
-      ];
-  
-      setComments(updatedComments);
-      setNewComment('');
+      try {
+        const newCommentData = await writeComment({ albumId: data.id, content: newComment });
+        const updatedComments = [
+          ...comments,
+          {
+            ...newCommentData,  // 서버에서 반환한 댓글 데이터를 사용
+            createdAt: '방금', // 서버에서 시간을 반환하면 그것을 사용
+            replies: [],
+          },
+        ];
+        setComments(updatedComments);
+        setNewComment('');
+      } catch (error) {
+        console.error('댓글 작성 실패:', error);
+        alert(`댓글 작성 중 오류가 발생했습니다: ${error.message}`);
+      }
     }
   };
+  
 
   const handleReport = (commentId) => {
     console.log(`댓글 ${commentId}가 신고되었습니다.`);
@@ -58,12 +59,48 @@ const FeedItem = ({ data }) => {
     console.log(`게시글${albumId}에 좋아요를 눌렀습니다.`);
   };
 
-  const handleCommentHeart = (commentId) => {
-    console.log(`댓글 ${commentId}에 좋아요를 눌렀습니다.`);
+  const handleCommentHeart = async (commentId) => {
+    try {
+      const response = await likeComment({ commentId });
+      console.log(`댓글 ${commentId}에 좋아요를 눌렀습니다.`, response);
+  
+      // 필요에 따라 상태를 업데이트하거나 UI를 변경합니다.
+      // 예를 들어, 해당 댓글의 좋아요 수를 증가시킬 수 있습니다.
+      setComments(prevComments =>
+        prevComments.map(comment =>
+          comment.id === commentId
+            ? { ...comment, likeCount: comment.likeCount + 1 }
+            : comment
+        )
+      );
+    } catch (error) {
+      console.error(`댓글 ${commentId}에 좋아요를 누르는 중 오류 발생:`, error);
+    }
   };
 
-  const handleReplyHeart = (replyId, commentId) => {
-    console.log(`${commentId}번 댓글의 ${replyId}번 대댓글에 좋아요를 눌렀습니다.`);
+  const handleReplyHeart = async (replyId, commentId) => {
+    try {
+      const response = await likeReply({ replyId, commentId });
+      console.log(`${commentId}번 댓글의 ${replyId}번 대댓글에 좋아요를 눌렀습니다.`, response);
+  
+      // 필요에 따라 상태를 업데이트하거나 UI를 변경합니다.
+      setComments(prevComments =>
+        prevComments.map(comment =>
+          comment.id === commentId
+            ? {
+                ...comment,
+                replies: comment.replies.map(reply =>
+                  reply.id === replyId
+                    ? { ...reply, likeCount: reply.likeCount + 1 }
+                    : reply
+                ),
+              }
+            : comment
+        )
+      );
+    } catch (error) {
+      console.error(`대댓글 ${replyId}에 좋아요를 누르는 중 오류 발생:`, error);
+    }
   };
 
   const formatDate = (date) => {

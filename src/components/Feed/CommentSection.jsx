@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import * as S from './CommentSection.style';
 import { Icon } from '../Icon';
+import { writeReply } from '../../apis/comment.js';
 
 const CommentSection = ({ comments, onReport, onCommentHeart, onReplyHeart }) => {
   const [commentList, setCommentList] = useState(comments);
@@ -15,42 +16,47 @@ const CommentSection = ({ comments, onReport, onCommentHeart, onReplyHeart }) =>
     });
   };
 
-  const handleReplySubmit = (commentId) => {
+  const handleReplySubmit = async (commentId) => {
     const replyText = newReply[commentId];
-
+  
     if (replyText.trim()) {
-      const updatedComments = commentList.map((comment) => {
-        if (comment.id === commentId) {
-          return {
-            ...comment,
-            replies: [
-              ...comment.replies,
-              {
-                id: Date.now(),
-                author: "현재 사용자", // 실제 사용자 이름으로 변경해야함
-                profileImage: "/path/to/profile.jpg", // 실제 사용자 프로필 이미지 경로로 변경해야함
-                text: replyText,
-                likeCount: 0,
-                createdAt: "방금",
-              },
-            ],
-          };
-        }
-        return comment;
-      });
-
-      setCommentList(updatedComments);
-
-      // 대댓글 등록 후 입력창만 닫습니다.
-      setShowReplyInput({
-        ...showReplyInput,
-        [commentId]: false,
-      });
-
-      setNewReply({
-        ...newReply,
-        [commentId]: '',
-      });
+      try {
+        // API를 통해 대댓글 작성 요청
+        const newReplyData = await writeReply({ commentId, content: replyText });
+  
+        const updatedComments = commentList.map((comment) => {
+          if (comment.id === commentId) {
+            return {
+              ...comment,
+              replies: [
+                ...comment.replies,
+                {
+                  ...newReplyData,  // 서버에서 반환한 대댓글 데이터를 사용
+                  likeCount: 0,  // 서버에서 좋아요 수를 반환한다면 이 부분을 수정
+                  createdAt: "방금",  // 서버에서 시간을 반환하면 그것을 사용
+                },
+              ],
+            };
+          }
+          return comment;
+        });
+  
+        setCommentList(updatedComments);
+  
+        // 대댓글 등록 후 입력창만 닫습니다.
+        setShowReplyInput({
+          ...showReplyInput,
+          [commentId]: false,
+        });
+  
+        setNewReply({
+          ...newReply,
+          [commentId]: '',
+        });
+      } catch (error) {
+        console.error(`대댓글 작성 실패:`, error);
+        alert(`대댓글 작성 중 오류가 발생했습니다: ${error.message}`);
+      }
     }
   };
 

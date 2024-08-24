@@ -4,12 +4,13 @@ import CommentSection from './CommentSection';
 import { Icon } from '../Icon';
 import { formatDistanceToNow } from 'date-fns';
 import { ko } from 'date-fns/locale';
-import { Chatting } from '../Chatting'; // Chatting 컴포넌트를 import
+import { Chatting } from '../Chatting';
 
 import * as S from './AlbumDetail.style.jsx';
 
+import { writeComment, likeComment, likeReply } from '../../apis/comment.js'; // API 함수들 import
+
 const AlbumDetail = ({ album, albumId }) => {
-  // yourId를 props로 받아옴
   const {
     profileImage,
     profileName,
@@ -20,31 +21,23 @@ const AlbumDetail = ({ album, albumId }) => {
     comment,
     likeUsers = [],
   } = album;
+
   const [newComment, setNewComment] = useState('');
-  const [showChat, setShowChat] = useState(false); // 채팅 상태 관리
-
-  const isValidDate = (date) => {
-    return !isNaN(new Date(date).getTime());
-  };
-
+  const [showChat, setShowChat] = useState(false);
   const [comments, setComments] = useState(
     initialComments.map((comment) => ({
       ...comment,
-      createdAt: isValidDate(comment.createdAt)
-        ? formatDistanceToNow(new Date(comment.createdAt), {
-            addSuffix: true,
-            locale: ko,
-          })
-        : 'Invalid date',
+      createdAt: formatDistanceToNow(new Date(comment.createdAt), {
+        addSuffix: true,
+        locale: ko,
+      }),
       replies: comment.replies
         ? comment.replies.map((reply) => ({
             ...reply,
-            createdAt: isValidDate(reply.createdAt)
-              ? formatDistanceToNow(new Date(reply.createdAt), {
-                  addSuffix: true,
-                  locale: ko,
-                })
-              : 'Invalid date',
+            createdAt: formatDistanceToNow(new Date(reply.createdAt), {
+              addSuffix: true,
+              locale: ko,
+            }),
           }))
         : [],
     }))
@@ -54,20 +47,58 @@ const AlbumDetail = ({ album, albumId }) => {
     setNewComment(e.target.value);
   };
 
-  const handleCommentSubmit = () => {
+  const handleCommentSubmit = async () => {
     if (newComment.trim()) {
-      const newCommentData = {
-        id: Date.now(),
-        author: '현재 사용자',
-        profileImage: '/path/to/profile.jpg',
-        text: newComment,
-        likeCount: 0,
-        createdAt: '방금',
-        replies: [],
-      };
+      try {
+        const newCommentData = await writeComment({
+          albumId,
+          content: newComment,
+        });
 
-      setComments([...comments, newCommentData]);
-      setNewComment('');
+        setComments([...comments, {
+          ...newCommentData,
+          createdAt: '방금',
+          replies: [],
+        }]);
+        setNewComment('');
+      } catch (error) {
+        console.error('댓글 작성 실패:', error);
+      }
+    }
+  };
+
+  const handleCommentHeart = async (commentId) => {
+    try {
+      await likeComment({ commentId });
+
+      setComments(comments.map((comment) =>
+        comment.id === commentId
+          ? { ...comment, likeCount: comment.likeCount + 1 }
+          : comment
+      ));
+    } catch (error) {
+      console.error(`댓글 ${commentId}에 좋아요를 누르는 중 오류 발생:`, error);
+    }
+  };
+
+  const handleReplyHeart = async (replyId, commentId) => {
+    try {
+      await likeReply({ replyId, commentId });
+
+      setComments(comments.map((comment) =>
+        comment.id === commentId
+          ? {
+              ...comment,
+              replies: comment.replies.map((reply) =>
+                reply.id === replyId
+                  ? { ...reply, likeCount: reply.likeCount + 1 }
+                  : reply
+              ),
+            }
+          : comment
+      ));
+    } catch (error) {
+      console.error(`${commentId}번 댓글의 ${replyId}번 대댓글에 좋아요를 누르는 중 오류 발생:`, error);
     }
   };
 
@@ -79,35 +110,19 @@ const AlbumDetail = ({ album, albumId }) => {
     console.log(`${albumId}번 게시글이 신고되었습니다`);
   };
 
-  const formatDate = (date) => {
-    return isValidDate(date)
-      ? formatDistanceToNow(new Date(date), { addSuffix: true, locale: ko })
-      : 'Invalid date';
-  };
-
   const toggleChat = () => {
-    setShowChat(true); // 채팅창을 열기
+    setShowChat(true);
   };
 
-  const handleCommentHeart = (commentId) => {
-    console.log(`댓글 ${commentId}에 좋아요를 눌렀습니다.`);
-  };
-
-  const handleReplyHeart = (replyId, commentId) => {
-    console.log(`${commentId}번 댓글의 ${replyId}번 대댓글에 좋아요를 눌렀습니다.`);
-  };
-
-  return showChat ? ( // showChat이 true일 때 Chatting 컴포넌트를 렌더링
+  return showChat ? (
     <Chatting />
   ) : (
-    // showChat이 false일 때 AlbumDetail을 렌더링
     <S.AlbumDetailLayout>
       <S.IconContainer>
         <Link to='/album/bookmark'>
           <Icon id='bookmark' width='26' height='27' />
         </Link>
-        <Icon id='message' width='26' height='26' onClick={toggleChat} />{' '}
-        {/* 클릭 시 toggleChat 호출 */}
+        <Icon id='message' width='26' height='26' onClick={toggleChat} />
         <Icon
           id='reportbutton'
           width='28'
@@ -117,7 +132,7 @@ const AlbumDetail = ({ album, albumId }) => {
       </S.IconContainer>
       <S.Title>앨범 정보</S.Title>
       <S.AlbumComment>{comment}</S.AlbumComment>
-      <S.CreatedAt>{formatDate(createdAt)}</S.CreatedAt>
+      <S.CreatedAt>{formatDistanceToNow(new Date(createdAt), { addSuffix: true, locale: ko })}</S.CreatedAt>
       <S.StyledHr />
 
       <S.CommentSectionContainer>
