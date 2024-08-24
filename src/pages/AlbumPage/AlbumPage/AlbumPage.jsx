@@ -5,7 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 import { getAlbumList } from '../../../apis/album.js';
 
 import useAuth from '../../../hooks/useAuth.jsx';
-import useInfiniteScroll from '../../../hooks/useInfiniteScroll.jsx';
+import usePagination from '../../../hooks/usePagination.jsx';
 
 import { AlbumItem } from '../../AlbumPage';
 import { DropDown } from '../../../components/DropDown';
