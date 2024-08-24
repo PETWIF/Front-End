@@ -1,6 +1,6 @@
 export default function useAuth() {
-  const userId = 72;
-  const nickname = '서리';
+  const userId = 66;
+  const nickname = '홍';
 
   return { userId, nickname };
 }

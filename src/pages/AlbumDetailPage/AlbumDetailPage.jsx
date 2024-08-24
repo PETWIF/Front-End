@@ -22,8 +22,8 @@ import { ALBUM_LIST, feedData } from '../../dummy/data';
 import * as S from './AlbumDetailPage.style.jsx';
 
 export default function AlbumDetailPage() {
-  const { userId } = useAuth();
-  const { userId: currentUserId, albumId } = useParams();
+  const { nickname } = useAuth();
+  const { nickname: currentNickname, albumId } = useParams();
 
   const { data } = useQuery({
     queryKey: ['albumDetail', albumId],
@@ -70,13 +70,13 @@ export default function AlbumDetailPage() {
             <button onClick={() => deleteA.mutate()}>삭제</button>
           </S.ActoinButtons>
         </S.BackButton>
-        {userId !== Number(currentUserId) && (
+        {nickname !== currentNickname && (
           <S.MenuList>
             <Search
               value={keyword}
               onChange={(event) => setKeyword(event.target.value)}
             />
-            <Link to={`/album/bookmark/${userId}`}>
+            <Link to={`/album/bookmark/${nickname}`}>
               <S.MenuItem>
                 <Icon id='bookmark' width='26' height='27' />
                 <span>BOOKMARK</span>
@@ -91,7 +91,7 @@ export default function AlbumDetailPage() {
         <AlbumViewer albumImages={data.albumImages} content={data.content} />
       </S.MainContainer>
       <S.SideContainer>
-        {userId !== Number(currentUserId) && <UserInfo />}
+        {nickname !== currentNickname && <UserInfo />}
         <AlbumInfo data={data} />
         {showChat ? (
           <Chatting />
