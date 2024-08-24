@@ -1,8 +1,7 @@
-import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
-
-import { getFriendSentList, cancelFriend } from '../../../apis/friend.js';
+import { getFriendSentList } from '../../../apis/friend.js';
 
 import useAuth from '../../../hooks/useAuth.jsx';
+import useFriend from '../../../hooks/useFriend.jsx';
 import usePagination from '../../../hooks/usePagination.jsx';
 
 import { Avatar } from '../../../components/Avatar';
@@ -12,17 +11,10 @@ import * as S from '../Common.Style.jsx';
 
 export default function FriendSentList() {
   const { nickname: myNickname } = useAuth();
+  const { cancel } = useFriend();
   const { data, status, fetchNextPage } = usePagination({
     queryKey: ['friendSentList'],
     queryFn: ({ pageParam }) => getFriendSentList({ page: pageParam }),
-  });
-
-  const queryClient = useQueryClient();
-  const cancel = useMutation({
-    mutationFn: (nickname) => cancelFriend({ nickname }),
-    onSuccess: () => {
-      queryClient.invalidateQueries(['friendSentList']);
-    },
   });
 
   if (!data) return null;

@@ -62,3 +62,10 @@ export const getSuggestedFriendList = async ({ page = 0 }) => {
   });
   return repsponse.data.data.recFriendList;
 };
+
+export const getFriendStatus = async ({ nickname }) => {
+  const response = await authAxios.get(`/friends/status`, {
+    params: { nickname },
+  });
+  return response.data.data.status;
+};
