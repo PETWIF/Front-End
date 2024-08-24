@@ -25,13 +25,10 @@ export default function AlbumPage() {
   const params = useParams();
   const currentNickname = decodeURIComponent(params.nickname || nickname);
 
-  const [sort, setSort] = useState({
-    name: '최신',
-    value: 'LATEST',
-  });
+  const [sort, setSort] = useState();
   const [showChat, setShowChat] = useState(false); // State to toggle between RandomFriend and Chat
 
-  const { data, ref } = useInfiniteScroll({
+  const { data, ref } = usePagination({
     queryKey: ['albumList', currentNickname, sort?.value ?? 'LATEST'],
     queryFn: ({ pageParam }) =>
       getAlbumList({
