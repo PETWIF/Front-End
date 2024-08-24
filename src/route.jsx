@@ -3,6 +3,7 @@ import { AddInfoPage } from './pages/AddInfoPage';
 import { AgreePage } from './pages/AgreePage';
 import { AlbumDetailPage } from './pages/AlbumDetailPage';
 import { AlbumPage } from './pages/AlbumPage';
+import { AlbumEditPage } from './pages/AlbumEditPage';
 import { AlbumPostPage } from './pages/AlbumPostPage';
 import { AlbumMakingPage } from './pages/AlbumMakingPage';
 import { BookmarkPage } from './pages/BookmarkPage';
@@ -101,6 +102,10 @@ export const routeList = [
       {
         path: '/album/:userId/detail/:albumId',
         element: <AlbumDetailPage />,
+      },
+      {
+        path: '/album/edit/:albumId',
+        element: <AlbumEditPage />,
       },
       {
         path: '/album/bookmark/:userId',
