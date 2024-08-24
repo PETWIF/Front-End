@@ -89,6 +89,14 @@ const AlbumDetail = ({ album, albumId }) => {
     setShowChat(true); // 채팅창을 열기
   };
 
+  const handleCommentHeart = (commentId) => {
+    console.log(`댓글 ${commentId}에 좋아요를 눌렀습니다.`);
+  };
+
+  const handleReplyHeart = (replyId, commentId) => {
+    console.log(`${commentId}번 댓글의 ${replyId}번 대댓글에 좋아요를 눌렀습니다.`);
+  };
+
   return showChat ? ( // showChat이 true일 때 Chatting 컴포넌트를 렌더링
     <Chatting />
   ) : (
@@ -118,6 +126,8 @@ const AlbumDetail = ({ album, albumId }) => {
             key={comments.length}
             comments={comments}
             onReport={handleReport}
+            onCommentHeart={handleCommentHeart}
+            onReplyHeart={handleReplyHeart}
           />
         </S.CommentSection>
 

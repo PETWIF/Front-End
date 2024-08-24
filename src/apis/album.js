@@ -6,14 +6,10 @@ export const getHomeList = async ({ page = 0 }) => {
   });
   return response.data.data;
 };
-
-export const getAlbumList = async ({
-  nickname,
-  page = 0,
-  sortBy = 'LATEST',
-}) => {
+  
+export const getAlbumList = async ({ nickname, page = 0, sortBy }) => {
   const repsponse = await authAxios.get(`/users/albums`, {
-    params: { nickname, page, sort_by: sortBy },
+    params: { nickname, page, ...(sortBy && { sort_by: sortBy }) },
   });
   return repsponse.data.data.albums;
 };
