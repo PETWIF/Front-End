@@ -27,7 +27,9 @@ export const AlbumUpdatesFeedContainer = styled.div`
   gap: 20px;
   width: 100%;
   box-sizing: border-box;
-  overflow: hidden;
+  overflow: auto;
   flex-grow: 1;
-  max-height:1500px;
+  max-height: 1500px;
+  -ms-overflow-style: none; /* IE 및 Edge에서 스크롤 바 숨김 */
+  scrollbar-width: none; /* Firefox에서 스크롤 바 숨김 */
 `;

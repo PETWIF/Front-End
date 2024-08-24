@@ -1,9 +1,12 @@
-import React, { useState } from 'react';
-import * as S from './chatting.style';
-import { Profile as Img } from '../../dummy/images';
+import { useState } from 'react';
+
 import { Avatar } from '../Avatar';
 import { Icon } from '../../components/Icon';
+
 import { CHAT_DATA } from '../../dummy/data';
+import { Profile as Img } from '../../dummy/images';
+
+import * as S from './Chatting.style.jsx';
 
 const nickname = '댕댕산책가';
 

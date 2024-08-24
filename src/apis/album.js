@@ -1,8 +1,15 @@
 import { authAxios } from '../axios/index.js';
 
-export const getAlbumList = async ({ userId, sortBy }) => {
-  const repsponse = await authAxios.get(`/users/${userId}/albums`, {
-    params: { ...(sortBy && { sort_by: sortBy }) },
+export const getHomeList = async ({ page = 0 }) => {
+  const response = await authAxios.get('/posts', {
+    params: { page },
+  });
+  return response.data.data;
+};
+
+export const getAlbumList = async ({ nickname, page = 0, sortBy }) => {
+  const repsponse = await authAxios.get(`/users/albums`, {
+    params: { nickname, page, ...(sortBy && { sort_by: sortBy }) },
   });
   return repsponse.data.data.albums;
 };

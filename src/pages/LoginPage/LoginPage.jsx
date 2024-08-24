@@ -1,19 +1,15 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { mockPostLogin } from '../../dummy/data/user.js';
+import { postLogin, postGoogleLogin } from '../../apis/login.js';
 
 import { Button } from '../../components/Button';
 import { Icon } from '../../components/Icon';
 
-import useCheckIcon from '../../hooks/useCheckIcon.jsx';
-
 import * as S from './LoginPage.style.jsx';
 
 export default function LoginPage() {
-  const { isChecked, checking } = useCheckIcon();
   const navigate = useNavigate();
-  // 이름, 비번, 인증번호도 추가하기
 
   const [email, setEmail] = useState('');
   const [password, setPwd] = useState('');
@@ -24,15 +20,16 @@ export default function LoginPage() {
   const [isRightEmail, setIsRightEmail] = useState(false);
   const [isRightPwd, setIsRightPwd] = useState(false);
 
+  const [autoLogin, setAutoLogin] = useState(false); // -> 자동 로그인 체크 여부
+
   const validateEmail = (value) => /\S+@\S+\.\S+/.test(value);
-  const validatePwd = (value) => value.length >= 4 && value.length <= 12;
+  const validatePwd = (value) => value.length >= 12;
 
   const handleInputChange = (e) => {
     const { id, value } = e.target;
 
     switch (id) {
       case 'email':
-        console.log({ email });
         setEmail(value);
         const isValidEmail = validateEmail(value);
         setIsRightEmail(isValidEmail);
@@ -47,26 +44,74 @@ export default function LoginPage() {
     }
   };
 
+  const handleGoogleLogin = async () => {
+
+    // 링크를 로컬 호스트가 아닌 다른 내용으로 바꾸면 오류 발생
+    window.location.href = `https://accounts.google.com/o/oauth2/auth?client_id=928539400314-fsf7hhtt5mbqvpa8slt5iae561c99mpc.apps.googleusercontent.com&redirect_uri=http://localhost:8080/login/oauth2/code/google&response_type=code&scope=https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile`;
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const googleCode = urlParams.get('code');
+  
+    const response = await postGoogleLogin(googleCode);
+    const { isSuccess, data } = response;
+
+    if (isSuccess) {
+      const { accessToken, refreshToken } = data;
+
+      if (autoLogin) {
+        localStorage.setItem('accessToken', accessToken);
+        localStorage.setItem('refreshToken', refreshToken);
+        localStorage.setItem('autoLogin', 'true');
+        // localStorage.setItem('token', token);
+      }
+
+      navigate('/home');
+    } else {
+      setEmailError('로그인에 실패했습니다. 다시 시도해 주세요.');
+      setPwdError('비밀번호가 일치하지 않습니다.');
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // if (!isRightEmail || !isRightPwd) {
-    //       return;
-    // }
-
-    try {
-      await mockPostLogin({ name, email, password });
-      navigate('/home');
-      console.log('로그인 성공:', { name, email, password });
-    } catch (error) {
-      console.log({ email });
-      console.error('로그인 실패:', error.message);
-      if (error.message === 'User not found') {
-        setEmailError('가입되지 않은 이메일입니다.');
-      } else if (error.message === 'Incorrect password') {
-        setPwdError('비밀번호가 일치하지 않습니다.');
-      }
+    if (!isRightEmail || !isRightPwd) {
+      return;
     }
+
+    const response = await postLogin({ email, password });
+    const { isSuccess, data } = response;
+
+    if (isSuccess) {
+      
+      const { accessToken, refreshToken } = data;
+      console.log(data);
+      localStorage.setItem('accessToken', accessToken);
+      localStorage.setItem('refreshToken', refreshToken);
+
+      if (autoLogin) {
+        localStorage.setItem('autoLogin', 'true');
+      }
+
+      navigate('/home');
+    } else {
+      setEmailError('로그인에 실패했습니다. 다시 시도해 주세요.');
+      setPwdError('비밀번호가 일치하지 않습니다.');
+    }
+  };
+
+  useEffect(() => {
+    // 토큰 확인
+    const storedAccessToken = localStorage.getItem('accessToken');
+    const storedAutoLogin = localStorage.getItem('autoLogin');
+
+    if (storedAccessToken && storedAutoLogin === 'true') {
+      navigate('/home');
+    }
+  }, [navigate]);
+
+  const handleAutoLoginClick = () => {
+    setAutoLogin(!autoLogin);
   };
 
   return (
@@ -109,10 +154,10 @@ export default function LoginPage() {
             </S.InputContainer>
             <S.AutoLoginContainer>
               <Icon
-                id={isChecked ? 'checked' : 'unchecked'}
+                id={autoLogin ? 'checked' : 'unchecked'}
                 width='35px'
                 height='35px'
-                onClick={checking}
+                onClick={handleAutoLoginClick} 
               />
               <span>자동 로그인</span>
             </S.AutoLoginContainer>
@@ -132,10 +177,8 @@ export default function LoginPage() {
           <S.StyledHr />
           <S.MainBoldText>간편 로그인</S.MainBoldText>
           <S.SocialLoginWrapper>
-            <S.SocialLoginContainer id='kakao' width='62px' height='62px' />
-            {/* <S.SocialLoginContainer id='naver' width='62px' height='62px' /> */}
-            <S.SocialLoginContainer id='apple' width='62px' height='62px' />
-            {/* <S.SocialLoginContainer id='google' width='62px' height='62px' /> */}
+            <S.SocialLoginContainer id='kakao' width='62px' height='62px'/>
+            <S.SocialLoginContainer id='google' width='62px' height='62px' onClick={handleGoogleLogin}/>
           </S.SocialLoginWrapper>
           <S.UnderlinedText to='/signup'>
             아직 회원이 아니시라면?

@@ -1,3 +1,4 @@
+import { forwardRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 
 import useAuth from '../../../hooks/useAuth.jsx';
@@ -7,7 +8,8 @@ import { Icon } from '../../../components/Icon';
 
 import * as S from './AlbumItem.style.jsx';
 
-export default function AlbumItem({ album }) {
+const AlbumItem = forwardRef((props, ref) => {
+  const { album } = props;
   const { userId } = useAuth();
   const params = useParams();
   const currentUserId = Number(params?.userId) || userId;
@@ -15,7 +17,7 @@ export default function AlbumItem({ album }) {
     album;
 
   return (
-    <S.AlbumItem>
+    <S.AlbumItem ref={ref}>
       <S.Img src={coverImageUrl} alt={albumId} />
       <S.AlbumHover>
         <S.IconContainer>
@@ -43,4 +45,6 @@ export default function AlbumItem({ album }) {
       </S.AlbumHover>
     </S.AlbumItem>
   );
-}
+});
+
+export default AlbumItem;

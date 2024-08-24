@@ -37,3 +37,15 @@ export const Text = styled.p`
   line-height: 23px;
   word-break: keep-all;
 `;
+
+export const InputStyle = styled.input`
+  width: 100%;
+  height: 50px;
+  margin-top: 5px;
+  padding: 15px;
+  border: none;
+  border-radius: 10px;
+  // line-height: 0;
+  color: ${(props) => props.theme.color.gray1};
+  background: ${(props) => props.theme.color.gray5};
+`;
