@@ -18,11 +18,15 @@ const queryClient = new QueryClient({
       retry: 0,
     },
     mutations: {
-      onError: (error) => console.error(error),
+      onError: (error) => {
+        alert(error.response.data.message);
+      },
     },
   },
   queryCache: new QueryCache({
-    onError: (error) => console.error(error),
+    onError: (error) => {
+      alert(error.response.data.message);
+    },
   }),
 });
 
