@@ -1,7 +1,10 @@
 import { Link } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
 
 import { getSuggestedFriendList } from '../../apis/friend.js';
+
+import useAuth from '../../hooks/useAuth.jsx';
+import useFriend from '../../hooks/useFriend.jsx';
+import usePagination from '../../hooks/usePagination.jsx';
 
 import { Button } from '../Button';
 import { Layout } from '../Common';
@@ -11,31 +14,35 @@ import { RANDOM_FRIENDS } from '../../dummy/data';
 
 import * as S from './RandomFriend.style.jsx';
 
-const nickname = '펫위프';
-
 export default function RandomFriend() {
-  const { data } = useQuery({
+  const { nickname: myNickname } = useAuth();
+  const { request } = useFriend();
+  const { data, status, fetchNextPage } = usePagination({
     queryKey: ['suggestedFriendList'],
-    queryFn: () => getSuggestedFriendList(),
-    staleTime: 1000 * 60 * 5,
+    queryFn: ({ pageParam }) => getSuggestedFriendList({ page: pageParam }),
   });
 
   if (!data) return null;
 
+  const friendList =
+    data && !data.pages.includes(undefined)
+      ? data.pages.flatMap((page) => page)
+      : [];
+
   return (
     <S.RandomFriendLayout>
-      <S.Title>{nickname}님을 위한 추천</S.Title>
+      <S.Title>{myNickname}님을 위한 추천</S.Title>
       <S.FriendList>
-        {data.map(({ nickname, profile_url: profileUrl }) => (
+        {friendList.map(({ nickname, profile_url: profileUrl }) => (
           <S.FriendItem key={nickname}>
             <div>
-              {/* <Link to={`/album/${nickname}`}> */}
-              <Avatar src={profileUrl} size='66px' />
-              {/* </Link> */}
+              <Link to={`/album/${nickname}`}>
+                <Avatar src={profileUrl} size='66px' />
+              </Link>
               <span>{nickname}</span>
             </div>
             <Button
-              onClick={() => console.log(`${nickname} 친구 추가`)}
+              onClick={() => request.mutate(nickname)}
               width='100px'
               padding='8px'
               borderRadius='5px'
@@ -45,15 +52,18 @@ export default function RandomFriend() {
           </S.FriendItem>
         ))}
       </S.FriendList>
-      <Button
-        padding='11px'
-        buttonStyle='light'
-        borderRadius='5px'
-        hasBorder
-        onClick={() => console.log('더 많은 프로필 보기')}
-      >
-        더 많은 프로필 보기
-      </Button>
+      {friendList.length === 0 && <S.Text>추천 친구</S.Text>}
+      {friendList.length > 0 && status === 'success' && (
+        <Button
+          onClick={() => fetchNextPage()}
+          padding='11px'
+          buttonStyle='light'
+          borderRadius='5px'
+          hasBorder
+        >
+          더 많은 프로필 보기
+        </Button>
+      )}
     </S.RandomFriendLayout>
   );
 }

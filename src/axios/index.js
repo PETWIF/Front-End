@@ -1,10 +1,10 @@
 import axios from 'axios';
 
 export const authAxios = axios.create({
-  baseURL: 'https://petwif.store',
+  baseURL: import.meta.env.VITE_SERVER_DOMAIN,
   headers: {
     'Content-Type': 'application/json',
     withCredentials: true,
-    Authorization: `${localStorage.getItem('token')}`,
+    Authorization: `${localStorage.getItem('accessToken')}`,
   },
 });
