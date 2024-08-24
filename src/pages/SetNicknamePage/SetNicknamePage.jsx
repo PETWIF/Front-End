@@ -17,14 +17,14 @@ export default function SetNicknamePage() {
   const [isRightNickname, setIsRightNickname] = useState(false);
   const [nicknameError, setNicknameError] = useState('');
 
-  const [profilePic, setProfilePic] = useState(null); 
+  const [profilePic, setProfilePic] = useState(''); 
   const [preview, setPreview] = useState(<Icon id='editPic' width='42px' height='42px' />); 
 
   const validateNickname = (value) => value.trim().length >= 2 && value.trim().length <= 6;
 
   const navigate = useNavigate();
   const location = useLocation();
-  const { email, password } = location.state;
+  //const { email, password } = location.state;
 
   const handleInputChange = (e) => {
     const { id, value } = e.target;
@@ -42,20 +42,18 @@ export default function SetNicknamePage() {
       e.preventDefault();
     
       const file = e.target.files[0];
-      if (!file) return;
-    
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setProfilePic(reader.result); // 파일을 읽어 URL로 미리보기 이미지 설정
-      };
-      reader.readAsDataURL(file);
-    
+      console.log(file);
+
+      setProfilePic(file);
+      //
+
+      const image = window.URL.createObjectURL(file);
+      setPreview(image);
+    // 미리보기 이상...
       try {
-        const response = await postProfilePic({ file }); // FormData 객체를 전송
-        const { data } = response;
-    
-        setProfilePic(data.url); // 서버에서 반환된 URL을 사용
-        setPreview(data.url); // 미리보기 이미지 설정
+        const formData = new FormData();
+        formData.append('file:', file);
+        const response = await postProfilePic(formData); // FormData 객체를 전송
 
       } catch (error) {
         console.error("프로필 사진 설정 실패:", error);
@@ -76,7 +74,9 @@ export default function SetNicknamePage() {
           console.log('사용 가능한 닉네임:', { nickname });
           setNicknameError('사용 가능한 닉네임입니다!');
 
-          navigate(destination, { state: { email, password, nickname: nickname } });
+          navigate(destination, 
+            // { state: { email, password, nickname: nickname } }
+          );
         } else {
           setIsRightNickname(false); 
           setNicknameError('이미 사용 중인 닉네임입니다.');

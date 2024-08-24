@@ -1,12 +1,7 @@
-import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
-
-import {
-  getFriendReceivedList,
-  acceptFriend,
-  rejectFriend,
-} from '../../../apis/friend.js';
+import { getFriendReceivedList } from '../../../apis/friend.js';
 
 import useAuth from '../../../hooks/useAuth.jsx';
+import useFriend from '../../../hooks/useFriend.jsx';
 import usePagination from '../../../hooks/usePagination.jsx';
 
 import { Avatar } from '../../../components/Avatar';
@@ -16,25 +11,11 @@ import * as S from '../Common.Style.jsx';
 
 export default function FriendReceivedList() {
   const { nickname: myNickname } = useAuth();
+  const { accept, reject } = useFriend();
+
   const { data, status, fetchNextPage } = usePagination({
     queryKey: ['friendReceivedList'],
     queryFn: ({ pageParam }) => getFriendReceivedList({ page: pageParam }),
-  });
-
-  const queryClient = useQueryClient();
-  const accept = useMutation({
-    mutationFn: (nickname) => acceptFriend({ nickname }),
-    onSuccess: () => {
-      queryClient.invalidateQueries(['friendReceivedList']);
-      queryClient.invalidateQueries(['friendList']);
-    },
-  });
-
-  const reject = useMutation({
-    mutationFn: (nickname) => rejectFriend({ nickname }),
-    onSuccess: () => {
-      queryClient.invalidateQueries(['friendReceivedList']);
-    },
   });
 
   if (!data) return null;

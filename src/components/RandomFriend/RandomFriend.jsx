@@ -1,8 +1,9 @@
 import { Link } from 'react-router-dom';
-import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
 
-import { getSuggestedFriendList, requestFriend } from '../../apis/friend.js';
+import { getSuggestedFriendList } from '../../apis/friend.js';
 
+import useAuth from '../../hooks/useAuth.jsx';
+import useFriend from '../../hooks/useFriend.jsx';
 import usePagination from '../../hooks/usePagination.jsx';
 
 import { Button } from '../Button';
@@ -13,21 +14,12 @@ import { RANDOM_FRIENDS } from '../../dummy/data';
 
 import * as S from './RandomFriend.style.jsx';
 
-const nickname = '펫위프';
-
 export default function RandomFriend() {
+  const { nickname: myNickname } = useAuth();
+  const { request } = useFriend();
   const { data, status, fetchNextPage } = usePagination({
     queryKey: ['suggestedFriendList'],
     queryFn: ({ pageParam }) => getSuggestedFriendList({ page: pageParam }),
-  });
-
-  const queryClient = useQueryClient();
-  const request = useMutation({
-    mutationFn: (nickname) => requestFriend({ nickname }),
-    onSuccess: () => {
-      queryClient.invalidateQueries(['suggestedFriendList']);
-      queryClient.invalidateQueries(['friendSentList']);
-    },
   });
 
   if (!data) return null;
@@ -39,7 +31,7 @@ export default function RandomFriend() {
 
   return (
     <S.RandomFriendLayout>
-      <S.Title>{nickname}님을 위한 추천</S.Title>
+      <S.Title>{myNickname}님을 위한 추천</S.Title>
       <S.FriendList>
         {friendList.map(({ nickname, profile_url: profileUrl }) => (
           <S.FriendItem key={nickname}>

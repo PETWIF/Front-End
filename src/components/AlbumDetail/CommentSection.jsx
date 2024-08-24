@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import * as S from './CommentSection.style';
 import { Icon } from '../Icon';
 
-const CommentSection = ({ comments, onReport }) => {
+const CommentSection = ({ comments, onReport, onCommentHeart, onReplyHeart }) => {
   const [commentList, setCommentList] = useState(comments);
   const [newReply, setNewReply] = useState({});
   const [showReplies, setShowReplies] = useState({});
@@ -90,7 +90,7 @@ const CommentSection = ({ comments, onReport }) => {
           </S.CommentHeader>
           <S.CommentText>{comment.text}</S.CommentText>
           <S.CommentActions>
-            <Icon id='commentheart' width='14' height='12'></Icon> {comment.likeCount}
+            <Icon id='commentheart' width='14' height='12' onClick={() => onCommentHeart(comment.id)}></Icon> {comment.likeCount}
             <Icon id='replybutton' width='13' height='12' onClick={() => toggleShowReplies(comment.id)} />
             {comment.replies && comment.replies.length > 0 && (
               <span>{comment.replies.length}</span>
@@ -109,7 +109,7 @@ const CommentSection = ({ comments, onReport }) => {
                       </S.ReplyAuthor>
                       <S.ReplyText>{reply.text}</S.ReplyText>
                       <S.ReplyActions>
-                        <Icon id='commentheart' width='14' height='12'></Icon>{reply.likeCount}
+                        <Icon id='commentheart' width='14' height='12'  onClick={() => onReplyHeart(reply.id, comment.id)}></Icon>{reply.likeCount}
                         <S.CommentCreatedAt>{reply.createdAt}</S.CommentCreatedAt>
                       </S.ReplyActions>
                     </S.Reply>

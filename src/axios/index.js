@@ -5,6 +5,6 @@ export const authAxios = axios.create({
   headers: {
     'Content-Type': 'application/json',
     withCredentials: true,
-    Authorization: `${localStorage.getItem('token')}`,
+    Authorization: `${localStorage.getItem('accessToken')}`,
   },
 });

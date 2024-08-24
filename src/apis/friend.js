@@ -30,7 +30,7 @@ export const cancelFriend = async ({ nickname }) => {
 
 export const removeFriend = async ({ nickname }) => {
   const repsponse = await authAxios.delete('/friends', {
-    nickname,
+    params: { nickname },
   });
   return repsponse;
 };
@@ -61,4 +61,11 @@ export const getSuggestedFriendList = async ({ page = 0 }) => {
     params: { page },
   });
   return repsponse.data.data.recFriendList;
+};
+
+export const getFriendStatus = async ({ nickname }) => {
+  const response = await authAxios.get(`/friends/status`, {
+    params: { nickname },
+  });
+  return response.data.data.status;
 };

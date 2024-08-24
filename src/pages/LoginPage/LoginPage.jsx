@@ -62,6 +62,7 @@ export default function LoginPage() {
         localStorage.setItem('accessToken', accessToken);
         localStorage.setItem('refreshToken', refreshToken);
         localStorage.setItem('autoLogin', 'true');
+        // localStorage.setItem('token', token);
       }
 
       navigate('/home');
@@ -82,11 +83,13 @@ export default function LoginPage() {
     const { isSuccess, data } = response;
 
     if (isSuccess) {
+      
       const { accessToken, refreshToken } = data;
+      console.log(data);
+      localStorage.setItem('accessToken', accessToken);
+      localStorage.setItem('refreshToken', refreshToken);
 
       if (autoLogin) {
-        localStorage.setItem('accessToken', accessToken);
-        localStorage.setItem('refreshToken', refreshToken);
         localStorage.setItem('autoLogin', 'true');
       }
 
