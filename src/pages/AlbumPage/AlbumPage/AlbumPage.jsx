@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
 import { useParams, Link } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 
 import { getAlbumList } from '../../../apis/album.js';
 
@@ -19,10 +19,6 @@ import { SORT_CATEGORIES } from '../../../constants';
 import { ALBUM_LIST } from '../../../dummy/data';
 
 import * as S from './AlbumPage.style.jsx';
-
-const myId = 'myUserId1';
-const yourId = '댕댕산책가';
-const userId = 46;
 
 export default function AlbumPage() {
   const { nickname } = useAuth();
@@ -95,8 +91,8 @@ export default function AlbumPage() {
         </S.AlbumBox>
       </S.MainContainer>
       <S.SideContainer>
-        <Profile userId={userId} />
-        {showChat ? <Chatting userId={yourId} /> : <RandomFriend />}
+        <Profile />
+        {showChat ? <Chatting /> : <RandomFriend />}
       </S.SideContainer>
     </S.MainLayout>
   );
