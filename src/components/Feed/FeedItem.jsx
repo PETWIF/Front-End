@@ -5,6 +5,7 @@ import { Icon } from '../Icon';
 import { formatDistanceToNow } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import { albumCover } from '../../dummy/images';
+import { Link } from 'react-router-dom';
 
 const FeedItem = ({ data }) => {
   const { profileImage, profileName, albumImage, likeCount, createdAt, comments: initialComments, comment, likeUsers = [] } = data;
@@ -53,6 +54,18 @@ const FeedItem = ({ data }) => {
     console.log(`댓글 ${commentId}가 신고되었습니다.`);
   };
 
+  const handleAlbumHeart = (albumId) => {
+    console.log(`게시글${albumId}에 좋아요를 눌렀습니다.`);
+  };
+
+  const handleCommentHeart = (commentId) => {
+    console.log(`댓글 ${commentId}에 좋아요를 눌렀습니다.`);
+  };
+
+  const handleReplyHeart = (replyId, commentId) => {
+    console.log(`${commentId}번 댓글의 ${replyId}번 대댓글에 좋아요를 눌렀습니다.`);
+  };
+
   const formatDate = (date) => {
     return formatDistanceToNow(new Date(date), { addSuffix: true, locale: ko });
   };
@@ -69,9 +82,13 @@ const FeedItem = ({ data }) => {
             </div>
           </S.Profile>
           <S.Actions>
-            <Icon id='albumdm' width='31' height='32' />
-            <Icon id='albumheart' width='31' height='26' />
-            <Icon id='albumbookmark' width='22' height='27' />
+            <Link to={`/chatting`}>
+              <Icon id='albumdm' width='31' height='32' />
+            </Link>
+              <Icon id='albumheart' width='31' height='26' onClick={() => handleAlbumHeart(data.id)}/>
+            <Link to={`/bookmark`}>
+              <Icon id='albumbookmark' width='22' height='27' />
+            </Link>
             <Icon id='albumhamburger' width='23' height='4' />
           </S.Actions>
         </S.Header>
@@ -110,6 +127,8 @@ const FeedItem = ({ data }) => {
               key={comments.length} 
               comments={comments} 
               onReport={handleReport}
+              onCommentHeart={handleCommentHeart}
+              onReplyHeart={handleReplyHeart}
             /> 
           </S.CommentSection>
           
