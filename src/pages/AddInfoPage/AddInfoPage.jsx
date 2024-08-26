@@ -40,8 +40,6 @@ export default function AddInfoPage() {
 
     try {
       const token = localStorage.getItem('accessToken');
-      const userRes = '';
-      const petRes = '';
 
         if (token) {
           userRes = await patchAddUserInfo({ gender, birthDate, telecom, phone, address });

@@ -19,14 +19,14 @@ export const Wrapper = styled(Flex)`
 // 하단의 로그인 버튼을 제외한 폼 부분
 export const FormWrapper = styled(Flex)`
   width: 450px;
-  height: 600px;
+  height: 650px;
   gap: 10px;
   background-color: #fff;
   border: 1px solid #b4b4b4;
   padding: 35px;
   display: flex;
   align-items: center;
-  justify-content: space-evenly;
+  justify-content: space-between;
   flex-direction: column;
 `;
 

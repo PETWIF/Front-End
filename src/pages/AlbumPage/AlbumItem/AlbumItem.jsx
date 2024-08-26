@@ -35,12 +35,12 @@ const AlbumItem = forwardRef((props, ref) => {
           </S.IconBox>
         </S.IconContainer>
         <S.ButtonContainer>
-          <Link key={albumId} to={`/album/${currentUserId}/detail/${albumId}`}>
+          <Link to={`/album/${currentUserId}/detail/${albumId}`}>
             <AlbumButton>앨범 구경하기</AlbumButton>
           </Link>
-          <AlbumButton onClick={() => console.log('앨범 수정하기')}>
-            앨범 수정하기
-          </AlbumButton>
+          <Link to={`/album/edit/${albumId}`}>
+            <AlbumButton>앨범 수정하기</AlbumButton>
+          </Link>
         </S.ButtonContainer>
       </S.AlbumHover>
     </S.AlbumItem>

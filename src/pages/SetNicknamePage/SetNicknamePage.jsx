@@ -65,7 +65,6 @@ export default function SetNicknamePage() {
       e.preventDefault();
       
       const token = localStorage.getItem('accessToken');
-      const Response = '';
   
       if (!isRightNickname) return;
 

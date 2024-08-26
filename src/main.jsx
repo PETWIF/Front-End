@@ -15,13 +15,24 @@ const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       retry: 0,
+      refetchOnWindowFocus: false,
     },
     mutations: {
-      onError: (error) => console.error(error),
+      onError: (error) => {
+        if (error.response.status === 404) {
+          return;
+        }
+        alert(error.response.data.message);
+      },
     },
   },
   queryCache: new QueryCache({
-    onError: (error) => console.error(error),
+    onError: (error) => {
+      if (error.response.status === 404) {
+        return;
+      }
+      alert(error.response.data.message);
+    },
   }),
 });
 

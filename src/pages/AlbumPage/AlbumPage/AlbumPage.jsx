@@ -28,7 +28,7 @@ export default function AlbumPage() {
   const [sort, setSort] = useState();
   const [showChat, setShowChat] = useState(false); // State to toggle between RandomFriend and Chat
 
-  const { data, ref } = useInfiniteScroll({
+  const { data, ref } = usePagination({
     queryKey: ['albumList', currentNickname, sort?.value ?? 'LATEST'],
     queryFn: ({ pageParam }) =>
       getAlbumList({
@@ -49,6 +49,8 @@ export default function AlbumPage() {
 
   const rest = albumList.slice(0, -1); // 마지막 요소를 제외한 나머지 배열
   const last = albumList[albumList.length - 1] ?? {};
+
+  console.log(albumList);
 
   return (
     <S.MainLayout>
