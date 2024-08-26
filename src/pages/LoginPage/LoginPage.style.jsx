@@ -159,7 +159,7 @@ export const AutoLoginContainer = styled.div`
 
 // 임시 목업
 export const MockUp = styled.div`
-  width: 708px;
+  width: 620px;
   height: 630px;
   flex: 0 0 auto;
 `;

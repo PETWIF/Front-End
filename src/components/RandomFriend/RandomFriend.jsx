@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 
 import { getSuggestedFriendList } from '../../apis/friend.js';
 
-import useAuth from '../../hooks/useAuth.jsx';
+import { useAuth }from '../../hooks/useAuth.jsx';
 import useFriend from '../../hooks/useFriend.jsx';
 import usePagination from '../../hooks/usePagination.jsx';
 

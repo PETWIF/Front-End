@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 
-import { patchAddUserInfo, postAddPetInfo } from '../../apis/addInfo.js';
+import { patchAddUserInfo, postAddPetInfo, patchAddUserInfoBeforeLogin, postAddPetInfoBeforeLogin } from '../../apis/addInfo.js';
 
 import { Button } from '../../components/Button';
 
@@ -15,7 +15,7 @@ export default function AddInfoPage() {
   const location = useLocation();
   const navigate = useNavigate();
   
-  const { nickname } = location.state || {};
+  const { email, nickname } = location.state || {};
 
   const [gender, setGender] = useState('');
   const [year, setYear] = useState(''); 
@@ -39,8 +39,19 @@ export default function AddInfoPage() {
     console.log({ petName, petGender, petAgeInt, petKind });
 
     try {
-      const userRes = await patchAddUserInfo({ gender, birthDate, telecom, phone, address });
-      const petRes = await postAddPetInfo({ petName, petGender, petAgeInt, petKind });
+      const token = localStorage.getItem('accessToken');
+      const userRes = '';
+      const petRes = '';
+
+        if (token) {
+          userRes = await patchAddUserInfo({ gender, birthDate, telecom, phone, address });
+          petRes = await postAddPetInfo({ petName, petGender, petAgeInt, petKind });
+        } else {
+          userRes = await patchAddUserInfoBeforeLogin({ gender, birthDate, telecom, phone, address });
+          petRes = await postAddPetInfoBeforeLogin({ petName, petGender, petAgeInt, petKind });
+        }
+
+        const { isSuccess } = Response;
 
       if (userRes && petRes) {
       console.log('정보 입력 성공');

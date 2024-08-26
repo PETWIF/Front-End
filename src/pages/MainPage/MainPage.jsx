@@ -11,6 +11,7 @@ import {
   Content,
   MainContainer,
   WhiteBox,
+  Story
 } from './MainPage.style';
 
 const MainPage = () => {
@@ -21,7 +22,9 @@ const MainPage = () => {
     <MainContainer>
       <WhiteBox>
         <AlbumUpdatesFeedContainer>
-          <AlbumUpdates />
+          <Story>
+            <AlbumUpdates />
+          </Story>
           <Feed />
         </AlbumUpdatesFeedContainer>
       </WhiteBox>
