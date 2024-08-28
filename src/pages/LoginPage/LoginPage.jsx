@@ -57,10 +57,10 @@ export default function LoginPage() {
 
     if (isSuccess) {
       const { accessToken, refreshToken } = data;
+      localStorage.setItem('accessToken', accessToken);
+      localStorage.setItem('refreshToken', refreshToken);
 
       if (autoLogin) {
-        localStorage.setItem('accessToken', accessToken);
-        localStorage.setItem('refreshToken', refreshToken);
         localStorage.setItem('autoLogin', 'true');
         // localStorage.setItem('token', token);
       }
