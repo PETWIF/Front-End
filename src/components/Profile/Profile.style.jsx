@@ -37,6 +37,7 @@ export const NicknameContianer = styled.div`
 
 export const Description = styled.p`
   margin: 16px 0;
+  padding-left: 20px;
   font-weight: 400;
   font-size: 16px;
   line-height: 23px;

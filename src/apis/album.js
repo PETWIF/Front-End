@@ -6,7 +6,7 @@ export const getHomeList = async ({ page = 0 }) => {
   });
   return response.data.data;
 };
-
+  
 export const getAlbumList = async ({ nickname, page = 0, sortBy }) => {
   const repsponse = await authAxios.get(`/users/albums`, {
     params: { nickname, page, ...(sortBy && { sort_by: sortBy }) },
@@ -21,5 +21,16 @@ export const getAlbumDetail = async ({ albumId }) => {
 
 export const deleteAlbum = async ({ albumId }) => {
   const response = await authAxios.delete(`/albums/${albumId}`);
+  return response;
+};
+
+export const editAlbum = async ({ albumId, title, content, scope }) => {
+  const response = await authAxios.patch(`/albums/${albumId}`, {
+    requestDto: {
+      title,
+      content,
+      scope,
+    },
+  });
   return response;
 };
