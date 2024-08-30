@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { postLogin, postGoogleLogin } from '../../apis/login.js';
+import { useAuth } from '../../hooks/useAuth';
+
+import { postGoogleLogin } from '../../apis/login.js'; // useAuth로 옮겨야 함
 
 import { Button } from '../../components/Button';
 import { Icon } from '../../components/Icon';
@@ -20,6 +22,7 @@ export default function LoginPage() {
   const [isRightEmail, setIsRightEmail] = useState(false);
   const [isRightPwd, setIsRightPwd] = useState(false);
 
+  const { isLogin, handleLogin } = useAuth(); // 로그인 설정
   const [autoLogin, setAutoLogin] = useState(false); // -> 자동 로그인 체크 여부
 
   const validateEmail = (value) => /\S+@\S+\.\S+/.test(value);
@@ -53,14 +56,14 @@ export default function LoginPage() {
     const googleCode = urlParams.get('code');
   
     const response = await postGoogleLogin(googleCode);
-    const { isSuccess, data } = response;
+    const { isSuccess, data, id, nickname } = response;
 
     if (isSuccess) {
       const { accessToken, refreshToken } = data;
+      localStorage.setItem('accessToken', accessToken);
+        localStorage.setItem('refreshToken', refreshToken);
 
       if (autoLogin) {
-        localStorage.setItem('accessToken', accessToken);
-        localStorage.setItem('refreshToken', refreshToken);
         localStorage.setItem('autoLogin', 'true');
         // localStorage.setItem('token', token);
       }
@@ -79,22 +82,10 @@ export default function LoginPage() {
       return;
     }
 
-    const response = await postLogin({ email, password });
-    const { isSuccess, data } = response;
-
-    if (isSuccess) {
-      
-      const { accessToken, refreshToken } = data;
-      console.log(data);
-      localStorage.setItem('accessToken', accessToken);
-      localStorage.setItem('refreshToken', refreshToken);
-
-      if (autoLogin) {
-        localStorage.setItem('autoLogin', 'true');
-      }
-
-      navigate('/home');
-    } else {
+    try {
+      await handleLogin({ email, password, autoLogin });
+    } catch (error) {
+      console.log(error);
       setEmailError('로그인에 실패했습니다. 다시 시도해 주세요.');
       setPwdError('비밀번호가 일치하지 않습니다.');
     }
@@ -122,7 +113,9 @@ export default function LoginPage() {
           <S.MainBoldText>
             반려동물과의 추억을 사람들과 나눠 보세요
           </S.MainBoldText>
-          <S.MockUp />
+          <S.MockUp>
+              <Icon id='mockup' width='620px' height='620px' />
+          </S.MockUp>
         </S.PETWIFContainer>
         <S.FormWrapper>
           <S.FormContainer onSubmit={handleSubmit}>

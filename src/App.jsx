@@ -1,5 +1,6 @@
 import { useLocation, Outlet } from 'react-router-dom';
 
+import { AuthProvider } from './hooks/useAuth.jsx'
 import { ThemeProvider } from 'styled-components';
 
 import { Header } from './components/Header';
@@ -15,8 +16,10 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
+      <AuthProvider>
       {!hideHeader && <Header />}
       <Outlet />
+      </AuthProvider>
     </ThemeProvider>
   );
 }

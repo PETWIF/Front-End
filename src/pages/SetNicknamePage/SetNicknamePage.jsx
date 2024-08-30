@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 
-import { patchNickname, postProfilePic } from '../../apis/nickname.js';
+import { patchNickname, postProfilePic, patchNicknameBeforeLogin, postProfilePicBeforeLogin } from '../../apis/nickname.js';
 
 import { Button } from '../../components/Button';
 import { Icon } from '../../components/Icon';
@@ -24,7 +24,7 @@ export default function SetNicknamePage() {
 
   const navigate = useNavigate();
   const location = useLocation();
-  //const { email, password } = location.state;
+  const { email, password } = location.state;
 
   const handleInputChange = (e) => {
     const { id, value } = e.target;
@@ -63,11 +63,18 @@ export default function SetNicknamePage() {
 
     const handleSubmit = async (e, destination) => {
       e.preventDefault();
+      
+      const token = localStorage.getItem('accessToken');
   
       if (!isRightNickname) return;
 
       try {
-        const Response = await patchNickname({ nickname });
+
+        if (token) {
+          Response = await patchNickname({ nickname });
+        } else {
+          Response = await patchNicknameBeforeLogin({ nickname })
+        }
         const { isSuccess } = Response;
   
         if (isSuccess) {
