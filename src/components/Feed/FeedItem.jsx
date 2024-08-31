@@ -80,12 +80,14 @@ const FeedItem = forwardRef((props, ref) => {
     console.log(`게시글${albumId}에 좋아요를 눌렀습니다.`);
   };
 
-  const handleCommentHeart = (commentId) => {
-    console.log(`댓글 ${commentId}에 좋아요를 눌렀습니다.`);
-  };
+  // const handleCommentHeart = (commentId) => {
+  //   console.log(`댓글 ${commentId}에 좋아요를 눌렀습니다.`);
+  // };
 
   const handleReplyHeart = (replyId, commentId) => {
-    console.log(`${commentId}번 댓글의 ${replyId}번 대댓글에 좋아요를 눌렀습니다.`);
+    console.log(
+      `${commentId}번 댓글의 ${replyId}번 대댓글에 좋아요를 눌렀습니다.`
+    );
   };
 
   const formatDate = (date) => {
@@ -162,9 +164,8 @@ const FeedItem = forwardRef((props, ref) => {
               key={comments.length}
               comments={comments}
               onReport={handleReport}
-              onCommentHeart={handleCommentHeart}
               onReplyHeart={handleReplyHeart}
-            /> 
+            />
           </S.CommentSection>
 
           <S.CommentInputContainer>
