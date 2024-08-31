@@ -125,3 +125,16 @@ export const MainNormalText = styled.p`
   align: center;
   color: ${(props) => props.theme.color.gray2};
 `;
+
+export const WarningText = styled.span`
+  &.error {
+    color: red;
+  }
+  &.success {
+    color: #f87f28;
+  }
+
+  font-size: 14px;
+  font-weight: 400;
+  margin-top: 5px;
+`;

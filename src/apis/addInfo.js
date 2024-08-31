@@ -13,11 +13,14 @@ export const patchAddUserInfo = async ({ gender, birthDate, telecom, phone, addr
 };
 
 export const postAddPetInfo = async ({ petName, petGender, petAgeInt, petKind }) => {
-    const response = await authAxios.post(`pet/add`, {
+    const response = await authAxios.post(`/pet/add`, {
         petName: petName,
         gender: petGender,
         age: petAgeInt,
         petKind: petKind,
+    },
+    {
+        params: { token },
     });   
     
     return response.data.isSuccess;
@@ -39,7 +42,7 @@ export const patchAddUserInfoBeforeLogin = async ({ email, gender, birthDate, te
 };
 
 export const postAddPetInfoBeforeLogin = async ({ email, petName, petGender, petAgeInt, petKind }) => {
-    const response = await authAxios.post(`pet/add/beforeLogin`, {
+    const response = await authAxios.post(`/pet/add/beforeLogin`, {
         petName: petName,
         gender: petGender,
         age: petAgeInt,

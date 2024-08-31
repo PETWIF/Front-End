@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { patchNickname, postProfilePic, patchNicknameBeforeLogin, postProfilePicBeforeLogin } from '../../apis/nickname.js';
 
@@ -23,8 +23,6 @@ export default function SetNicknamePage() {
   const validateNickname = (value) => value.trim().length >= 2 && value.trim().length <= 6;
 
   const navigate = useNavigate();
-  const location = useLocation();
-  const { email, password } = location.state;
 
   const handleInputChange = (e) => {
     const { id, value } = e.target;
@@ -80,13 +78,10 @@ export default function SetNicknamePage() {
         if (isSuccess) {
           console.log('사용 가능한 닉네임:', { nickname });
           setNicknameError('사용 가능한 닉네임입니다!');
-
-          navigate(destination, 
-            // { state: { email, password, nickname: nickname } }
-          );
+          navigate(destination, { state: { nickname }});
         } else {
           setIsRightNickname(false); 
-          setNicknameError('이미 사용 중인 닉네임입니다.');
+          setNicknameError('이미 사용 중인 닉네임입니다. 다른 닉네임을 이용해 주세요.');
         }
       } catch (error) {
         console.error('오류 발생:', error);
@@ -100,7 +95,7 @@ export default function SetNicknamePage() {
         <S.Container>
           <S.FormWrapper>
             <TitleContainer to='/agree' backIcon='true' titleText='프로필' />
-            <S.FormContainer onSubmit={(e) => handleSubmit(e, '/addInfo')}> 
+            <S.FormContainer> 
             <input
                 type="file"
                 accept="image/*"
@@ -135,10 +130,18 @@ export default function SetNicknamePage() {
               <br />
               <S.MainBoldText>추가 정보 입력</S.MainBoldText>
               <S.StyledHr />
-              <Button width='100%' padding='16px' buttonStyle='orange' onClick={() => navigate('/addInfo', { state: { email, password, nickname: nickname }})}>
+              <Button 
+              width='100%' 
+              padding='16px' 
+              buttonStyle='orange' 
+              onClick={(e) => handleSubmit(e, '/addInfo')}>
                 지금 입력
               </Button>
-              <Button width='100%' padding='16px' buttonStyle='gray' onClick={() => navigate('/home', { state: { email, password, nickname: nickname }})}>
+              <Button 
+              width='100%' 
+              padding='16px' 
+              buttonStyle='gray' 
+              onClick={() => handleSubmit(e, '/login')}>
                 나중에 하기
               </Button>
             </S.FormContainer>

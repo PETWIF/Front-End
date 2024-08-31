@@ -15,7 +15,7 @@ export default function AddInfoPage() {
   const location = useLocation();
   const navigate = useNavigate();
   
-  const { email, nickname } = location.state || {};
+  const { nickname } = location.state || {};
 
   const [gender, setGender] = useState('');
   const [year, setYear] = useState(''); 
@@ -40,8 +40,9 @@ export default function AddInfoPage() {
 
     try {
       const token = localStorage.getItem('accessToken');
+      let userRes, petRes;
 
-        if (token) {
+        if (token !== null) {
           userRes = await patchAddUserInfo({ gender, birthDate, telecom, phone, address });
           petRes = await postAddPetInfo({ petName, petGender, petAgeInt, petKind });
         } else {
@@ -49,9 +50,9 @@ export default function AddInfoPage() {
           petRes = await postAddPetInfoBeforeLogin({ petName, petGender, petAgeInt, petKind });
         }
 
-        const { isSuccess } = Response;
+        const { isSuccess } = userRes;
 
-      if (userRes && petRes) {
+      if (isSuccess) {
       console.log('정보 입력 성공');
       navigate('/registered', { state: { nickname } });
       } else {
