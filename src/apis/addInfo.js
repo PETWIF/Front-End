@@ -12,7 +12,7 @@ export const patchAddUserInfo = async ({ gender, birthDate, telecom, phone, addr
     return response.data.isSuccess;
 };
 
-export const postAddPetInfo = async ({ petName, petGender, petAgeInt, petKind }) => {
+export const postAddPetInfo = async ({ token, petName, petGender, petAgeInt, petKind }) => {
     const response = await authAxios.post(`/pet/add`, {
         petName: petName,
         gender: petGender,
@@ -20,7 +20,7 @@ export const postAddPetInfo = async ({ petName, petGender, petAgeInt, petKind })
         petKind: petKind,
     },
     {
-        params: { token },
+        params: { Authorization: token },
     });   
     
     return response.data.isSuccess;

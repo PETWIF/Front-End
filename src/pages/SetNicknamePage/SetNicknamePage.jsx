@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 import { patchNickname, postProfilePic, patchNicknameBeforeLogin, postProfilePicBeforeLogin } from '../../apis/nickname.js';
 
@@ -17,7 +17,10 @@ export default function SetNicknamePage() {
   const [isRightNickname, setIsRightNickname] = useState(false);
   const [nicknameError, setNicknameError] = useState('');
 
-  const [profilePic, setProfilePic] = useState(''); 
+  const location = useLocation();
+  const { email } = location.state || {} ;
+  console.log(email);
+
   const [preview, setPreview] = useState(<Icon id='editPic' width='42px' height='42px' />); 
 
   const validateNickname = (value) => value.trim().length >= 2 && value.trim().length <= 6;
@@ -40,14 +43,10 @@ export default function SetNicknamePage() {
       e.preventDefault();
     
       const file = e.target.files[0];
-      console.log(file);
-
-      setProfilePic(file);
-      //
 
       const image = window.URL.createObjectURL(file);
-      setPreview(image);
-    // 미리보기 이상...
+      setPreview(image);  // 미리보기 URL을 상태로 설정
+
       try {
         const formData = new FormData();
         formData.append('file:', file);
@@ -64,21 +63,21 @@ export default function SetNicknamePage() {
       
       const token = localStorage.getItem('accessToken');
   
-      if (!isRightNickname) return;
+     if (!isRightNickname) return;
 
       try {
 
-        if (token) {
+        if (token !== null) {
           Response = await patchNickname({ nickname });
         } else {
-          Response = await patchNicknameBeforeLogin({ nickname })
+          Response = await patchNicknameBeforeLogin({ email, nickname })
         }
         const { isSuccess } = Response;
   
         if (isSuccess) {
           console.log('사용 가능한 닉네임:', { nickname });
           setNicknameError('사용 가능한 닉네임입니다!');
-          navigate(destination, { state: { nickname }});
+          navigate(destination, { state: { email: email, nickname: nickname }});
         } else {
           setIsRightNickname(false); 
           setNicknameError('이미 사용 중인 닉네임입니다. 다른 닉네임을 이용해 주세요.');
@@ -103,18 +102,11 @@ export default function SetNicknamePage() {
                 onChange={(e) => {handleFileChange(e)}}
                 id="fileInput"
               />
-              <S.InputFileStyle onClick={() => document.getElementById('fileInput').click()} 
-                style={{ cursor: 'pointer' }}>
-                {preview}
-              </S.InputFileStyle>
-              {/* <Icon
-                id='editPic' 
-                width='212px' 
-                height='212px' 
+              <S.InputFileStyle 
                 onClick={() => document.getElementById('fileInput').click()} 
                 style={{ cursor: 'pointer' }}>
-                {preview}
-              </Icon>  */}
+                {preview && <S.StyledImage src={preview}/>}
+              </S.InputFileStyle>
             <S.InputContainer>
               <S.MainBoldText>닉네임</S.MainBoldText>
               <S.MainNormalText>

@@ -214,7 +214,7 @@ export default function SignUpPage() {
 
       if (isSuccess) {
         console.log('회원가입 성공:', response);
-        navigate('/agree', { state: { email, password: pwd } });
+        navigate('/agree', { state: { email: email, password: pwd } });
       } else {
         switch (code) {
           case 'COMMON400':

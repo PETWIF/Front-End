@@ -15,7 +15,7 @@ export default function AddInfoPage() {
   const location = useLocation();
   const navigate = useNavigate();
   
-  const { nickname } = location.state || {};
+  const { email, nickname } = location.state || {};
 
   const [gender, setGender] = useState('');
   const [year, setYear] = useState(''); 
@@ -44,10 +44,10 @@ export default function AddInfoPage() {
 
         if (token !== null) {
           userRes = await patchAddUserInfo({ gender, birthDate, telecom, phone, address });
-          petRes = await postAddPetInfo({ petName, petGender, petAgeInt, petKind });
+          petRes = await postAddPetInfo({ token, petName, petGender, petAgeInt, petKind });
         } else {
-          userRes = await patchAddUserInfoBeforeLogin({ gender, birthDate, telecom, phone, address });
-          petRes = await postAddPetInfoBeforeLogin({ petName, petGender, petAgeInt, petKind });
+          userRes = await patchAddUserInfoBeforeLogin({ email, gender, birthDate, telecom, phone, address });
+          petRes = await postAddPetInfoBeforeLogin({ email, petName, petGender, petAgeInt, petKind });
         }
 
         const { isSuccess } = userRes;
