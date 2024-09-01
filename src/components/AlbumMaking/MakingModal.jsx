@@ -15,7 +15,7 @@ export default function AlbumModal({ close, albumCover }) {
               <img
                 src={albumCover}
                 alt='Album Cover'
-                style={{ width: '100%' }}
+                style={{ width: '100%', height:'100%' }}
               />
             ) : (
               '이미지 없음'

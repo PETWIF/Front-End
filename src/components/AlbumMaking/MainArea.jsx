@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, forwardRef, useImperativeHandle } from 'react';
 import html2canvas from 'html2canvas';
 import { useStore } from '../../store/store';
 import {
@@ -20,12 +20,13 @@ import {
 import 'react-resizable/css/styles.css';
 import { Icon } from '../Icon';
 
-export default function MainArea({
+const MainArea = forwardRef(({
   selectedImages,
   setSelectedImages,
   emoticons,
   setEmoticons,
-}) {
+  onCaptureComplete,
+}, ref) => {
   const { isCoverEditing, isTextEditing } = useStore();
   const fileInputRef = useRef(null);
   const inputFieldRef = useRef(null);
@@ -45,6 +46,7 @@ export default function MainArea({
   const [textAlign, setTextAlign] = useState('left');
   const [color, setColor] = useState('#000000');
   const [linkUrl, setLinkUrl] = useState('');
+  const contentRef = useRef(null);
 
   // 저장된 상태들을 위한 변수
   const [savedImages, setSavedImages] = useState([]);
@@ -696,13 +698,21 @@ export default function MainArea({
     }
   };
 
-  const handleSaveAsPng = async () => {
-    const content = document.getElementById('mainContentContainer');
-    const canvas = await html2canvas(content);
-    const dataUrl = canvas.toDataURL('image/png');
-    onSaveCover(dataUrl); // 부모 컴포넌트로 전달
-  };
+  useImperativeHandle(ref, () => ({
+    captureContent: async () => {
+      console.log("activate capturecontent");
+      if (contentRef.current) {
+        const canvas = await html2canvas(contentRef.current, {
+          useCORS: true, // 외부 이미지를 캡처할 수 있도록 설정
+        });
+        const image = canvas.toDataURL('image/png');
+        onCaptureComplete(image);
+        console.log("activate image");
+      }
+    }
+  }));
 
+  
   return (
     <MainContainer $isCoverEditing={isCoverEditing}>
       <MainTitleContainer $isCoverEditing={isCoverEditing}>
@@ -819,7 +829,7 @@ export default function MainArea({
         )}
       </MainTitleContainer>
       <MainContnetContainer
-        id='mainContentContainer'
+        ref={contentRef}
         $isCoverEditing={isCoverEditing}
         onDragOver={(e) => handleDragOver(draggingIndex, e)}
         onDrop={() => handleDrop(draggingIndex)}
@@ -1055,4 +1065,6 @@ export default function MainArea({
       </MainContnetContainer>
     </MainContainer>
   );
-}
+});
+
+export default MainArea;

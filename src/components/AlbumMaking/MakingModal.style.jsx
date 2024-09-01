@@ -44,7 +44,7 @@ export const AlbumCover = styled.div`
   height: 100%;
   border-radius: 10px;
   margin-bottom: 20px;
-  background: #e0e0e0;
+  border: 1px solid red;
 `;
 
 export const Albumcontexts = styled.div`
