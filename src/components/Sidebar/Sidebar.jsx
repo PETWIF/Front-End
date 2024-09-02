@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 
 import { Button } from '../Button';
@@ -12,7 +12,7 @@ import { useAuth } from '../../hooks/useAuth';
 
 export default function Sidebar({ isOpen, close }) {
   const { pathname } = useLocation();
-  const { isLogin, handleLogout } = useAuth(); // useAuth 훅 사용
+  const { isLogin, handleLogout } = useAuth(); 
   const navigate = useNavigate();
 
   useEffect(() => {

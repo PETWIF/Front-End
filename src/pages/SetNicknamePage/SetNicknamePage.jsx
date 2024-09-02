@@ -19,7 +19,6 @@ export default function SetNicknamePage() {
 
   const location = useLocation();
   const { email } = location.state || {} ;
-  console.log(email);
 
   const [preview, setPreview] = useState(<Icon id='editPic' width='42px' height='42px' />); 
 
@@ -41,6 +40,8 @@ export default function SetNicknamePage() {
 
     const handleFileChange = async (e) => {
       e.preventDefault();
+      
+      const token = localStorage.getItem('accessToken');
     
       const file = e.target.files[0];
 
@@ -50,8 +51,11 @@ export default function SetNicknamePage() {
       try {
         const formData = new FormData();
         formData.append('file:', file);
-        const response = await postProfilePic(formData); // FormData 객체를 전송
-
+        if (token !== null) {
+          await postProfilePic({ formData });
+        } else {
+          await postProfilePicBeforeLogin({ email, formData })
+        }
       } catch (error) {
         console.error("프로필 사진 설정 실패:", error);
       } 
@@ -62,22 +66,23 @@ export default function SetNicknamePage() {
       e.preventDefault();
       
       const token = localStorage.getItem('accessToken');
+      let response;
   
      if (!isRightNickname) return;
 
       try {
 
         if (token !== null) {
-          Response = await patchNickname({ nickname });
+         response = await patchNickname({ nickname });
         } else {
-          Response = await patchNicknameBeforeLogin({ email, nickname })
+         response = await patchNicknameBeforeLogin({ email, nickname })
         }
-        const { isSuccess } = Response;
+        const { isSuccess } = response;
   
         if (isSuccess) {
           console.log('사용 가능한 닉네임:', { nickname });
           setNicknameError('사용 가능한 닉네임입니다!');
-          navigate(destination, { state: { email: email, nickname: nickname }});
+          navigate(destination, { state: { email, nickname }});
         } else {
           setIsRightNickname(false); 
           setNicknameError('이미 사용 중인 닉네임입니다. 다른 닉네임을 이용해 주세요.');
@@ -133,7 +138,7 @@ export default function SetNicknamePage() {
               width='100%' 
               padding='16px' 
               buttonStyle='gray' 
-              onClick={() => handleSubmit(e, '/login')}>
+              onClick={(e) => handleSubmit(e, '/login')}>
                 나중에 하기
               </Button>
             </S.FormContainer>
