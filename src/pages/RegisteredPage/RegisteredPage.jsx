@@ -16,11 +16,11 @@ export default function RegisteredPage() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const { nickname } = location.state;
+  const { nickname } = location.state || {};
 
   useEffect(() => {
     if (redirectToHome) {
-      navigate('/home'); // 상태가 변경되면 홈으로 이동
+      navigate('/login'); // 상태가 변경되면 홈으로 이동
     }
   }, [redirectToHome, navigate]); // redirectToHome 상태가 변경될 때마다 실행
 
@@ -48,7 +48,7 @@ export default function RegisteredPage() {
               <br />
             </S.Welcome>
             <Button width='100%' padding='16px' buttonStyle='orange' onClick={handleButtonClick}>
-              홈으로 가기
+              로그인 페이지로 가기
             </Button>
           </S.FormWrapper>
         </S.Container>
