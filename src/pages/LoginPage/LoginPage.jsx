@@ -55,8 +55,7 @@ export default function LoginPage() {
 };
 
   const KakaoLoginCallback = async () => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const kakaoCode = urlParams.get('code');
+    const kakaoCode = new URL(dococument.location.toString()).searchParams.get(`code`);
     console.log(kakaoCode);
 
     if (kakaoCode) {
@@ -79,7 +78,11 @@ export default function LoginPage() {
 
 
   const handleGoogleLogin = async () => {
-    window.location.href = `https://accounts.google.com/o/oauth2/auth?client_id=928539400314-fsf7hhtt5mbqvpa8slt5iae561c99mpc.apps.googleusercontent.com&redirect_uri=http://localhost:8080/login/oauth2/code/google&response_type=code&scope=https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile`;
+    window.location.href = `https://accounts.google.com/o/oauth2/auth?
+    client_id=928539400314-fsf7hhtt5mbqvpa8slt5iae561c99mpc.apps.googleusercontent.com
+    &redirect_uri=http://localhost:8080/login/oauth2/code/google&response_type=code
+    &scope=https://www.googleapis.com/auth/userinfo.email 
+    https://www.googleapis.com/auth/userinfo.profile`;
   };
 
   const GoogleLoginCallback = async () => {
