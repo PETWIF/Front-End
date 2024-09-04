@@ -6,13 +6,22 @@ import { Icon } from '../Icon';
 
 import * as S from './CommentSection.style';
 
-const CommentSection = ({ comments, onReport, onReplyHeart }) => {
+const CommentSection = ({ comments, onReport }) => {
   const { likeComment, deleteLikeComment } = useLike();
 
   const [commentList, setCommentList] = useState(comments);
   const [newReply, setNewReply] = useState({});
   const [showReplies, setShowReplies] = useState({});
   const [showReplyInput, setShowReplyInput] = useState({});
+
+  const handleCommentLike = ({ isLike, commentId }) => {
+    if (isLike) {
+      deleteLikeComment.mutate({ commentId });
+      return;
+    }
+
+    likeComment.mutate({ commentId });
+  };
 
   const handleReplyChange = (commentId, e) => {
     setNewReply({
@@ -83,7 +92,7 @@ const CommentSection = ({ comments, onReport, onReplyHeart }) => {
 
   return (
     <S.CommentSection>
-      {commentList.map((comment) => (
+      {comments.map((comment) => (
         <S.Comment key={comment.id}>
           <S.CommentHeader>
             <S.CommentAuthor>
@@ -103,14 +112,14 @@ const CommentSection = ({ comments, onReport, onReplyHeart }) => {
               id='commentheart'
               width='14'
               height='12'
-              onClick={() => {
-                if (comment.isLike) {
-                  deleteLikeComment.mutate({ commentId: comment.id });
-                } else {
-                  likeComment.mutate({ commentId: comment.id });
-                }
-              }}
+              onClick={() =>
+                handleCommentLike({
+                  isLike: comment.liked,
+                  commentId: comment.id,
+                })
+              }
             />
+
             <span>{comment.likeCount}</span>
             <Icon
               id='replybutton'
@@ -142,7 +151,12 @@ const CommentSection = ({ comments, onReport, onReplyHeart }) => {
                           id='commentheart'
                           width='14'
                           height='12'
-                          onClick={() => onReplyHeart(reply.id, comment.id)}
+                          onClick={() =>
+                            handleCommentLike({
+                              isLike: comment.liked,
+                              commentId: comment.id,
+                            })
+                          }
                         ></Icon>
                         {reply.likeCount}
                         <S.CommentCreatedAt>

@@ -14,6 +14,17 @@ const CommentSection = ({ comments, onReport, onReplyHeart }) => {
   const [showReplies, setShowReplies] = useState({});
   const [showReplyInput, setShowReplyInput] = useState({});
 
+  const handleCommentLike = ({ isLike, commentId }) => {
+    if (isLike) {
+      deleteLikeComment.mutate({
+        commentId,
+      });
+      return;
+    }
+
+    likeComment.mutate({ commentId });
+  };
+
   const handleReplyChange = (commentId, e) => {
     setNewReply({
       ...newReply,
@@ -103,13 +114,12 @@ const CommentSection = ({ comments, onReport, onReplyHeart }) => {
               id='commentheart'
               width='14'
               height='12'
-              onClick={() => {
-                if (comment.isLike) {
-                  deleteLikeComment.mutate({ commentId: comment.id });
-                } else {
-                  likeComment.mutate({ commentId: comment.id });
-                }
-              }}
+              onClick={() =>
+                handleCommentLike({
+                  isLiek: comment.liked,
+                  commentId: comment.id,
+                })
+              }
             ></Icon>{' '}
             {comment.likeCount}
             <Icon
@@ -142,7 +152,12 @@ const CommentSection = ({ comments, onReport, onReplyHeart }) => {
                           id='commentheart'
                           width='14'
                           height='12'
-                          onClick={() => onReplyHeart(reply.id, comment.id)}
+                          onClick={() =>
+                            handleCommentLike({
+                              isLiek: comment.liked,
+                              commentId: comment.id,
+                            })
+                          }
                         ></Icon>
                         {reply.likeCount}
                         <S.CommentCreatedAt>
