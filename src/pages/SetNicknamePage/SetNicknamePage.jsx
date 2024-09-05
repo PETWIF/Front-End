@@ -138,7 +138,7 @@ export default function SetNicknamePage() {
               width='100%' 
               padding='16px' 
               buttonStyle='gray' 
-              onClick={(e) => handleSubmit(e, '/login')}>
+              onClick={(e) => handleSubmit(e, '/registered')}>
                 나중에 하기
               </Button>
             </S.FormContainer>

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { useAuth } from '../../hooks/useAuth';
 
-import { postGoogleLogin, postKakaoLogin } from '../../apis/login.js'; // useAuth로 옮겨야 함
+import { postGoogleLogin, postKakaoLogin } from '../../apis/login.js'; 
 
 import { Button } from '../../components/Button';
 import { Icon } from '../../components/Icon';
