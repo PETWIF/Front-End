@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 
 import { getSuggestedFriendList } from '../../apis/friend.js';
 
-import useAuth from '../../hooks/useAuth.jsx';
+import { useAuth }from '../../hooks/useAuth.jsx';
 import useFriend from '../../hooks/useFriend.jsx';
 import usePagination from '../../hooks/usePagination.jsx';
 
@@ -31,7 +31,7 @@ export default function RandomFriend() {
 
   return (
     <S.RandomFriendLayout>
-      <S.Title>{myNickname}님을 위한 추천</S.Title>
+      <S.Title>{myNickname} 님을 위한 추천</S.Title>
       <S.FriendList>
         {friendList.map(({ nickname, profile_url: profileUrl }) => (
           <S.FriendItem key={nickname}>

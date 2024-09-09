@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { postLogin, postGoogleLogin } from '../../apis/login.js';
+import { useAuth } from '../../hooks/useAuth';
+
+import { postGoogleLogin, postKakaoLogin } from '../../apis/login.js'; // useAuth로 옮겨야 함
 
 import { Button } from '../../components/Button';
 import { Icon } from '../../components/Icon';
@@ -20,6 +22,7 @@ export default function LoginPage() {
   const [isRightEmail, setIsRightEmail] = useState(false);
   const [isRightPwd, setIsRightPwd] = useState(false);
 
+  const { isLogin, handleLogin } = useAuth(); // 로그인 설정
   const [autoLogin, setAutoLogin] = useState(false); // -> 자동 로그인 체크 여부
 
   const validateEmail = (value) => /\S+@\S+\.\S+/.test(value);
@@ -44,13 +47,45 @@ export default function LoginPage() {
     }
   };
 
+  const handleKakaoLogin = () => {
+    window.location.href = `https://kauth.kakao.com/oauth/authorize
+?client_id=290e9622e67ae7945bf3ba677f42dc48
+&redirect_uri=http://localhost:8080/kakaoLogin
+&response_type=code`;
+};
+
+  const KakaoLoginCallback = async () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const kakaoCode = urlParams.get('code');
+    console.log(kakaoCode);
+
+    if (kakaoCode) {
+        const response = await postKakaoLogin(kakaoCode);
+        const { isSuccess, data } = response;
+
+        if (isSuccess) {
+            const { accessToken, refreshToken } = data;
+            localStorage.setItem('accessToken', accessToken);
+            localStorage.setItem('refreshToken', refreshToken);
+
+            navigate('/home');
+        } else {
+            setEmailError('로그인에 실패했습니다. 다시 시도해 주세요.');
+        }
+    } else {
+        setEmailError('로그인에 실패했습니다. 다시 시도해 주세요.');
+    }
+};
+
+
   const handleGoogleLogin = async () => {
-
-    // 링크를 로컬 호스트가 아닌 다른 내용으로 바꾸면 오류 발생
     window.location.href = `https://accounts.google.com/o/oauth2/auth?client_id=928539400314-fsf7hhtt5mbqvpa8slt5iae561c99mpc.apps.googleusercontent.com&redirect_uri=http://localhost:8080/login/oauth2/code/google&response_type=code&scope=https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile`;
+  };
 
+  const GoogleLoginCallback = async () => {
     const urlParams = new URLSearchParams(window.location.search);
     const googleCode = urlParams.get('code');
+    console.log(googleCode);
   
     const response = await postGoogleLogin(googleCode);
     const { isSuccess, data } = response;
@@ -59,18 +94,21 @@ export default function LoginPage() {
       const { accessToken, refreshToken } = data;
       localStorage.setItem('accessToken', accessToken);
       localStorage.setItem('refreshToken', refreshToken);
+<<<<<<< HEAD
 
       if (autoLogin) {
         localStorage.setItem('autoLogin', 'true');
         // localStorage.setItem('token', token);
       }
+=======
+>>>>>>> 436df996511c09503f5eb787f75b2db56b57ce7e
 
       navigate('/home');
     } else {
       setEmailError('로그인에 실패했습니다. 다시 시도해 주세요.');
       setPwdError('비밀번호가 일치하지 않습니다.');
     }
-  };
+};
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -79,22 +117,10 @@ export default function LoginPage() {
       return;
     }
 
-    const response = await postLogin({ email, password });
-    const { isSuccess, data } = response;
-
-    if (isSuccess) {
-      
-      const { accessToken, refreshToken } = data;
-      console.log(data);
-      localStorage.setItem('accessToken', accessToken);
-      localStorage.setItem('refreshToken', refreshToken);
-
-      if (autoLogin) {
-        localStorage.setItem('autoLogin', 'true');
-      }
-
-      navigate('/home');
-    } else {
+    try {
+      await handleLogin({ email, password, autoLogin });
+    } catch (error) {
+      console.log(error);
       setEmailError('로그인에 실패했습니다. 다시 시도해 주세요.');
       setPwdError('비밀번호가 일치하지 않습니다.');
     }
@@ -122,7 +148,9 @@ export default function LoginPage() {
           <S.MainBoldText>
             반려동물과의 추억을 사람들과 나눠 보세요
           </S.MainBoldText>
-          <S.MockUp />
+          <S.MockUp>
+              <Icon id='mockup' width='620px' height='620px' />
+          </S.MockUp>
         </S.PETWIFContainer>
         <S.FormWrapper>
           <S.FormContainer onSubmit={handleSubmit}>
@@ -177,8 +205,8 @@ export default function LoginPage() {
           <S.StyledHr />
           <S.MainBoldText>간편 로그인</S.MainBoldText>
           <S.SocialLoginWrapper>
-            <S.SocialLoginContainer id='kakao' width='62px' height='62px'/>
-            <S.SocialLoginContainer id='google' width='62px' height='62px' onClick={handleGoogleLogin}/>
+            <S.SocialLoginContainer id='kakao' width='62px' height='62px' onClick={() => {handleKakaoLogin(); KakaoLoginCallback();}}/>
+            <S.SocialLoginContainer id='google' width='62px' height='62px' onClick={() => {handleGoogleLogin(); GoogleLoginCallback();}}/>
           </S.SocialLoginWrapper>
           <S.UnderlinedText to='/signup'>
             아직 회원이 아니시라면?

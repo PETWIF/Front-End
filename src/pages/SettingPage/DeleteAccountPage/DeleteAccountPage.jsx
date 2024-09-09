@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getMyId, deleteAccount } from '../../../apis/deleteAccount.js';
+
+import { useAuth }from '../../../hooks/useAuth.jsx';
+import { deleteAccount } from '../../../apis/deleteAccount.js';
 
 import { Button } from '../../../components/Button';
 import {
@@ -14,6 +16,7 @@ import {
 import * as S from './DeleteAccountPage.style.jsx';
 
 export default function DeleteAccountPage() {
+  const { userId: id } = useAuth();
   const navigate = useNavigate();
   const [agree, setAgree] = useState(false);
 
@@ -28,20 +31,18 @@ export default function DeleteAccountPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(localStorage.getItem('token'));
 
-    if (!agree) {
-      return;
-    }
+    console.log(id);
 
-    const userId = await getMyId();
-    console.log(userId);
-    const response = await deleteAccount({ userId });
+    const response = await deleteAccount({ id });
     const { isSuccess } = response;
 
     if (isSuccess) {
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
+      localStorage.removeItem('autoLogin');
+
       console.log('탈퇴 완료');
-      // 완료 안내 모달 추가
       navigate('/login');
     } else {
       console.log('탈퇴 처리 불가능');
