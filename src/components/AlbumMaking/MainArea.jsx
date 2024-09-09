@@ -58,7 +58,6 @@ const MainArea = forwardRef(
     const [linkUrl, setLinkUrl] = useState('');
     const contentRef = useRef(null);
 
-
     // 저장된 상태들을 위한 변수
     const [savedCoverEditingState, setSavedCoverEditingState] = useState({
       images: [],

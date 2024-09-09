@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import * as S from './MakingModal.style';
 import { Radio, RadioGroup } from '../Input';
 import { createAlbum } from '../../apis/album';
@@ -15,8 +15,10 @@ export default function AlbumModal({ close, albumCover }) {
   const handleUpload = async () => {
     try {
       const coverImage = await fetch(albumCover)
-        .then(res => res.blob())
-        .then(blob => new File([blob], 'coverImage.png', { type: 'image/png' }));
+        .then((res) => res.blob())
+        .then(
+          (blob) => new File([blob], 'coverImage.png', { type: 'image/png' })
+        );
 
       await createAlbum({
         title,
@@ -58,15 +60,22 @@ export default function AlbumModal({ close, albumCover }) {
             <label>
               <S.B>앨범 제목</S.B>
             </label>
-            <S.Input type='text' placeholder='앨범 제목을 입력해주세요' value={title} 
-              onChange={handleTitleChange} />
+            <S.Input
+              type='text'
+              placeholder='앨범 제목을 입력해주세요'
+              value={title}
+              onChange={handleTitleChange}
+            />
           </div>
           <div>
             <label>
               <S.B>앨범 문구</S.B>
             </label>
-            <S.TextArea placeholder='문구를 입력해주세요' value={content} 
-              onChange={handleContentChange} />
+            <S.TextArea
+              placeholder='문구를 입력해주세요'
+              value={content}
+              onChange={handleContentChange}
+            />
           </div>
           <div>
             <label>
