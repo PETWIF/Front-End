@@ -27,13 +27,13 @@ export default function FriendList() {
   return (
     <S.FriendLayout>
       <S.FriendContainer>
-        <S.Title>{myNickname}님의 친구 목록</S.Title>
+        <S.Title>{myNickname} 님의 친구 목록</S.Title>
         <S.FriendList>
           {friendList.map(({ id, nickname, profile_url: profileUrl }) => (
             <S.FriendItem
               key={id}
               onClick={() => {
-                console.log(`${nickname}님 앨범 페이지로 이동!`);
+                console.log(`${nickname} 님 앨범 페이지로 이동!`);
               }}
             >
               <Avatar src={profileUrl} size='66px' />

@@ -36,7 +36,6 @@ export const Container = styled(Flex)`
 export const FormWrapper = styled(Flex)`
   width: 100%;
   height: 100%;
-  gap: 20px;
   background-color: #fff;
   border: 1px solid #b4b4b4;
   padding: 37.5px;
@@ -50,12 +49,10 @@ export const FormWrapper = styled(Flex)`
 export const FormContainer = styled.form`
   height: 100%;
   width: 100%;
-  display: flex;
-  gap: 10px;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-  overflow-y: auto;
+  gap: 5px;
+  overflow: auto;
+  display: grid;
+  place-items: center; 
 
   ::-webkit-scrollbar {
     display: none;
@@ -91,17 +88,22 @@ export const InputStyle = styled.input`
 
 // input
 export const InputFileStyle = styled.div`
-  width: auto;
+  width: 200px;
   height: 200px;
-  margin: 10px;
+  margin: 20px;
   display: flex;
+  overflow: hidden;
   justify-content: center;
   align-items: center;
-  padding: 60px;
   border: 1px solid ${(props) => props.theme.color.gray1};
-  border-radius: 100%;
-  // color: ${(props) => props.theme.color.gray1};
-  // background: ${(props) => props.theme.color.gray5};
+  border-radius: 50%;
+`;
+
+export const StyledImage = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%; /* 이미지도 원형으로 */
 `;
 
 // 구분선 스타일링
@@ -109,7 +111,7 @@ export const StyledHr = styled.hr`
   width: 100%;
   height: 1px;
   background-color: ${(props) => props.theme.color.gray2};
-  margin: 20px;
+  margin: 10px;
 `;
 
 // input label과 같이 올라가는 두꺼운 텍스트
@@ -124,4 +126,17 @@ export const MainNormalText = styled.p`
   font-size: 15px;
   align: center;
   color: ${(props) => props.theme.color.gray2};
+`;
+
+export const WarningText = styled.span`
+  &.error {
+    color: red;
+  }
+  &.success {
+    color: #f87f28;
+  }
+
+  font-size: 14px;
+  font-weight: 400;
+  margin-top: 5px;
 `;
