@@ -15,6 +15,18 @@ export const WhiteBox = styled.div`
   max-width: 100%;
   box-sizing: border-box;
 `;
+
+export const Story = styled.div`
+  flex: 1;
+  width: 100%;
+  height: 200px;
+  display: flex;
+  flex-direction: column;
+  background: ${(props) => props.theme.color.white};
+  border-radius: 15px;
+  padding: 20px;
+`;
+
 export const Content = styled.div`
   width: 400px;
   display: flex;

@@ -44,7 +44,6 @@ export const AlbumCover = styled.div`
   height: 100%;
   border-radius: 10px;
   margin-bottom: 20px;
-  border: 1px solid red;
 `;
 
 export const Albumcontexts = styled.div`
@@ -72,7 +71,6 @@ export const TextArea = styled.textarea`
   border-radius: 5px;
   resize: none;
 `;
-
 
 export const ModalFooter = styled.div`
   padding: 10px 20px;

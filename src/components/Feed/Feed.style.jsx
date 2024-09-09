@@ -11,7 +11,7 @@ export const FeedContainer = styled.div`
 export const FeedItem = styled.div`
   background: ${(props) => props.theme.color.white};
   border-radius: 15px;
-  padding: 20px;
+  padding: 40px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: row; /* FeedZone과 MainContent를 나란히 배치 */

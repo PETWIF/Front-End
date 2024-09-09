@@ -4,7 +4,7 @@ import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
 
 import { getAlbumDetail, deleteAlbum } from '../../apis/album.js';
 
-import useAuth from '../../hooks/useAuth.jsx';
+import { useAuth }from '../../hooks/useAuth.jsx';
 
 import { AlbumDetail } from '../../components/AlbumDetail';
 import { AlbumInfo } from '../../components/AlbumInfo';

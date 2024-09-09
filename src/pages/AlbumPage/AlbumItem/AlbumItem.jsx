@@ -1,7 +1,7 @@
 import { forwardRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 
-import useAuth from '../../../hooks/useAuth.jsx';
+import { useAuth }from '../../../hooks/useAuth.jsx';
 
 import { AlbumButton } from '../index.js';
 import { Icon } from '../../../components/Icon';
