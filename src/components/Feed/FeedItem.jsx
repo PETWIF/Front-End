@@ -7,6 +7,10 @@ import { ko } from 'date-fns/locale';
 import CommentSection from './CommentSection';
 import { Icon } from '../Icon';
 
+import { postReportComment } from '../../apis/report.js'; 
+
+import useReportModal from '../../hooks/useReportModal.jsx';
+
 import { albumCover, defaultProfile } from '../../dummy/images';
 
 import * as S from './Feed.style';
@@ -29,6 +33,8 @@ const FeedItem = forwardRef((props, ref) => {
     updatedAT,
   } = data;
   const [newComment, setNewComment] = useState('');
+
+  const { isOpen, open, close, ReportModal } = useReportModal();
 
   // initialComments.map((comment) => ({
   //   ...comment,
@@ -72,8 +78,16 @@ const FeedItem = forwardRef((props, ref) => {
     }
   };
 
-  const handleReport = (commentId) => {
-    console.log(`댓글 ${commentId}가 신고되었습니다.`);
+  const handleReport = async (commentId) => {
+    const response = await postReportComment({ commentId, content });
+    const { isSuccess, data } = response;
+
+    if (isSuccess) {
+      console.log("댓글 신고 완료:", data);
+      open();
+    } else {
+      console.log("에러 발생");
+    }
   };
 
   const handleAlbumHeart = (albumId) => {
@@ -93,6 +107,7 @@ const FeedItem = forwardRef((props, ref) => {
   };
 
   return (
+    <>
     <S.FeedItem ref={ref}>
       <S.FeedZone>
         <S.Header>
@@ -188,6 +203,8 @@ const FeedItem = forwardRef((props, ref) => {
         </S.CommentSectionContainer>
       </S.MainContent>
     </S.FeedItem>
+    {isOpen && <ReportModal type='warning' close={close} />}
+    </>
   );
 });
 
