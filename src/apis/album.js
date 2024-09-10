@@ -6,7 +6,7 @@ export const getHomeList = async ({ page = 0 }) => {
   });
   return response.data.data;
 };
-  
+
 export const getAlbumList = async ({ nickname, page = 0, sortBy }) => {
   const repsponse = await authAxios.get(`/users/albums`, {
     params: { nickname, page, ...(sortBy && { sort_by: sortBy }) },
@@ -32,5 +32,15 @@ export const editAlbum = async ({ albumId, title, content, scope }) => {
       scope,
     },
   });
+  return response;
+};
+
+export const likeAlbum = async ({ albumId }) => {
+  const response = await authAxios.post(`/albums/${albumId}/like`);
+  return response;
+};
+
+export const deleteAlbumLike = async ({ albumId }) => {
+  const response = await authAxios.delete(`/albums/${albumId}/like`);
   return response;
 };
