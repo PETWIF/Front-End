@@ -31,12 +31,6 @@ export default function DeleteAccountPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // const token = localStorage.getItem('accessToken');
-    // console.log(token);
-
-    // if (!agree) {
-    //   return;
-    // }
 
     console.log(id);
 
@@ -44,8 +38,11 @@ export default function DeleteAccountPage() {
     const { isSuccess } = response;
 
     if (isSuccess) {
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
+      localStorage.removeItem('autoLogin');
+
       console.log('탈퇴 완료');
-      // 완료 안내 모달 추가
       navigate('/login');
     } else {
       console.log('탈퇴 처리 불가능');

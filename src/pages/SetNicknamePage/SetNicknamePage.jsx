@@ -17,14 +17,14 @@ export default function SetNicknamePage() {
   const [isRightNickname, setIsRightNickname] = useState(false);
   const [nicknameError, setNicknameError] = useState('');
 
-  const [profilePic, setProfilePic] = useState(''); 
+  const location = useLocation();
+  const { email } = location.state || {} ;
+
   const [preview, setPreview] = useState(<Icon id='editPic' width='42px' height='42px' />); 
 
   const validateNickname = (value) => value.trim().length >= 2 && value.trim().length <= 6;
 
   const navigate = useNavigate();
-  const location = useLocation();
-  const { email, password } = location.state;
 
   const handleInputChange = (e) => {
     const { id, value } = e.target;
@@ -40,21 +40,22 @@ export default function SetNicknamePage() {
 
     const handleFileChange = async (e) => {
       e.preventDefault();
+      
+      const token = localStorage.getItem('accessToken');
     
       const file = e.target.files[0];
-      console.log(file);
-
-      setProfilePic(file);
-      //
 
       const image = window.URL.createObjectURL(file);
-      setPreview(image);
-    // 미리보기 이상...
+      setPreview(image);  // 미리보기 URL을 상태로 설정
+
       try {
         const formData = new FormData();
         formData.append('file:', file);
-        const response = await postProfilePic(formData); // FormData 객체를 전송
-
+        if (token !== null) {
+          await postProfilePic({ formData });
+        } else {
+          await postProfilePicBeforeLogin({ email, formData })
+        }
       } catch (error) {
         console.error("프로필 사진 설정 실패:", error);
       } 
@@ -65,28 +66,26 @@ export default function SetNicknamePage() {
       e.preventDefault();
       
       const token = localStorage.getItem('accessToken');
+      let response;
   
-      if (!isRightNickname) return;
+     if (!isRightNickname) return;
 
       try {
 
-        if (token) {
-          Response = await patchNickname({ nickname });
+        if (token !== null) {
+         response = await patchNickname({ nickname });
         } else {
-          Response = await patchNicknameBeforeLogin({ nickname })
+         response = await patchNicknameBeforeLogin({ email, nickname })
         }
-        const { isSuccess } = Response;
+        const { isSuccess } = response;
   
         if (isSuccess) {
           console.log('사용 가능한 닉네임:', { nickname });
           setNicknameError('사용 가능한 닉네임입니다!');
-
-          navigate(destination, 
-            // { state: { email, password, nickname: nickname } }
-          );
+          navigate(destination, { state: { email, nickname }});
         } else {
           setIsRightNickname(false); 
-          setNicknameError('이미 사용 중인 닉네임입니다.');
+          setNicknameError('이미 사용 중인 닉네임입니다. 다른 닉네임을 이용해 주세요.');
         }
       } catch (error) {
         console.error('오류 발생:', error);
@@ -100,7 +99,7 @@ export default function SetNicknamePage() {
         <S.Container>
           <S.FormWrapper>
             <TitleContainer to='/agree' backIcon='true' titleText='프로필' />
-            <S.FormContainer onSubmit={(e) => handleSubmit(e, '/addInfo')}> 
+            <S.FormContainer> 
             <input
                 type="file"
                 accept="image/*"
@@ -108,18 +107,11 @@ export default function SetNicknamePage() {
                 onChange={(e) => {handleFileChange(e)}}
                 id="fileInput"
               />
-              <S.InputFileStyle onClick={() => document.getElementById('fileInput').click()} 
-                style={{ cursor: 'pointer' }}>
-                {preview}
-              </S.InputFileStyle>
-              {/* <Icon
-                id='editPic' 
-                width='212px' 
-                height='212px' 
+              <S.InputFileStyle 
                 onClick={() => document.getElementById('fileInput').click()} 
                 style={{ cursor: 'pointer' }}>
-                {preview}
-              </Icon>  */}
+                {preview && <S.StyledImage src={preview}/>}
+              </S.InputFileStyle>
             <S.InputContainer>
               <S.MainBoldText>닉네임</S.MainBoldText>
               <S.MainNormalText>
@@ -135,10 +127,18 @@ export default function SetNicknamePage() {
               <br />
               <S.MainBoldText>추가 정보 입력</S.MainBoldText>
               <S.StyledHr />
-              <Button width='100%' padding='16px' buttonStyle='orange' onClick={() => navigate('/addInfo', { state: { email, password, nickname: nickname }})}>
+              <Button 
+              width='100%' 
+              padding='16px' 
+              buttonStyle='orange' 
+              onClick={(e) => handleSubmit(e, '/addInfo')}>
                 지금 입력
               </Button>
-              <Button width='100%' padding='16px' buttonStyle='gray' onClick={() => navigate('/home', { state: { email, password, nickname: nickname }})}>
+              <Button 
+              width='100%' 
+              padding='16px' 
+              buttonStyle='gray' 
+              onClick={(e) => handleSubmit(e, '/login')}>
                 나중에 하기
               </Button>
             </S.FormContainer>

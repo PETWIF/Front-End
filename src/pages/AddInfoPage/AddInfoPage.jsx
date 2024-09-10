@@ -30,32 +30,32 @@ export default function AddInfoPage() {
   const [petKind, setPetKind] = useState('');
 
   const birthDate = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-  const petAgeInt = parseInt(petAge, 10);  
+  // const petAgeInt = parseInt(petAge, 10);  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     console.log({ gender, birthDate, telecom, phone, address });
-    console.log({ petName, petGender, petAgeInt, petKind });
+    console.log({ petName, petGender, petAge, petKind });
 
     try {
       const token = localStorage.getItem('accessToken');
+      let userRes, petRes;
 
         if (token) {
           userRes = await patchAddUserInfo({ gender, birthDate, telecom, phone, address });
-          petRes = await postAddPetInfo({ petName, petGender, petAgeInt, petKind });
+          petRes = await postAddPetInfo({ petName, petGender, petAge, petKind });
         } else {
-          userRes = await patchAddUserInfoBeforeLogin({ gender, birthDate, telecom, phone, address });
-          petRes = await postAddPetInfoBeforeLogin({ petName, petGender, petAgeInt, petKind });
+          userRes = await patchAddUserInfoBeforeLogin({ email, gender, birthDate, telecom, phone, address });
+          petRes = await postAddPetInfoBeforeLogin({ email, petName, petGender, petAge, petKind });
         }
 
-        const { isSuccess } = Response;
+        const { isSuccess } = petRes;
 
-      if (userRes && petRes) {
+      if (isSuccess) {
       console.log('정보 입력 성공');
       navigate('/registered', { state: { nickname } });
       } else {
-        console.error('유저:', userRes);
         console.error('펫:', petRes);
       }
     } catch (error) {
@@ -74,7 +74,7 @@ export default function AddInfoPage() {
               backIcon='true'
               titleText='추가 정보 입력'
             />
-            <S.FormContainer onSubmit={(e) => handleSubmit(e)}>
+            <S.FormContainer>
               <S.MainBoldText>회원 정보</S.MainBoldText>
               <S.StyledHr />
               <S.MainBoldText>성별</S.MainBoldText>
@@ -149,9 +149,9 @@ export default function AddInfoPage() {
                   placeholder='거주지를 입력해 주세요 (예: 서울시 용산구)'
                   onChange={(e) => setAddress(e.target.value)}
                 />
-                <Button width='119px' fontSize='14px' padding='14px' buttonStyle='light'>
+                {/* <Button type='button' width='119px' fontSize='14px' padding='14px' buttonStyle='light'>
                   주소 입력
-                </Button>
+                </Button> */}
               </S.InputWrapper>
               <br />
               <S.MainBoldText>반려동물 정보</S.MainBoldText>
@@ -162,7 +162,6 @@ export default function AddInfoPage() {
                   <S.InputStyle
                     $width='263px'
                     type='text'
-                    className='pet-name'
                     placeholder='반려동물의 이름을 입력해 주세요'
                     onChange={(e) => setPetName(e.target.value)}
                   />
@@ -193,7 +192,6 @@ export default function AddInfoPage() {
                   <S.InputStyle
                     $width='263px'
                     type='text'
-                    className='pet-age'
                     placeholder='반려동물의 나이를 입력해 주세요'
                     onChange={(e) => setPetAge(e.target.value)}
                   />
@@ -205,13 +203,16 @@ export default function AddInfoPage() {
                   <S.InputStyle
                     $width='263px'
                     type='text'
-                    className='pet-kind'
                     placeholder='반려동물의 종류를 입력해 주세요'
                     onChange={(e) => setPetKind(e.target.value)}
                   />
                 </S.InputContainer>
               </S.InputWrapper>
-                <Button type='submit' width='100%' padding='15px' buttonStyle='orange'>
+                <Button 
+                    onClick={(e) => handleSubmit(e)} 
+                    width='100%' 
+                    padding='15px' 
+                    buttonStyle='orange'>
                   입력 완료
                 </Button>
             </S.FormContainer>

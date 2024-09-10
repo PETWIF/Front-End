@@ -39,7 +39,7 @@ export const routeList = [
     children: [
       {
         index: true,
-        element: <MainPage />,
+        element: <LoginPage />,
       },
       {
         path: '/login',
