@@ -9,23 +9,25 @@ export const postLogin = async ({ email, password }) => {
     return response.data;
 };
 
-export const postKakaoLogin = async ({ kakaoCode }) => {
-    const response = await authAxios.get(`/login/oauth2/oauth?code=${code}`, {
-    }, 
-    {
-        params: { code: kakaoCode, }
-    }
-);   
-    return response.data;
-};
+    export const getKakaoLogin = async ({ code }) => {
+    const response = await authAxios.get(`/login/oauth2/oauth`,
+      {
+        params: { code: code },
+      }
+    );
 
-export const postGoogleLogin = async ({ googleCode }) => {
-    const response = await authAxios.post(`/login/oauth2/code/google?code=${googleCode}`, {
-    }, 
-    {
-        params: { code: googleCode, }
-    }
-);   
-    
     return response.data;
-};
+  };
+  
+
+  export const postGoogleLogin = async ({ code }) => {
+    const response = await authAxios.post(`/login/oauth2/code/google`, 
+      null, 
+      {
+        params: { code: code }, 
+      }
+    );
+  
+    return response.data;
+  };
+  

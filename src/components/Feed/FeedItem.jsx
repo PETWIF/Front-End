@@ -7,7 +7,7 @@ import { ko } from 'date-fns/locale';
 import CommentSection from './CommentSection';
 import { Icon } from '../Icon';
 
-import { postReportComment } from '../../apis/report.js'; 
+import { postReportComment, postReportAlbum } from '../../apis/report.js'; 
 
 import useReportModal from '../../hooks/useReportModal.jsx';
 
@@ -35,6 +35,8 @@ const FeedItem = forwardRef((props, ref) => {
   const [newComment, setNewComment] = useState('');
 
   const { isOpen, open, close, ReportModal } = useReportModal();
+
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   // initialComments.map((comment) => ({
   //   ...comment,
@@ -78,13 +80,27 @@ const FeedItem = forwardRef((props, ref) => {
     }
   };
 
-  const handleReport = async (commentId) => {
+  const handleReportComment = async (commentId) => {
     const response = await postReportComment({ commentId, content });
     const { isSuccess, data } = response;
 
     if (isSuccess) {
       console.log("댓글 신고 완료:", data);
       open();
+    } else {
+      console.log("에러 발생");
+    }
+  };
+
+  const handleReportAlbum = async () => {
+    setIsMenuOpen(false); 
+    const reportReason = '부적절한 게시물'; // 임시 사유
+    const response = await postReportAlbum({ albumId, reportReason });
+    const { isSuccess, data } = response;
+
+    if (isSuccess) {
+      console.log("앨범 신고 완료:", data);
+      open(); 
     } else {
       console.log("에러 발생");
     }
@@ -100,6 +116,10 @@ const FeedItem = forwardRef((props, ref) => {
 
   const handleReplyHeart = (replyId, commentId) => {
     console.log(`${commentId}번 댓글의 ${replyId}번 대댓글에 좋아요를 눌렀습니다.`);
+  };
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen); // 메뉴 열림/닫힘 상태 토글
   };
 
   const formatDate = (date) => {
@@ -134,7 +154,31 @@ const FeedItem = forwardRef((props, ref) => {
             <Link to={`/bookmark`}>
               <Icon id='albumbookmark' width='22' height='27' />
             </Link>
-            <Icon id='albumhamburger' width='23' height='4' />
+            <Icon id='albumhamburger' width='23' height='4' onClick={toggleMenu}/>
+            {isMenuOpen && ( // 메뉴 열림 상태일 때 메뉴 표시
+                <div className="menu"
+                style={{
+                  position: 'relative',
+                  top: '50px', // 버튼 바로 아래에 위치하게 함
+                  left: '10px',
+                  backgroundColor: '#fff',
+                  border: '1px solid #ddd',
+                  borderRadius: '4px',
+                  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
+                  zIndex: 1,
+                }}>
+                  <ul style={{ listStyle: 'none', margin: 0, padding: '8px 0' }}>
+                    <li onClick={handleReportAlbum}
+                    style={{
+                      padding: '8px 16px',
+                      cursor: 'pointer',
+                      whiteSpace: 'nowrap',
+                      ':hover': { backgroundColor: '#f5f5f5' },
+                    }}>신고</li>
+                    {/* 다른 메뉴 항목을 추가할 수 있음 */}
+                  </ul>
+                </div>
+              )}
           </S.Actions>
         </S.Header>
         <S.StyledLink key={albumId} to={`/album/detail/${albumId}`}>
@@ -176,7 +220,7 @@ const FeedItem = forwardRef((props, ref) => {
             <CommentSection
               key={comments.length}
               comments={comments}
-              onReport={handleReport}
+              onReport={handleReportComment}
               onCommentHeart={handleCommentHeart}
               onReplyHeart={handleReplyHeart}
             /> 
