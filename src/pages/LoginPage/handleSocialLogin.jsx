@@ -1,6 +1,11 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../hooks/useAuth';
+
 import { postGoogleLogin, getKakaoLogin } from '../../apis/login.js'; 
+
+// const { isLogin, handleLogin } = useAuth(); // 로그인 설정
+// const [autoLogin, setAutoLogin] = useState(false); // -> 자동 로그인 체크 여부
 
 export const KakaoLoginCallback = () => {
   const navigate = useNavigate();
@@ -13,11 +18,14 @@ export const KakaoLoginCallback = () => {
       const { isSuccess, data } = response;
 
       console.log(response);
+      console.log("토큰 확인:", localStorage.getItem('accessToken'));
 
       if (isSuccess) {
         const { accessToken, refreshToken } = data;
         localStorage.setItem('accessToken', accessToken);
         localStorage.setItem('refreshToken', refreshToken);
+
+        // await handleLogin({ email, password, autoLogin });
 
         navigate('/home');
       } else {
@@ -28,7 +36,9 @@ export const KakaoLoginCallback = () => {
     }
   };
 
-  handleKakaoLogin();
+  useEffect(() => {
+    handleKakaoLogin();
+  }, []);
 
   return <div>카카오 로그인 처리 중...</div>;
 };
@@ -45,6 +55,7 @@ export const GoogleLoginCallBack = () => {
           const { isSuccess, data } = response;
 
           console.log(response);
+        //   console.log(localStorage.getItem('accessToken', accessToken));
   
           if (isSuccess) {
             const { accessToken, refreshToken } = data;
