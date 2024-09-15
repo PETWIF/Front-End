@@ -46,9 +46,6 @@ export default function LoginPage() {
   };
 
   const handleKakaoLogin = () => {
-    const kakaoClientID = import.meta.env.VITE_KAKAO_CLIENT_ID;
-    const kakaoRedirectURL = import.meta.env.VITE_KAKAO_REDIRECTION_URL;
-
     window.location.href = `https://kauth.kakao.com/oauth/authorize?client_id=${import.meta.env.VITE_KAKAO_CLIENT_ID}&redirect_uri=${import.meta.env.VITE_KAKAO_REDIRECTION_URL}&response_type=code`;
 };
 
@@ -75,12 +72,11 @@ export default function LoginPage() {
   };
 
   useEffect(() => {
-    // 토큰 확인
     const storedAccessToken = localStorage.getItem('accessToken');
     const storedAutoLogin = localStorage.getItem('autoLogin');
 
     if (storedAccessToken && storedAutoLogin === 'true') {
-      navigate('/home');
+      window.location.replace('/home');
     }
   }, [navigate]);
 

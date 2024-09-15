@@ -1,11 +1,7 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../hooks/useAuth';
 
 import { postGoogleLogin, getKakaoLogin } from '../../apis/login.js'; 
-
-// const { isLogin, handleLogin } = useAuth(); // 로그인 설정
-// const [autoLogin, setAutoLogin] = useState(false); // -> 자동 로그인 체크 여부
 
 export const KakaoLoginCallback = () => {
   const navigate = useNavigate();
@@ -16,32 +12,25 @@ export const KakaoLoginCallback = () => {
     try {
       const response = await getKakaoLogin({ code });
       const { isSuccess, data } = response;
+      const { accessToken, refreshToken } = data;
 
-      console.log(response);
-      console.log("토큰 확인:", localStorage.getItem('accessToken'));
-
-      if ((isSuccess === true) && data)  {
-        const { accessToken, refreshToken } = data;
+      if (isSuccess)  {
         localStorage.setItem('accessToken', accessToken);
         localStorage.setItem('refreshToken', refreshToken);
-
-        // await handleLogin({ email, password, autoLogin });
-
-        navigate('/registered');
+                    
+        console.log("로그인 성공! 홈으로 이동합니다...");
+        window.location.replace('/home');
       } else {
         console.error('로그인에 실패했습니다. 다시 시도해 주세요.');
       }
     } catch (error) {
       console.error('로그인 중 에러 발생. 다시 시도해 주세요.', error);
     }
-
-    console.log("토큰 확인:", localStorage.getItem('accessToken'));
-    console.log("리프레시 토큰 확인:", localStorage.getItem('refreshToken'));
   };
 
   useEffect(() => {
     handleKakaoLogin();
-  }, []);
+  }, [navigate]);
 
   return <div>카카오 로그인 처리 중...</div>;
 };
@@ -57,15 +46,13 @@ export const GoogleLoginCallBack = () => {
           const response = await postGoogleLogin({ code });
           const { isSuccess, data } = response;
       
-          console.log(response);
-      
-          if (isSuccess && data) {
+          if (isSuccess) {
             const { accessToken, refreshToken } = data;
             localStorage.setItem('accessToken', accessToken);
             localStorage.setItem('refreshToken', refreshToken);
             
             console.log("로그인 성공! 홈으로 이동합니다...");
-            navigate('/home');
+            window.location.replace('/home');
           } else {
             console.error('로그인에 실패했습니다. 다시 시도해 주세요.');
           }
@@ -73,7 +60,7 @@ export const GoogleLoginCallBack = () => {
           console.error('로그인에 실패했습니다. 다시 시도해 주세요.', error);
         }
       };      
-  
+
       handleGoogleLogin();
     }, [navigate]);
   

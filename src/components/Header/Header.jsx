@@ -19,8 +19,6 @@ export default function Header() {
     const response = await getMyProfile();
     const { isSuccess, data } = response;
 
-    console.log(response);
-
     if (isSuccess) {
       const { profile_url } = data;
       setProfile(profile_url);
