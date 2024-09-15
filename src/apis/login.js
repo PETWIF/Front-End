@@ -10,11 +10,9 @@ export const postLogin = async ({ email, password }) => {
 };
 
     export const getKakaoLogin = async ({ code }) => {
-    console.log(code);
-    console.log("토큰 확인:", localStorage.getItem('accessToken'));
     const response = await authAxios.get(`/login/oauth2/oauth`,
       {
-        params: {  code: encodeURIComponent(code) },
+        params: { code: encodeURIComponent(code) },
       }
     );
 
@@ -23,7 +21,6 @@ export const postLogin = async ({ email, password }) => {
   
 
   export const postGoogleLogin = async ({ code }) => {
-    console.log(code);
     const response = await authAxios.post(`/login/oauth2/code/google`, 
       {}, 
       {

@@ -20,20 +20,23 @@ export const KakaoLoginCallback = () => {
       console.log(response);
       console.log("토큰 확인:", localStorage.getItem('accessToken'));
 
-      if (isSuccess) {
+      if ((isSuccess === true) && data)  {
         const { accessToken, refreshToken } = data;
         localStorage.setItem('accessToken', accessToken);
         localStorage.setItem('refreshToken', refreshToken);
 
         // await handleLogin({ email, password, autoLogin });
 
-        navigate('/home');
+        navigate('/registered');
       } else {
         console.error('로그인에 실패했습니다. 다시 시도해 주세요.');
       }
     } catch (error) {
-      console.error('로그인에 실패했습니다. 다시 시도해 주세요.', error);
+      console.error('로그인 중 에러 발생. 다시 시도해 주세요.', error);
     }
+
+    console.log("토큰 확인:", localStorage.getItem('accessToken'));
+    console.log("리프레시 토큰 확인:", localStorage.getItem('refreshToken'));
   };
 
   useEffect(() => {
@@ -49,19 +52,18 @@ export const GoogleLoginCallBack = () => {
     useEffect(() => {
       const handleGoogleLogin = async () => {
         const code = new URL(document.location.toString()).searchParams.get('code');
-  
+      
         try {
-          const response = await postGoogleLogin({code});
+          const response = await postGoogleLogin({ code });
           const { isSuccess, data } = response;
-
+      
           console.log(response);
-        //   console.log(localStorage.getItem('accessToken', accessToken));
-  
-          if (isSuccess) {
+      
+          if (isSuccess && data) {
             const { accessToken, refreshToken } = data;
             localStorage.setItem('accessToken', accessToken);
             localStorage.setItem('refreshToken', refreshToken);
-  
+            
             console.log("로그인 성공! 홈으로 이동합니다...");
             navigate('/home');
           } else {
@@ -70,7 +72,7 @@ export const GoogleLoginCallBack = () => {
         } catch (error) {
           console.error('로그인에 실패했습니다. 다시 시도해 주세요.', error);
         }
-      };
+      };      
   
       handleGoogleLogin();
     }, [navigate]);

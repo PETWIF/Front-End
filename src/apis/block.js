@@ -22,4 +22,11 @@ export const unblock = async ({ nickname }) => {
   return response;
 };
 
+export const checkBlock = async ({ nickname }) => {
+  const response = await authAxios.get('/blocks/status', {
+    params: { nickname },
+  });
+  return response;
+};
+
 

@@ -52,60 +52,12 @@ export default function LoginPage() {
     window.location.href = `https://kauth.kakao.com/oauth/authorize?client_id=${import.meta.env.VITE_KAKAO_CLIENT_ID}&redirect_uri=${import.meta.env.VITE_KAKAO_REDIRECTION_URL}&response_type=code`;
 };
 
-//   const KakaoLoginCallback = async () => {
-//     let kakaoCode = new URL(document.location.toString()).searchParams.get(`code`);
-//     console.log(kakaoCode);
-
-//     if (kakaoCode) {
-//         const response = await postKakaoLogin(kakaoCode);
-//         const { isSuccess, data } = response;
-
-//         if (isSuccess) {
-//             const { accessToken, refreshToken } = data;
-//             localStorage.setItem('accessToken', accessToken);
-//             localStorage.setItem('refreshToken', refreshToken);
-
-//             console.log("로그인 성공! 홈으로 이동합니다...");
-
-//             navigate('/home');
-//         } else {
-//             setEmailError('로그인에 실패했습니다. 다시 시도해 주세요.');
-//         }
-//     } else {
-//         setEmailError('로그인에 실패했습니다. 다시 시도해 주세요.');
-//     }
-// };
-
-
   const handleGoogleLogin = async () => {
     const googleClientID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
     const googleRedirectURL = import.meta.env.VITE_GOOGLE_REDIRECTION_URL;
 
     window.location.href = `https://accounts.google.com/o/oauth2/auth?client_id=${googleClientID}&redirect_uri=${googleRedirectURL}&response_type=code&scope=https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile`;
   };
-
-//   const GoogleLoginCallback = async () => {
-//     const googleCode = new URL(document.location.toString()).searchParams.get(`code`);
-//     // const urlParams = new URLSearchParams(window.location.search);
-//     // const googleCode = urlParams.get('code');
-  
-//     const response = await postGoogleLogin(googleCode);
-//     const { isSuccess, data } = response;
-
-//     if (isSuccess) {
-//       const { accessToken, refreshToken } = data;
-//       localStorage.setItem('accessToken', accessToken);
-//       localStorage.setItem('refreshToken', refreshToken);
-
-      
-//       console.log("로그인 성공! 홈으로 이동합니다...");
-
-//       navigate('/home');
-//     } else {
-//       setEmailError('로그인에 실패했습니다. 다시 시도해 주세요.');
-//       setPwdError('비밀번호가 일치하지 않습니다.');
-//     }
-// };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -119,7 +71,6 @@ export default function LoginPage() {
     } catch (error) {
       console.log(error);
       setEmailError('로그인에 실패했습니다. 다시 시도해 주세요.');
-      setPwdError('비밀번호가 일치하지 않습니다.');
     }
   };
 
