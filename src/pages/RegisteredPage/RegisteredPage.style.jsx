@@ -12,7 +12,6 @@ export const Header = styled(Flex)`
   background: ${(props) => props.theme.color.white};
   border: 1px solid ${(props) => props.theme.color.gray3};
 `;
-
 // 페이지 전체
 export const Wrapper = styled(Flex)`
   height: 100%;
@@ -20,19 +19,21 @@ export const Wrapper = styled(Flex)`
   justify-content: center;
   align-items: center;
   background: ${(props) => props.theme.color.white};
-  padding: 80px 150px;
-  gap: 150px;
+  padding: 50px 150px;
 `;
 
 export const Container = styled.div`
   width: 450px;
-  height: 450px;
+  height: 500px;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: space-evenly;
+  flex-direction: column;
   background: ${(props) => props.theme.color.white};
+  border: 1px solid #b4b4b4;
+  padding-top: 35px;
 `;
+
 
 // input label과 같이 올라가는 두꺼운 텍스트
 export const MainBoldText = styled.p`
@@ -82,13 +83,9 @@ export const FormWrapper = styled.div`
   width: 100%;
   height: 100%;
   background-color: #fff;
-  border: 1px solid #b4b4b4;
   padding: 37.5px;
-  display: flex;
-  gap: 20px; 
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
+  display: grid;
+  place-items: center; 
   overflow-y: auto;
 
   ::-webkit-scrollbar {
@@ -128,4 +125,17 @@ export const Welcome = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+`;
+
+// input
+export const InputFileStyle = styled.div`
+  width: 200px;
+  height: 200px;
+  margin-bottom: 20px;
+  display: flex;
+  overflow: hidden;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid ${(props) => props.theme.color.gray1};
+  border-radius: 50%;
 `;

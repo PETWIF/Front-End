@@ -50,11 +50,11 @@ export default function SetNicknamePage() {
 
       try {
         const formData = new FormData();
-        formData.append('file:', file);
+        formData.append('file', file);
         if (token !== null) {
-          await postProfilePic({ formData });
+          await postProfilePic({ file });
         } else {
-          await postProfilePicBeforeLogin({ email, formData })
+          await postProfilePicBeforeLogin({ email, file })
         }
       } catch (error) {
         console.error("프로필 사진 설정 실패:", error);
@@ -138,7 +138,7 @@ export default function SetNicknamePage() {
               width='100%' 
               padding='16px' 
               buttonStyle='gray' 
-              onClick={(e) => handleSubmit(e, '/login')}>
+              onClick={(e) => handleSubmit(e, '/registered')}>
                 나중에 하기
               </Button>
             </S.FormContainer>

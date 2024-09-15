@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { Button } from '../../components/Button';
 import { Avatar } from '../../components/Avatar';
+
+import { getMyProfile } from '../../apis/getMyProfile.js'; 
 
 import { Profile as Img } from '../../dummy/images';
 
@@ -12,20 +14,37 @@ import TitleContainer from '../../components/LoginComponents/TitleContainer';
 import * as S from './RegisteredPage.style.jsx';
 
 export default function RegisteredPage() {
-  const [redirectToHome, setRedirectToHome] = useState(false); // 상태 추가
-  const location = useLocation();
+  const [redirectToHome, setRedirectToHome] = useState(false); 
+  const [profile, setProfile] = useState(Img);
+  const [nickname, setNickname] = useState('');
+
   const navigate = useNavigate();
 
-  const { nickname } = location.state || {};
+  const getProfilePic = async () => {
+    const response = await getMyProfile();
+    const { isSuccess, data } = response;
+
+    console.log(response);
+
+    if (isSuccess) {
+      const { nickname, profile_url } = data;
+      setNickname(nickname);
+      setProfile(profile_url);
+    } else {
+      console.log("프로필 사진 미설정 상태. 기본 프로필 사진으로 대체됩니다.");
+    }
+};
 
   useEffect(() => {
+    getProfilePic();
+
     if (redirectToHome) {
-      navigate('/login'); // 상태가 변경되면 홈으로 이동
+      navigate('/login');
     }
-  }, [redirectToHome, navigate]); // redirectToHome 상태가 변경될 때마다 실행
+  }, [redirectToHome, navigate]); 
 
   const handleButtonClick = () => {
-    setRedirectToHome(true); // 버튼 클릭 시 상태 변경
+    setRedirectToHome(true); 
   };
 
   return (
@@ -33,9 +52,11 @@ export default function RegisteredPage() {
       <LoginHeader />
       <S.Wrapper>
         <S.Container>
+        <TitleContainer titleText='회원가입 완료' />
           <S.FormWrapper>
-            <TitleContainer titleText='회원가입 완료' />
-            <Avatar src={Img} size='212px' />
+            <S.InputFileStyle>
+              <Avatar src={profile} size='212px' />
+            </S.InputFileStyle>
             <S.MainBoldText>{nickname} 님</S.MainBoldText>
             <S.StyledHr />
             <S.Welcome>
