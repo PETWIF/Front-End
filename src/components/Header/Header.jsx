@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import { Flex } from '../Common';
 import { Icon } from '../Icon';
@@ -7,10 +7,29 @@ import { Sidebar } from '../Sidebar';
 
 import { Profile as Img } from '../../dummy/images';
 
+import { getMyProfile } from '../../apis/getMyProfile.js'; 
+
 import * as S from './Header.style.jsx';
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
+  const [profile, setProfile] = useState(Img);
+
+  const getProfilePic = async () => {
+    const response = await getMyProfile();
+    const { isSuccess, data } = response;
+
+    if (isSuccess) {
+      const { profile_url } = data;
+      setProfile(profile_url);
+    } else {
+      console.log("프로필 사진 미설정 상태. 기본 프로필 사진으로 대체됩니다.");
+    }
+};
+
+useEffect(() => {
+  getProfilePic();
+});
 
   return (
     <>
@@ -35,7 +54,7 @@ export default function Header() {
             <span>설정</span>
           </S.MenuItem>
           <S.MenuItem to='/user-profile'>
-            <Avatar src={Img} size='37px' />
+            <Avatar src={profile} size='37px' />
           </S.MenuItem>
         </Flex>
       </S.HeaderContainer>

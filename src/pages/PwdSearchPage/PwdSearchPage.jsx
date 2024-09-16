@@ -114,17 +114,20 @@ export default function PwdSearchPage() {
 
     try {
       const response = await postCode({ email, code });
-      const { isSuccess } = response;
+      const { isSuccess, message } = response;
 
       if (isSuccess) {
         console.log('인증 성공:', code);
         setCodeError('인증번호가 일치합니다!');
+        console.log(message);
       } else {
         setIsRightCode(false);
         setCodeError('인증번호가 일치하지 않습니다.');
+        console.log(message);
       }
     } catch (error) {
       console.error('인증번호 확인 실패:', error);
+      console.log(message);
     }
   };
 

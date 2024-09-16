@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 
 import { Button } from '../Button';
@@ -8,18 +8,14 @@ import { SIDE_MENUS } from '../../constants';
 
 import * as S from './Sidebar.style.jsx';
 
+import { useAuth } from '../../hooks/useAuth';
+
 export default function Sidebar({ isOpen, close }) {
   const { pathname } = useLocation();
-  const [isLogin, setIsLogin] = useState(false); 
+  const { isLogin, handleLogout } = useAuth(); 
   const navigate = useNavigate();
 
-  const checkLoginStatus = () => {
-    setIsLogin(!localStorage.getItem('token'));
-  };
-
-  // 사이드바 열릴 때마다 로그인 확인
   useEffect(() => {
-    checkLoginStatus(); 
 
     if (isOpen) {
       document.addEventListener('click', close);
@@ -28,25 +24,10 @@ export default function Sidebar({ isOpen, close }) {
     return () => document.removeEventListener('click', close);
   }, [isOpen, close]);
 
-  const handleLogout = () => {
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
-    localStorage.removeItem('autoLogin');
-    localStorage.removeItem('token');
-
-    setIsLogin(false);
-    console.log('로그아웃');
-    navigate('/login');
-  };
-
-  const handleLogin = () => {
-    navigate('/login');
-    console.log('로그인 페이지로 이동');
-  };
-
   if (!isOpen) {
     return null;
   }
+
 
   return (
     <S.SidebarWrapper onClick={(event) => event.stopPropagation()}>
@@ -66,11 +47,8 @@ export default function Sidebar({ isOpen, close }) {
             padding='18px'
             borderRadius='5px'
             onClick={() => {
-              if (isLogin) {
-                handleLogout();
-              } else {
-                handleLogin(); 
-              }
+              navigate('/login');
+              handleLogout();
             }}
           >
             {isLogin ? '로그아웃' : '로그인'}

@@ -32,6 +32,9 @@ import {
 import { SignUpPage } from './pages/SignUpPage';
 import { UserProfilePage } from './pages/UserProfilePage';
 
+import { GoogleLoginCallBack, KakaoLoginCallback } from './pages/LoginPage/handleSocialLogin.jsx';
+
+
 export const routeList = [
   {
     path: '/',
@@ -39,7 +42,7 @@ export const routeList = [
     children: [
       {
         index: true,
-        element: <MainPage />,
+        element: <LoginPage />,
       },
       {
         path: '/login',
@@ -148,6 +151,16 @@ export const routeList = [
       {
         path: '/user-profile',
         element: <UserProfilePage />,
+      },
+      { 
+        path: '/kakaoLogin',
+        element: <KakaoLoginCallback />,
+        meta: { hideHeader: true },
+      },
+      { 
+        path: '/login/oauth2/code/google',
+        element: <GoogleLoginCallBack />,
+        meta: { hideHeader: true },
       },
       {
         path: '/setting',

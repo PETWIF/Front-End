@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { postLogin, postGoogleLogin } from '../../apis/login.js';
+import { useAuth } from '../../hooks/useAuth';
 
 import { Button } from '../../components/Button';
 import { Icon } from '../../components/Icon';
@@ -20,6 +20,7 @@ export default function LoginPage() {
   const [isRightEmail, setIsRightEmail] = useState(false);
   const [isRightPwd, setIsRightPwd] = useState(false);
 
+  const { isLogin, handleLogin } = useAuth(); // 로그인 설정
   const [autoLogin, setAutoLogin] = useState(false); // -> 자동 로그인 체크 여부
 
   const validateEmail = (value) => /\S+@\S+\.\S+/.test(value);
@@ -44,32 +45,15 @@ export default function LoginPage() {
     }
   };
 
+  const handleKakaoLogin = () => {
+    window.location.href = `https://kauth.kakao.com/oauth/authorize?client_id=${import.meta.env.VITE_KAKAO_CLIENT_ID}&redirect_uri=${import.meta.env.VITE_KAKAO_REDIRECTION_URL}&response_type=code`;
+};
+
   const handleGoogleLogin = async () => {
+    const googleClientID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+    const googleRedirectURL = import.meta.env.VITE_GOOGLE_REDIRECTION_URL;
 
-    // 링크를 로컬 호스트가 아닌 다른 내용으로 바꾸면 오류 발생
-    window.location.href = `https://accounts.google.com/o/oauth2/auth?client_id=928539400314-fsf7hhtt5mbqvpa8slt5iae561c99mpc.apps.googleusercontent.com&redirect_uri=http://localhost:8080/login/oauth2/code/google&response_type=code&scope=https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile`;
-
-    const urlParams = new URLSearchParams(window.location.search);
-    const googleCode = urlParams.get('code');
-  
-    const response = await postGoogleLogin(googleCode);
-    const { isSuccess, data } = response;
-
-    if (isSuccess) {
-      const { accessToken, refreshToken } = data;
-
-      if (autoLogin) {
-        localStorage.setItem('accessToken', accessToken);
-        localStorage.setItem('refreshToken', refreshToken);
-        localStorage.setItem('autoLogin', 'true');
-        // localStorage.setItem('token', token);
-      }
-
-      navigate('/home');
-    } else {
-      setEmailError('로그인에 실패했습니다. 다시 시도해 주세요.');
-      setPwdError('비밀번호가 일치하지 않습니다.');
-    }
+    window.location.href = `https://accounts.google.com/o/oauth2/auth?client_id=${googleClientID}&redirect_uri=${googleRedirectURL}&response_type=code&scope=https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile`;
   };
 
   const handleSubmit = async (e) => {
@@ -79,34 +63,20 @@ export default function LoginPage() {
       return;
     }
 
-    const response = await postLogin({ email, password });
-    const { isSuccess, data } = response;
-
-    if (isSuccess) {
-      
-      const { accessToken, refreshToken } = data;
-      console.log(data);
-      localStorage.setItem('accessToken', accessToken);
-      localStorage.setItem('refreshToken', refreshToken);
-
-      if (autoLogin) {
-        localStorage.setItem('autoLogin', 'true');
-      }
-
-      navigate('/home');
-    } else {
+    try {
+      await handleLogin({ email, password, autoLogin });
+    } catch (error) {
+      console.log(error);
       setEmailError('로그인에 실패했습니다. 다시 시도해 주세요.');
-      setPwdError('비밀번호가 일치하지 않습니다.');
     }
   };
 
   useEffect(() => {
-    // 토큰 확인
     const storedAccessToken = localStorage.getItem('accessToken');
     const storedAutoLogin = localStorage.getItem('autoLogin');
 
     if (storedAccessToken && storedAutoLogin === 'true') {
-      navigate('/home');
+      window.location.replace('/home');
     }
   }, [navigate]);
 
@@ -122,7 +92,9 @@ export default function LoginPage() {
           <S.MainBoldText>
             반려동물과의 추억을 사람들과 나눠 보세요
           </S.MainBoldText>
-          <S.MockUp />
+          <S.MockUp>
+              <Icon id='mockup' width='620px' height='620px' />
+          </S.MockUp>
         </S.PETWIFContainer>
         <S.FormWrapper>
           <S.FormContainer onSubmit={handleSubmit}>
@@ -177,8 +149,8 @@ export default function LoginPage() {
           <S.StyledHr />
           <S.MainBoldText>간편 로그인</S.MainBoldText>
           <S.SocialLoginWrapper>
-            <S.SocialLoginContainer id='kakao' width='62px' height='62px'/>
-            <S.SocialLoginContainer id='google' width='62px' height='62px' onClick={handleGoogleLogin}/>
+            <S.SocialLoginContainer id='kakao' width='62px' height='62px' onClick={() => {handleKakaoLogin();}}/>
+            <S.SocialLoginContainer id='google' width='62px' height='62px' onClick={() => {handleGoogleLogin();}}/>
           </S.SocialLoginWrapper>
           <S.UnderlinedText to='/signup'>
             아직 회원이 아니시라면?

@@ -82,13 +82,18 @@ export default function PwdChangePage() {
 
     try {
       const response = await patchChangePw({ email, pwd, pwdRe });
-      const { isSuccess } = response;
+      const { isSuccess, data } = response;
 
       if (isSuccess) {
         console.log('비밀번호 변경 성공:', response);
       } else {
-        setIsRightPwdRe(false); 
-        setPwdReError('비밀번호가 일치하지 않습니다.');
+        if (data === '비밀번호 수정 실패') {
+          setIsRightPwdRe(false); 
+          setPwdReError('가입되지 않은 이메일입니다.');
+        } else {
+          setIsRightPwdRe(false); 
+          setPwdReError('비밀번호가 일치하지 않습니다.');
+        }
       }
     } catch (error) {
       console.error('비밀번호 변경 실패:', error);
