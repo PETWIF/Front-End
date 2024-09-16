@@ -113,9 +113,9 @@ const FeedItem = forwardRef((props, ref) => {
     console.log(`게시글${albumId}에 좋아요를 눌렀습니다.`);
   };
 
-  // const handleCommentHeart = (commentId) => {
-  //   console.log(`댓글 ${commentId}에 좋아요를 눌렀습니다.`);
-  // };
+  const handleCommentHeart = (commentId) => {
+    console.log(`댓글 ${commentId}에 좋아요를 눌렀습니다.`);
+  };
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen); // 메뉴 열림/닫힘 상태 토글
