@@ -43,13 +43,18 @@ export default function AddInfoPage() {
       let userRes, petRes;
 
         if (token) {
-          userRes = await patchAddUserInfo({ gender, birthDate, telecom, phone, address });
-          petRes = await postAddPetInfo({ petName, petGender, petAge, petKind });
+          [userRes, petRes] = await Promise.all([
+            patchAddUserInfo({ gender, birthDate, telecom, phone, address }),
+            postAddPetInfo({ petName, petGender, petAge, petKind })
+          ]);
         } else {
-          userRes = await patchAddUserInfoBeforeLogin({ email, gender, birthDate, telecom, phone, address });
-          petRes = await postAddPetInfoBeforeLogin({ email, petName, petGender, petAge, petKind });
+          [userRes, petRes] = await Promise.all([
+            patchAddUserInfoBeforeLogin({ email, gender, birthDate, telecom, phone, address }),
+            postAddPetInfoBeforeLogin({ email, petName, petGender, petAge, petKind })
+          ]);
         }
 
+        console.log(petRes);
         const { isSuccess } = petRes;
 
       if (isSuccess) {
