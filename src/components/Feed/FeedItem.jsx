@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom';
 import { formatDistanceToNow } from 'date-fns';
 import { ko } from 'date-fns/locale';
 
+import useLike from '../../hooks/useLike.jsx';
+
 import CommentSection from './CommentSection';
 import { Icon } from '../Icon';
 
@@ -18,6 +20,7 @@ import * as S from './Feed.style';
 const likeUsers = [];
 
 const FeedItem = forwardRef((props, ref) => {
+  const { likeAlbum, deleteLikeAlbum } = useLike();
   const { data } = props;
   const {
     albumId,
@@ -149,7 +152,11 @@ const FeedItem = forwardRef((props, ref) => {
               id={liked ? 'albumheart' : 'heart-line'}
               width='31'
               height='26'
-              onClick={() => handleAlbumHeart(data.id)}
+              onClick={() =>
+                liked
+                  ? deleteLikeAlbum.mutate({ albumId: data.albumId })
+                  : likeAlbum.mutate({ albumId: data.albumId })
+              }
             />
             <Link to={`/bookmark`}>
               <Icon id='albumbookmark' width='22' height='27' />
