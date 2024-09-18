@@ -15,7 +15,8 @@ export default function AddInfoPage() {
   const location = useLocation();
   const navigate = useNavigate();
   
-  const { email, nickname } = location.state || {};
+  const { email } = location.state || {};
+  console.log(email);
 
   const [gender, setGender] = useState('');
   const [year, setYear] = useState(''); 
@@ -59,7 +60,7 @@ export default function AddInfoPage() {
 
       if (isSuccess) {
       console.log('정보 입력 성공');
-      navigate('/registered', { state: { nickname } });
+      navigate('/registered', { state: { email: email } });
       } else {
         console.error('펫:', petRes);
       }

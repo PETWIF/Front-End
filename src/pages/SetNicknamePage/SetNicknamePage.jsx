@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 
-import { patchNickname, postProfilePic, patchNicknameBeforeLogin, postProfilePicBeforeLogin } from '../../apis/nickname.js';
+import { patchNickname, postProfilePic, patchNicknameBeforeLogin } from '../../apis/nickname.js';
 
 import { Button } from '../../components/Button';
 import { Icon } from '../../components/Icon';
@@ -18,7 +18,8 @@ export default function SetNicknamePage() {
   const [nicknameError, setNicknameError] = useState('');
 
   const location = useLocation();
-  const { email } = location.state || {} ;
+  const { email, id } = location.state || {} ;
+  console.log(email);
 
   const [preview, setPreview] = useState(<Icon id='editPic' width='42px' height='42px' />); 
 
@@ -41,8 +42,6 @@ export default function SetNicknamePage() {
     const handleFileChange = async (e) => {
       e.preventDefault();
       
-      const token = localStorage.getItem('accessToken');
-    
       const file = e.target.files[0];
 
       const image = window.URL.createObjectURL(file);
@@ -51,11 +50,7 @@ export default function SetNicknamePage() {
       try {
         const formData = new FormData();
         formData.append('file', file);
-        if (token !== null) {
-          await postProfilePic({ file });
-        } else {
-          await postProfilePicBeforeLogin({ email, file })
-        }
+        await postProfilePic({ id, file });
       } catch (error) {
         console.error("프로필 사진 설정 실패:", error);
       } 
@@ -82,7 +77,7 @@ export default function SetNicknamePage() {
         if (isSuccess) {
           console.log('사용 가능한 닉네임:', { nickname });
           setNicknameError('사용 가능한 닉네임입니다!');
-          navigate(destination, { state: { email, nickname }});
+          navigate(destination, { state: { email: email, nickname: nickname }});
         } else {
           setIsRightNickname(false); 
           setNicknameError('이미 사용 중인 닉네임입니다. 다른 닉네임을 이용해 주세요.');

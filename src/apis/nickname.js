@@ -8,15 +8,16 @@ export const patchNickname = async ({ nickname }) => {
     return response.data;
 };
 
-export const postProfilePic = async ({ file }) => {
+export const postProfilePic = async ({ id, file }) => {
   const response = await authAxios.post(
     '/member/profile',
-    { file: file, },  // formData를 요청 바디로 직접 전달
+    { file: file, }, 
     {
       headers: {
-        'Content-Type': 'multipart/form-data',  // 헤더는 세 번째 인수로 전달
-      }
-    }
+        'Content-Type': 'multipart/form-data', 
+      },
+      params: { id },
+    },
   );
 
   return response.data;
@@ -32,18 +33,3 @@ export const patchNicknameBeforeLogin = async ({ email, nickname }) => {
   
   return response.data;
 };
-
-export const postProfilePicBeforeLogin = async ({ email, file }) => {
-  const response = await authAxios.post('/member/profile/beforeLogin', 
-    { file: file },  
-    {
-      headers: {
-        'Content-Type': 'multipart/form-data', 
-      },
-      params: { email }  
-    }
-  );
-  
-  return response.data;
-};
-

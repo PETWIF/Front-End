@@ -1,10 +1,12 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../hooks/useAuth.jsx';
 
 import { postGoogleLogin, getKakaoLogin } from '../../apis/login.js'; 
 
 export const KakaoLoginCallback = () => {
   const navigate = useNavigate();
+  const { setIsLogin } = useAuth();
 
   const handleKakaoLogin = async () => {
     const code = new URL(window.location.href).searchParams.get('code');
@@ -12,13 +14,17 @@ export const KakaoLoginCallback = () => {
     try {
       const response = await getKakaoLogin({ code });
       const { isSuccess, data } = response;
-      const { accessToken, refreshToken } = data;
+      const { accessToken, refreshToken, id, nickname, profile_url } = data;
 
       if (isSuccess)  {
         localStorage.setItem('accessToken', accessToken);
         localStorage.setItem('refreshToken', refreshToken);
+        localStorage.setItem('nickname', nickname); 
+        localStorage.setItem('userId', id); 
+        localStorage.setItem('profile_url', profile_url); 
                     
         console.log("로그인 성공! 홈으로 이동합니다...");
+        setIsLogin(true);
         window.location.replace('/home');
       } else {
         console.error('로그인에 실패했습니다. 다시 시도해 주세요.');
@@ -37,6 +43,7 @@ export const KakaoLoginCallback = () => {
 
 export const GoogleLoginCallBack = () => {
     const navigate = useNavigate();
+    const { setIsLogin } = useAuth();
   
     useEffect(() => {
       const handleGoogleLogin = async () => {
@@ -45,13 +52,18 @@ export const GoogleLoginCallBack = () => {
         try {
           const response = await postGoogleLogin({ code });
           const { isSuccess, data } = response;
+          console.log(response);
       
           if (isSuccess) {
-            const { accessToken, refreshToken } = data;
+            const { accessToken, refreshToken, id, nickname, profile_url } = data;
             localStorage.setItem('accessToken', accessToken);
             localStorage.setItem('refreshToken', refreshToken);
+            localStorage.setItem('nickname', nickname); 
+            localStorage.setItem('userId', id); 
+            localStorage.setItem('profile_url', profile_url);
             
             console.log("로그인 성공! 홈으로 이동합니다...");
+            setIsLogin(true);
             window.location.replace('/home');
           } else {
             console.error('로그인에 실패했습니다. 다시 시도해 주세요.');

@@ -27,12 +27,13 @@ export function AuthProvider({ children }) {
     const { isSuccess, data } = response;
 
     if (isSuccess) {
-      const { accessToken, refreshToken, id, nickname } = data;
+      const { accessToken, refreshToken, id, nickname, profile_url} = data;
       
       localStorage.setItem('accessToken', accessToken);
       localStorage.setItem('refreshToken', refreshToken);
-      localStorage.setItem('nickname', nickname); // 닉네임 저장
-      localStorage.setItem('userId', id); // 사용자 ID 저장
+      localStorage.setItem('nickname', nickname); 
+      localStorage.setItem('userId', id); 
+      localStorage.setItem('profile_url', profile_url); 
       console.log("로그인, 토큰 발급 완료");
 
       if (autoLogin) {
@@ -53,6 +54,9 @@ export function AuthProvider({ children }) {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
     localStorage.removeItem('autoLogin');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('nickname'); 
+    localStorage.removeItem('profile_url'); 
     setIsLogin(false);
     setNickname(null);
     setUserId(null);
@@ -65,7 +69,7 @@ export function AuthProvider({ children }) {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ isLogin, nickname, userId, handleLogin, handleLogout }}> 
+    <AuthContext.Provider value={{ isLogin, setIsLogin, nickname, userId, handleLogin, handleLogout }}> 
       {children}
     </AuthContext.Provider>
   );

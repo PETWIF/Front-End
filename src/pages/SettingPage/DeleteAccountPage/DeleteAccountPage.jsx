@@ -16,7 +16,7 @@ import {
 import * as S from './DeleteAccountPage.style.jsx';
 
 export default function DeleteAccountPage() {
-  const { userId: id } = useAuth();
+  const { userId: id } = useAuth(); // me 통해서 가져오도록 수정 필요
   const navigate = useNavigate();
   const [agree, setAgree] = useState(false);
 
