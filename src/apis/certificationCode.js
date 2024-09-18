@@ -19,3 +19,11 @@ export const postCode = async ({ email, code }) => {
     
     return response.data;
 };
+
+export const searchPwd = async ({ email }) => {
+    const response = await authAxios.post(`/signup/pwFind`, {
+        email: email,
+    });   
+    
+    return response.data;
+};
