@@ -15,6 +15,7 @@ export const KakaoLoginCallback = () => {
       const response = await getKakaoLogin({ code });
       const { isSuccess, data } = response;
       const { accessToken, refreshToken, id, nickname, profile_url } = data;
+      console.log(data);
 
       if (isSuccess)  {
         localStorage.setItem('accessToken', accessToken);
