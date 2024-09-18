@@ -41,9 +41,9 @@ export default function DeleteAccountPage() {
       localStorage.removeItem('accessToken');
       localStorage.removeItem('refreshToken');
       localStorage.removeItem('autoLogin');
-      localStorage.removeItem('nickname');
-      localStorage.removeItem('id');
-      localStorage.removeItem('profile_url');
+      localStorage.removeItem('userId');
+      localStorage.removeItem('nickname'); 
+      localStorage.removeItem('profile_url'); 
 
       console.log('탈퇴 완료');
       navigate('/login');
