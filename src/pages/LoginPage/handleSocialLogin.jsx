@@ -18,7 +18,6 @@ export const KakaoLoginCallback = () => {
       const response = await getKakaoLogin({ code });
       const { isSuccess, data } = response;
       const { accessToken, refreshToken, id, nickname, profile_url } = data;
-      console.log(data);
 
       if (isSuccess)  {
         localStorage.setItem('accessToken', accessToken);
@@ -32,16 +31,14 @@ export const KakaoLoginCallback = () => {
         setLoading(false);
         window.location.replace('/home');
       } else {
-        console.error('다른 계정에서 이용 중인 이메일입니다. 다른 이메일을 이용해 주세요.');
-        setError('다른 계정에서 이용 중인 이메일입니다. 다른 이메일을 이용해 주세요.');
+        console.error(' 다른 계정에서 이용 중인 이메일입니다. 다른 이메일을 이용해 주세요. 5초 후 로그인 페이지로 이동합니다.');
+        setError(' 다른 계정에서 이용 중인 이메일입니다. 다른 이메일을 이용해 주세요. 5초 후 로그인 페이지로 이동합니다.');
         setLoading(false);
-        // return <div>다른 계정에서 이용 중인 이메일입니다. 다른 이메일을 이용해 주세요.</div>
       }
     } catch (error) {
-      console.error('로그인 중 에러가 발생했습니다. 잠시 후 다시 시도해 주세요.', error);
-      setError('로그인 중 에러가 발생했습니다. 잠시 후 다시 시도해 주세요.');
+      console.error(' 로그인 중 에러가 발생했습니다. 잠시 후 다시 시도해 주세요. 5초 후 로그인 페이지로 이동합니다.', error);
+      setError(' 로그인 중 에러가 발생했습니다. 잠시 후 다시 시도해 주세요. 5초 후 로그인 페이지로 이동합니다.');
       setLoading(false);
-      // return <div>로그인 중 에러가 발생했습니다. 잠시 후 다시 시도해 주세요.</div>
     }
   };
 
@@ -49,15 +46,25 @@ export const KakaoLoginCallback = () => {
     handleKakaoLogin();
   }, [navigate]);
 
+  useEffectgit (() => {
+    if (error) {
+      const timer = setTimeout(() => {
+        navigate('/login');
+      }, 5000);
+
+      return () => clearTimeout(timer); 
+    }
+  }, [error, navigate]);
+
   if (loading) {
-    return <div>카카오 로그인 처리 중...</div>; 
+    return <div>구글 로그인 처리 중...</div>;  
   }
 
   if (error) {
     return <div>{error}</div>; 
   }
 
-  return null;  
+  return null; 
 };
 
 export const GoogleLoginCallBack = () => {
@@ -88,21 +95,29 @@ export const GoogleLoginCallBack = () => {
             setIsLogin(true);
             window.location.replace('/home');
           } else {
-            console.error('다른 계정에서 이용 중인 이메일입니다. 다른 이메일을 이용해 주세요.');
-            setError('다른 계정에서 이용 중인 이메일입니다. 다른 이메일을 이용해 주세요.');
+            console.error(' 다른 계정에서 이용 중인 이메일입니다. 다른 이메일을 이용해 주세요. 5초 후 로그인 페이지로 이동합니다.');
+            setError(' 다른 계정에서 이용 중인 이메일입니다. 다른 이메일을 이용해 주세요. 5초 후 로그인 페이지로 이동합니다.');
             setLoading(false);
-            // return <div>다른 계정에서 이용 중인 이메일입니다. 다른 이메일을 이용해 주세요.</div>
           }
         } catch (error) {
-          console.error('로그인 중 에러가 발생했습니다. 잠시 후 다시 시도해 주세요.', error);
-          setError('로그인 중 에러가 발생했습니다. 잠시 후 다시 시도해 주세요.');
+          console.error(' 로그인 중 에러가 발생했습니다. 5초 후 로그인 페이지로 이동합니다.', error);
+          setError(' 로그인 중 에러가 발생했습니다. 5초 후 로그인 페이지로 이동합니다.');
           setLoading(false);
-          // return <div>로그인 중 에러가 발생했습니다. 잠시 후 다시 시도해 주세요.</div>
         }
       };      
 
       handleGoogleLogin();
     }, [navigate]);
+
+    useEffect(() => {
+      if (error) {
+        const timer = setTimeout(() => {
+          navigate('/login');
+        }, 5000);
+
+        return () => clearTimeout(timer); 
+      }
+    }, [error, navigate]);
 
     if (loading) {
       return <div>구글 로그인 처리 중...</div>;  
@@ -114,4 +129,3 @@ export const GoogleLoginCallBack = () => {
 
     return null;
   };
-
