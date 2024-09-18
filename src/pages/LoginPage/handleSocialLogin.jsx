@@ -46,7 +46,7 @@ export const KakaoLoginCallback = () => {
     handleKakaoLogin();
   }, [navigate]);
 
-  useEffectgit (() => {
+  useEffect (() => {
     if (error) {
       const timer = setTimeout(() => {
         navigate('/login');
