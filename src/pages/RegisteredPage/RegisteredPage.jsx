@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 import { Button } from '../../components/Button';
 import { Avatar } from '../../components/Avatar';
 
-import { getMyProfile } from '../../apis/getMyProfile.js'; 
+import { getMyProfileWithoutAuth } from '../../apis/getMyProfile.js'; 
 
 import { Profile as Img } from '../../dummy/images';
 
@@ -14,6 +14,9 @@ import TitleContainer from '../../components/LoginComponents/TitleContainer';
 import * as S from './RegisteredPage.style.jsx';
 
 export default function RegisteredPage() {
+  const location = useLocation();
+  const { email } = location.state || {};
+  console.log(email);
   const [redirectToHome, setRedirectToHome] = useState(false); 
   const [profile, setProfile] = useState(Img);
   const [nickname, setNickname] = useState('');
@@ -21,7 +24,7 @@ export default function RegisteredPage() {
   const navigate = useNavigate();
 
   const getProfilePic = async () => {
-    const response = await getMyProfile();
+    const response = await getMyProfileWithoutAuth({ email });
     const { isSuccess, data } = response;
 
     console.log(response);

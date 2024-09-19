@@ -45,7 +45,7 @@ useEffect(() => {
           style={{ cursor: 'pointer' }}
         />
         <Flex $gap='30px'>
-          <S.MenuItem>
+          <S.MenuItem to='/setting'>
             <Icon id='bell' width='24' height='25' />
             <span>알림 설정</span>
           </S.MenuItem>

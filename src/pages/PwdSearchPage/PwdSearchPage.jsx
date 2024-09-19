@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
-import { postEmail, postCode } from '../../apis/certificationCode.js';
+import { searchPwd, postCode } from '../../apis/certificationCode.js';
 
 import { debounce } from 'lodash';
 
@@ -89,7 +89,7 @@ export default function PwdSearchPage() {
     }
 
     try {
-      const response = await postEmail({ email });
+      const response = await searchPwd({ email });
       const { isSuccess } = response;
 
       if (isSuccess) {
@@ -97,7 +97,7 @@ export default function PwdSearchPage() {
         setEmailError('인증번호가 전송되었습니다.');
       } else {
         setIsRightEmail(false); 
-        setEmailError('이메일을 다시 한 번 확인해 주세요.');
+        setEmailError('가입되지 않은 이메일입니다. 다시 한 번 확인해 주세요.');
       }
     } catch (error) {
       console.error('이메일 전송 실패:', error);
