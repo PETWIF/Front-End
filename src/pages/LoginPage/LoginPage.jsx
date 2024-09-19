@@ -94,14 +94,6 @@ export default function LoginPage() {
       const { accessToken, refreshToken } = data;
       localStorage.setItem('accessToken', accessToken);
       localStorage.setItem('refreshToken', refreshToken);
-<<<<<<< HEAD
-
-      if (autoLogin) {
-        localStorage.setItem('autoLogin', 'true');
-        // localStorage.setItem('token', token);
-      }
-=======
->>>>>>> 436df996511c09503f5eb787f75b2db56b57ce7e
 
       navigate('/home');
     } else {
