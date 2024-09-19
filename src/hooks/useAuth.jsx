@@ -44,7 +44,7 @@ export function AuthProvider({ children }) {
       setNickname(nickname);
       setUserId(id); 
       
-      navigate('/home');
+      window.location.replace('/home');
     } else {
       throw new Error('로그인에 실패했습니다. 다시 시도해 주세요.');
     }

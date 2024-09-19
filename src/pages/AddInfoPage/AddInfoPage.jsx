@@ -16,7 +16,6 @@ export default function AddInfoPage() {
   const navigate = useNavigate();
   
   const { email } = location.state || {};
-  console.log(email);
 
   const [gender, setGender] = useState('');
   const [year, setYear] = useState(''); 
@@ -31,7 +30,6 @@ export default function AddInfoPage() {
   const [petKind, setPetKind] = useState('');
 
   const birthDate = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-  // const petAgeInt = parseInt(petAge, 10);  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -55,7 +53,7 @@ export default function AddInfoPage() {
           ]);
         }
 
-        console.log(petRes);
+        console.log(petRes, userRes);
         const { isSuccess } = petRes;
 
       if (isSuccess) {

@@ -19,8 +19,7 @@ export default function SetNicknamePage() {
 
   const location = useLocation();
   const { email, id } = location.state || {} ;
-  console.log(email);
-
+  
   const [preview, setPreview] = useState(<Icon id='editPic' width='42px' height='42px' />); 
 
   const validateNickname = (value) => value.trim().length >= 2 && value.trim().length <= 6;
