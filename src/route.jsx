@@ -43,6 +43,7 @@ export const routeList = [
       {
         index: true,
         element: <LoginPage />,
+        meta: { hideHeader: true },
       },
       {
         path: '/login',
