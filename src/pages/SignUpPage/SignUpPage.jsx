@@ -164,7 +164,7 @@ export default function SignUpPage() {
 
       if (isSuccess) {
         setEmailError('인증번호가 전송되었습니다.');
-      } else if (message = "Already assigned Member"){
+      } else if (message === "Already assigned Member"){
         setIsRightEmail(false); 
         setEmailError('이미 가입된 이메일입니다. 다른 이메일을 이용해 주세요.');
       }

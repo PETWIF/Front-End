@@ -15,6 +15,8 @@ import useReportModal from '../../hooks/useReportModal.jsx';
 
 import { albumCover, defaultProfile } from '../../dummy/images';
 
+import { authAxios } from '../../axios/index.js';
+
 import * as S from './Feed.style';
 
 const likeUsers = [];
@@ -62,26 +64,45 @@ const FeedItem = forwardRef((props, ref) => {
     setNewComment(e.target.value);
   };
 
-  const handleCommentSubmit = () => {
-    console.log('새 댓글:', newComment);
-
+  const handleCommentSubmit = async () => {
+    console.log('새 댓글:', newComment, albumId);
+    console.log(`Sending POST request to: ${import.meta.env.VITE_SERVER_DOMAIN}/albums/${albumId}/comment`);
+  
     if (newComment.trim()) {
-      const newCommentData = {
-        id: Date.now(),
-        author: '현재 사용자', // 실제 사용자 이름으로 변경해야함
-        profileImage: '/path/to/profile.jpg', // 실제 사용자 프로필 이미지 경로로 변경해야함
-        text: newComment,
-        likeCount: 0,
-        createdAt: '방금',
-        replies: [],
-      };
-
-      const updatedComments = [...comments, newCommentData];
-
-      setComments(updatedComments);
-      setNewComment('');
+      try {
+        // FormData 객체 생성
+        const formData = new FormData();
+        formData.append('content', newComment);
+  
+        const response = await authAxios.post(
+          `/albums/${albumId}/comment`,
+          formData,
+          {
+            headers: {
+              'Content-Type': 'multipart/form-data', // form-data 전송을 위한 Content-Type
+              // Authorization 헤더는 authAxios 인스턴스에서 이미 설정되어 있으므로, 여기서는 필요 없음
+            },
+          }
+        );
+  
+        if (response.status === 200 || response.status === 201) {
+          const newCommentData = {
+            id: response.data.id,
+            author: '현재 사용자',
+            profileImage: '/path/to/profile.jpg',
+            text: newComment,
+            likeCount: 0,
+            createdAt: '방금',
+            replies: [],
+          };
+          
+        }
+      } catch (error) {
+        console.error('댓글 전송 중 오류 발생:', error);
+      }
     }
   };
+  
 
   const handleReportComment = async (commentId) => {
     const response = await postReportComment({ commentId, content });
