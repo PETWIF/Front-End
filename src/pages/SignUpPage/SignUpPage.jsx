@@ -160,17 +160,16 @@ export default function SignUpPage() {
 
     try {
       const response = await postEmail({ email });
-      const { isSuccess } = response;
+      const { isSuccess, message } = response;
 
       if (isSuccess) {
-        console.log('이메일 존재:', { email });
         setEmailError('인증번호가 전송되었습니다.');
-      } else {
+      } else if (message === "Already assigned Member"){
         setIsRightEmail(false); 
-        setEmailError('이메일을 다시 한 번 확인해 주세요.');
+        setEmailError('이미 가입된 이메일입니다. 다른 이메일을 이용해 주세요.');
       }
     } catch (error) {
-      console.error('이메일 전송 실패:', error);
+      setEmailError('이미 가입된 이메일입니다. 다른 이메일을 이용해 주세요.');
     }
   };
 
@@ -210,11 +209,12 @@ export default function SignUpPage() {
 
     try {
       const response = await postSignUp({ name, email, pwd, pwdRe });
-      const { isSuccess, message, code } = response;
+      const { isSuccess, message, code, data } = response;
 
       if (isSuccess) {
+        const { id, email } = data;
         console.log('회원가입 성공:', response);
-        navigate('/agree', { state: { email: email, password: pwd } });
+        navigate('/agree', { state: { email: email, id: id, password: pwd } });
       } else {
         switch (code) {
           case 'COMMON400':

@@ -39,11 +39,11 @@ export default function AgreePage() {
 
   const navigate = useNavigate();
   const location = useLocation();
-  const { email } = location.state;
+  const { email, id } = location.state;
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    navigate('/setNickname', { state: { email: email } })
+    navigate('/setNickname', { state: { email: email, id: id } })
   };
 
   return (

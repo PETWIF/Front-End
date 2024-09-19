@@ -9,7 +9,13 @@ import useLike from '../../hooks/useLike.jsx';
 import CommentSection from './CommentSection';
 import { Icon } from '../Icon';
 
+import { postReportComment, postReportAlbum } from '../../apis/report.js'; 
+
+import useReportModal from '../../hooks/useReportModal.jsx';
+
 import { albumCover, defaultProfile } from '../../dummy/images';
+
+import { authAxios } from '../../axios/index.js';
 
 import * as S from './Feed.style';
 
@@ -33,6 +39,10 @@ const FeedItem = forwardRef((props, ref) => {
   } = data;
   const [newComment, setNewComment] = useState('');
 
+  const { isOpen, open, close, ReportModal } = useReportModal();
+
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
   // initialComments.map((comment) => ({
   //   ...comment,
   //   createdAt: formatDistanceToNow(new Date(comment.createdAt), {
@@ -54,44 +64,94 @@ const FeedItem = forwardRef((props, ref) => {
     setNewComment(e.target.value);
   };
 
-  const handleCommentSubmit = () => {
-    console.log('새 댓글:', newComment);
-
+  const handleCommentSubmit = async () => {
+    console.log('새 댓글:', newComment, albumId);
+    console.log(`Sending POST request to: ${import.meta.env.VITE_SERVER_DOMAIN}/albums/${albumId}/comment`);
+  
     if (newComment.trim()) {
-      const newCommentData = {
-        id: Date.now(),
-        author: '현재 사용자', // 실제 사용자 이름으로 변경해야함
-        profileImage: '/path/to/profile.jpg', // 실제 사용자 프로필 이미지 경로로 변경해야함
-        text: newComment,
-        likeCount: 0,
-        createdAt: '방금',
-        replies: [],
-      };
+      try {
+        // FormData 객체 생성
+        const formData = new FormData();
+        formData.append('content', newComment);
+  
+        const response = await authAxios.post(
+          `/albums/${albumId}/comment`,
+          formData,
+          {
+            headers: {
+              'Content-Type': 'multipart/form-data', // form-data 전송을 위한 Content-Type
+              // Authorization 헤더는 authAxios 인스턴스에서 이미 설정되어 있으므로, 여기서는 필요 없음
+            },
+          }
+        );
+  
+        if (response.status === 200 || response.status === 201) {
+          const newCommentData = {
+            id: response.data.id,
+            author: '현재 사용자',
+            profileImage: '/path/to/profile.jpg',
+            text: newComment,
+            likeCount: 0,
+            createdAt: '방금',
+            replies: [],
+          };
+          
+        }
+      } catch (error) {
+        console.error('댓글 전송 중 오류 발생:', error);
+      }
+    }
+  };
+  
 
-      const updatedComments = [...comments, newCommentData];
+  const handleReportComment = async (commentId) => {
+    const response = await postReportComment({ commentId, content });
+    const { isSuccess, data } = response;
 
-      setComments(updatedComments);
-      setNewComment('');
+    if (isSuccess) {
+      console.log("댓글 신고 완료:", data);
+      open();
+    } else {
+      console.log("에러 발생");
     }
   };
 
-  const handleReport = (commentId) => {
-    console.log(`댓글 ${commentId}가 신고되었습니다.`);
+  const handleReportAlbum = async () => {
+    setIsMenuOpen(false); 
+    const reportReason = '부적절한 게시물'; // 임시 사유
+    const response = await postReportAlbum({ albumId, reportReason });
+    const { isSuccess, data } = response;
+
+    if (isSuccess) {
+      console.log("앨범 신고 완료:", data);
+      open(); 
+    } else {
+      console.log("에러 발생");
+    }
   };
 
   const handleAlbumHeart = (albumId) => {
     console.log(`게시글${albumId}에 좋아요를 눌렀습니다.`);
   };
 
-  // const handleCommentHeart = (commentId) => {
-  //   console.log(`댓글 ${commentId}에 좋아요를 눌렀습니다.`);
-  // };
+  const handleCommentHeart = (commentId) => {
+    console.log(`댓글 ${commentId}에 좋아요를 눌렀습니다.`);
+  };
+
+  const handleReplyHeart = (replyId, commentId) => {
+    console.log(`${commentId}번 댓글의 ${replyId}번 대댓글에 좋아요를 눌렀습니다.`);
+  };
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen); // 메뉴 열림/닫힘 상태 토글
+  };
 
   const formatDate = (date) => {
     return formatDistanceToNow(new Date(date), { addSuffix: true, locale: ko });
   };
 
   return (
+    <>
     <S.FeedItem ref={ref}>
       <S.FeedZone>
         <S.Header>
@@ -122,7 +182,31 @@ const FeedItem = forwardRef((props, ref) => {
             <Link to={`/bookmark`}>
               <Icon id='albumbookmark' width='22' height='27' />
             </Link>
-            <Icon id='albumhamburger' width='23' height='4' />
+            <Icon id='albumhamburger' width='23' height='4' onClick={toggleMenu}/>
+            {isMenuOpen && ( // 메뉴 열림 상태일 때 메뉴 표시
+                <div className="menu"
+                style={{
+                  position: 'relative',
+                  top: '50px', // 버튼 바로 아래에 위치하게 함
+                  left: '10px',
+                  backgroundColor: '#fff',
+                  border: '1px solid #ddd',
+                  borderRadius: '4px',
+                  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
+                  zIndex: 1,
+                }}>
+                  <ul style={{ listStyle: 'none', margin: 0, padding: '8px 0' }}>
+                    <li onClick={handleReportAlbum}
+                    style={{
+                      padding: '8px 16px',
+                      cursor: 'pointer',
+                      whiteSpace: 'nowrap',
+                      ':hover': { backgroundColor: '#f5f5f5' },
+                    }}>신고</li>
+                    {/* 다른 메뉴 항목을 추가할 수 있음 */}
+                  </ul>
+                </div>
+              )}
           </S.Actions>
         </S.Header>
         <S.StyledLink key={albumId} to={`/album/detail/${albumId}`}>
@@ -164,8 +248,10 @@ const FeedItem = forwardRef((props, ref) => {
             <CommentSection
               key={comments.length}
               comments={comments}
-              onReport={handleReport}
-            />
+              onReport={handleReportComment}
+              onCommentHeart={handleCommentHeart}
+              onReplyHeart={handleReplyHeart}
+            /> 
           </S.CommentSection>
 
           <S.CommentInputContainer>
@@ -189,6 +275,8 @@ const FeedItem = forwardRef((props, ref) => {
         </S.CommentSectionContainer>
       </S.MainContent>
     </S.FeedItem>
+    {isOpen && <ReportModal type='warning' close={close} />}
+    </>
   );
 });
 

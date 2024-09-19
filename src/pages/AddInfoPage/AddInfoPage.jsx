@@ -15,7 +15,7 @@ export default function AddInfoPage() {
   const location = useLocation();
   const navigate = useNavigate();
   
-  const { email, nickname } = location.state || {};
+  const { email } = location.state || {};
 
   const [gender, setGender] = useState('');
   const [year, setYear] = useState(''); 
@@ -30,7 +30,6 @@ export default function AddInfoPage() {
   const [petKind, setPetKind] = useState('');
 
   const birthDate = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-  // const petAgeInt = parseInt(petAge, 10);  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -43,18 +42,23 @@ export default function AddInfoPage() {
       let userRes, petRes;
 
         if (token) {
-          userRes = await patchAddUserInfo({ gender, birthDate, telecom, phone, address });
-          petRes = await postAddPetInfo({ petName, petGender, petAge, petKind });
+          [userRes, petRes] = await Promise.all([
+            patchAddUserInfo({ gender, birthDate, telecom, phone, address }),
+            postAddPetInfo({ petName, petGender, petAge, petKind })
+          ]);
         } else {
-          userRes = await patchAddUserInfoBeforeLogin({ email, gender, birthDate, telecom, phone, address });
-          petRes = await postAddPetInfoBeforeLogin({ email, petName, petGender, petAge, petKind });
+          [userRes, petRes] = await Promise.all([
+            patchAddUserInfoBeforeLogin({ email, gender, birthDate, telecom, phone, address }),
+            postAddPetInfoBeforeLogin({ email, petName, petGender, petAge, petKind })
+          ]);
         }
 
+        console.log(petRes, userRes);
         const { isSuccess } = petRes;
 
       if (isSuccess) {
       console.log('정보 입력 성공');
-      navigate('/registered', { state: { nickname } });
+      navigate('/registered', { state: { email: email } });
       } else {
         console.error('펫:', petRes);
       }

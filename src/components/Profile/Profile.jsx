@@ -1,4 +1,5 @@
-import { useParams, Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 
 import { getFriendStatus } from '../../apis/friend.js';
@@ -11,6 +12,8 @@ import { Button } from '../Button';
 import { Icon } from '../Icon';
 import { Profile as Img } from '../../dummy/images';
 
+import { getMyProfile } from '../../apis/getMyProfile.js'; 
+
 import * as S from './Profile.style.jsx';
 
 const PROFILE_INFO_LIST = [
@@ -22,6 +25,7 @@ const PROFILE_INFO_LIST = [
 
 export default function Profile() {
   const { nickname } = useAuth();
+  const [profile, setProfile] = useState(Img);
   const { request, cancel, remove } = useFriend();
 
   const params = useParams();
@@ -38,11 +42,27 @@ export default function Profile() {
     return null;
   }
 
+  const getProfilePic = async () => {
+    const response = await getMyProfile();
+    const { isSuccess, data } = response;
+
+    if (isSuccess) {
+      const { profile_url } = data;
+      setProfile(profile_url);
+    } else {
+      console.log("프로필 사진 미설정 상태. 기본 프로필 사진으로 대체됩니다.");
+    }
+};
+
+useEffect(() => {
+  getProfilePic();
+});
+
   return (
     <S.ProfileLayout>
       <S.TopContainer>
         <div>
-          <Avatar src={Img} size='66px' />
+          <Avatar src={profile} size='66px' />
           <S.NicknameContianer>
             <span>{currentNickname}</span>
             <Icon id='check' width='20' height='20' />

@@ -8,15 +8,17 @@ export const patchNickname = async ({ nickname }) => {
     return response.data;
 };
 
-export const postProfilePic = async ({ formData }) => {
-    const response = await authAxios.post('/member/profile', 
-        { 
-        headers: {
-          'Content-Type': 'multipart/form-data', // multipart/form-data로 설정
-        },
-      file: formData,
-    }
-);
+export const postProfilePic = async ({ id, file }) => {
+  const response = await authAxios.post(
+    '/member/profile',
+    { file: file, }, 
+    {
+      headers: {
+        'Content-Type': 'multipart/form-data', 
+      },
+      params: { id },
+    },
+  );
 
   return response.data;
 };
@@ -30,20 +32,4 @@ export const patchNicknameBeforeLogin = async ({ email, nickname }) => {
   });   
   
   return response.data;
-};
-
-export const postProfilePicBeforeLogin = async ({ email, formData }) => {
-  const response = await authAxios.post('/member/profile/beforeLogin', 
-      { 
-      headers: {
-        'Content-Type': 'multipart/form-data', // multipart/form-data로 설정
-      },
-      file: formData,
-    },
-      {
-        params: { email },
-    }
-);
-
-return response.data;
 };
