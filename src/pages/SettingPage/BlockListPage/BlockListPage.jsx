@@ -42,8 +42,10 @@ export default function BlockListPage() {
                 console.log(`${nickname}님 앨범 페이지로 이동!`);
               }}
             >
-              <Avatar src={profileUrl} size='66px' />
-              <span>{nickname}</span>
+              <div>
+                <Avatar src={profileUrl} size='66px' />
+                <span>{nickname}</span>
+              </div>
               <Button
                 onClick={(event) => {
                   event.stopPropagation();
@@ -61,7 +63,7 @@ export default function BlockListPage() {
           ))}
         </S.FriendList>
         {blockList.length === 0 && <h1>차단한 계정이 없습니다</h1>}
-        {blockList.length > 0 && status === 'success' && (
+        {blockList.length > 5 && status === 'success' && (
           <Button
             onClick={() => {
               fetchNextPage();

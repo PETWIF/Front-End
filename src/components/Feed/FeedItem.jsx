@@ -10,6 +10,7 @@ import CommentSection from './CommentSection';
 import { Icon } from '../Icon';
 
 import { postReportComment, postReportAlbum } from '../../apis/report.js'; 
+import { block } from '../../apis/block.js'; 
 
 import useReportModal from '../../hooks/useReportModal.jsx';
 
@@ -113,6 +114,18 @@ const FeedItem = forwardRef((props, ref) => {
     console.log(`게시글${albumId}에 좋아요를 눌렀습니다.`);
   };
 
+  const handleBlockUser = async () => {
+    setIsMenuOpen(false); 
+    const response = await block({nickName});
+    const { isSuccess, data } = response;
+
+    if (isSuccess) {
+      console.log("사용자 차단 완료:", data);
+    } else {
+      console.log("에러 발생");
+    }
+  };
+
   const handleCommentHeart = (commentId) => {
     console.log(`댓글 ${commentId}에 좋아요를 눌렀습니다.`);
   };
@@ -182,7 +195,13 @@ const FeedItem = forwardRef((props, ref) => {
                       whiteSpace: 'nowrap',
                       ':hover': { backgroundColor: '#f5f5f5' },
                     }}>신고</li>
-                    {/* 다른 메뉴 항목을 추가할 수 있음 */}
+                    <li onClick={handleBlockUser}
+                    style={{
+                      padding: '8px 16px',
+                      cursor: 'pointer',
+                      whiteSpace: 'nowrap',
+                      ':hover': { backgroundColor: '#f5f5f5' },
+                    }}>차단</li>
                   </ul>
                 </div>
               )}

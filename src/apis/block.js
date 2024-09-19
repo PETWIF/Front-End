@@ -1,11 +1,11 @@
 import { authAxios } from '../axios';
 
-export const block = async ({ nickname }) => {
+export const block = async ({ nickName }) => {
   const response = await authAxios.post('/blocks', {
-    nickname,
+    nickname: nickName,
   });
 
-  return response;
+  return response.data;
 };
 
 export const viewBlockList = async ({ page = 0 }) => {

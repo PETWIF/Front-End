@@ -46,7 +46,7 @@ export const KakaoLoginCallback = () => {
     handleKakaoLogin();
   }, [navigate]);
 
-  useEffectgit (() => {
+  useEffect (() => {
     if (error) {
       const timer = setTimeout(() => {
         navigate('/login');
@@ -57,7 +57,7 @@ export const KakaoLoginCallback = () => {
   }, [error, navigate]);
 
   if (loading) {
-    return <div>구글 로그인 처리 중...</div>;  
+    return <div>카카오 로그인 처리 중...</div>;  
   }
 
   if (error) {
