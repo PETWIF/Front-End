@@ -95,7 +95,7 @@ const FeedItem = forwardRef((props, ref) => {
             createdAt: '방금',
             replies: [],
           };
-          
+           
         }
       } catch (error) {
         console.error('댓글 전송 중 오류 발생:', error);
