@@ -1,4 +1,6 @@
 import { viewBlockList, unblock } from '../../../apis/block.js';
+import { useEffect } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 
 import { useAuth }from '../../../hooks/useAuth.jsx';
 import usePagination from '../../../hooks/usePagination.jsx';
@@ -11,10 +13,30 @@ import * as S from './BlockListPage.style.jsx';
 export default function BlockListPage() {
 
   const { nickname: myNickname } = useAuth();
+  const queryClient = useQueryClient();
+
   const { data, status, fetchNextPage } = usePagination({
     queryKey: ['blockList'],
     queryFn: ({ pageParam }) => viewBlockList({ page: pageParam }),
   });
+
+  const Unblock = async (nickname) => {
+    console.log(nickname);
+    const response = await unblock({ nickname });
+    const { isSuccess, data } = response;
+    
+    if (isSuccess) {
+      console.log("차단 취소 완료:", data);
+      queryClient.invalidateQueries(['blockList']);
+    } else {
+      console.log("에러 발생");
+    }
+  };    
+
+  useEffect(() => {
+    // fetchNextPage가 호출된 이후 차단 목록이 업데이트되도록 무효화
+    queryClient.invalidateQueries(['blockList']);
+  }, [queryClient]);
 
   if (!data) return null;
 
@@ -49,12 +71,12 @@ export default function BlockListPage() {
               <Button
                 onClick={(event) => {
                   event.stopPropagation();
-                  unblock({nickname});
+                  Unblock(nickname);
                 }}
                 width='100px'
                 padding='8px'
                 borderRadius='5px'
-                buttonStyle='white'
+                buttonStyle='orange'
                 hasBorder
               >
                 차단 해제
@@ -78,7 +100,7 @@ export default function BlockListPage() {
         )}
           </S.Field>
         </S.Fieldset>
-        <Button padding='20px'>저장하기</Button>
+         {/* <Button padding='20px'>저장하기</Button> */}
       </S.Content>
     </S.SettingLayout>
   );

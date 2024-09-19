@@ -17,9 +17,11 @@ export const viewBlockList = async ({ page = 0 }) => {
 
 export const unblock = async ({ nickname }) => {
   const response = await authAxios.delete('/blocks', {
-    params: { nickname },
+    params: {
+              nickname,
+            },
   });
-  return response;
+  return response.data;
 };
 
 export const checkBlock = async ({ nickname }) => {
