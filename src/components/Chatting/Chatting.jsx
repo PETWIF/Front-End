@@ -63,6 +63,9 @@ export default function Chatting() {
               <S.ChatBubble isMe={message.sender === 'me'}>
                 {message.text}
               </S.ChatBubble>
+              <S.ChatTimestamp>
+                신고
+              </S.ChatTimestamp>
               <S.ChatTimestamp isMe={message.sender === 'me'}>
                 {message.timestamp}
               </S.ChatTimestamp>
