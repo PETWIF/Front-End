@@ -1,10 +1,12 @@
-import { useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 
 import { getAlbumList } from '../../../apis/album.js';
+import { checkBlock } from '../../../apis/block.js';
 
 import { useAuth } from '../../../hooks/useAuth.jsx';
+import useModal from '../../../hooks/useModal.jsx';
 import usePagination from '../../../hooks/usePagination.jsx';
 import useInfiniteScroll from '../../../hooks/useInfiniteScroll.jsx';
 
@@ -23,6 +25,9 @@ import * as S from './AlbumPage.style.jsx';
 
 export default function AlbumPage() {
   const { nickname } = useAuth();
+  const navigate = useNavigate();
+  const { isOpen, open, close, Modal } = useModal();
+
   const params = useParams();
   const currentNickname = decodeURIComponent(params.nickname || nickname);
 
@@ -43,6 +48,19 @@ export default function AlbumPage() {
     setShowChat((prev) => !prev);
   };
 
+  const handleCheckBlock = async () => {
+    const response = await checkBlock({ nickname: currentNickname });
+    const { block } = response;
+
+    if (block) {
+      console.log(`이 사용자를 차단했으므로 페이지를 볼 수 없습니다:`, data);
+      open();
+    } else {
+      console.log(response);
+      console.log('차단하지 않은 사용자입니다. 앨범 페이지를 로드합니다.');
+    }
+  };
+
   const albumList =
     data && !data.pages.includes(undefined)
       ? data.pages.flatMap((page) => page)
@@ -50,6 +68,12 @@ export default function AlbumPage() {
 
   const rest = albumList.slice(0, -1); // 마지막 요소를 제외한 나머지 배열
   const last = albumList[albumList.length - 1] ?? {};
+
+  useEffect(() => {
+    if (currentNickname) {
+      handleCheckBlock();
+    }
+  }, [currentNickname]);
 
   return (
     <S.MainLayout>
@@ -97,6 +121,7 @@ export default function AlbumPage() {
         <Profile />
         {showChat ? <Chatting /> : <RandomFriend />}
       </S.SideContainer>
+      {isOpen && <Modal text='내가 차단한 사용자의 앨범 페이지입니다! 버튼을 누르면 홈으로 돌아갑니다.' close={() => {close(); navigate('/home');}} />}
     </S.MainLayout>
   );
 }

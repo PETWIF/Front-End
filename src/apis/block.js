@@ -28,7 +28,7 @@ export const checkBlock = async ({ nickname }) => {
   const response = await authAxios.get('/blocks/status', {
     params: { nickname },
   });
-  return response;
+  return response.data.data;
 };
 
 
