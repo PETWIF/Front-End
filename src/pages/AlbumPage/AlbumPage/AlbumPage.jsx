@@ -51,8 +51,6 @@ export default function AlbumPage() {
   const rest = albumList.slice(0, -1); // 마지막 요소를 제외한 나머지 배열
   const last = albumList[albumList.length - 1] ?? {};
 
-  console.log(albumList);
-
   return (
     <S.MainLayout>
       <S.MainContainer>
