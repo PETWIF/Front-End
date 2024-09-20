@@ -170,18 +170,20 @@ const FeedItem = forwardRef((props, ref) => {
       <S.FeedItem ref={ref}>
         <S.FeedZone>
           <S.Header>
-            <S.Profile>
-              <img
-                src={profileImageUrl ?? defaultProfile}
-                alt={`${nickName} 프로필`}
-              />
-              <div
-                style={{ display: 'flex', alignItems: 'center', gap: '10px' }}
-              >
-                <S.ProfileName>{nickName}</S.ProfileName>
-                <S.CreatedAt>{formatDate(updatedAT)}</S.CreatedAt>
-              </div>
-            </S.Profile>
+            <Link to={`/album/${nickName}`}>
+              <S.Profile>
+                <img
+                  src={profileImageUrl ?? defaultProfile}
+                  alt={`${nickName} 프로필`}
+                />
+                <div
+                  style={{ display: 'flex', alignItems: 'center', gap: '10px' }}
+                >
+                  <S.ProfileName>{nickName}</S.ProfileName>
+                  <S.CreatedAt>{formatDate(updatedAT)}</S.CreatedAt>
+                </div>
+              </S.Profile>
+            </Link>
             <S.Actions>
               <Link to={`/chatting`}>
                 <Icon id='albumdm' width='31' height='32' />
