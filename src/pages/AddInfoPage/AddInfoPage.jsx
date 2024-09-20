@@ -10,7 +10,7 @@ import TitleContainer from '../../components/LoginComponents/TitleContainer';
 
 import * as S from './AddInfoPage.style.jsx';
 
-// 추후 유효성 검사 통과 여부에 따라 글씨 바뀌도록 설정 필요
+
 export default function AddInfoPage() {
   const location = useLocation();
   const navigate = useNavigate();
