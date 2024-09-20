@@ -38,10 +38,6 @@ export default function Profile() {
     enabled: nickname !== currentNickname,
   });
 
-  if (nickname !== currentNickname && status !== 'success') {
-    return null;
-  }
-
   const getProfilePic = async () => {
     const response = await getMyProfile();
     const { isSuccess, data } = response;
@@ -52,11 +48,15 @@ export default function Profile() {
     } else {
       console.log("프로필 사진 미설정 상태. 기본 프로필 사진으로 대체됩니다.");
     }
-};
+  };
 
-useEffect(() => {
-  getProfilePic();
-});
+  useEffect(() => {
+    getProfilePic();
+  }, []); 
+
+  if (nickname !== currentNickname && status !== 'success') {
+    return null;
+  }
 
   return (
     <S.ProfileLayout>

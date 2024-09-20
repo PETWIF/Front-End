@@ -172,3 +172,19 @@ export const ChatSendButton = styled.button`
     background-color: ${(props) => props.theme.color.primaryDark};
   }
 `;
+
+export const ReportButton = styled.span`
+  font-size: 12px;
+  color: ${(props) => props.theme.color.gray};
+  align-self: center; 
+  margin-top: 5px;
+  margin-right: 3px;
+  position: relative;
+  bottom: -22px; 
+  cursor: pointer;
+  white-space: nowrap;
+  
+  &:hover {
+    color: ${(props) => props.theme.color.primary};
+  }
+`;
