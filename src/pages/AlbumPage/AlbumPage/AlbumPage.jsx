@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import { getAlbumList } from '../../../apis/album.js';
 
-import { useAuth }from '../../../hooks/useAuth.jsx';
+import { useAuth } from '../../../hooks/useAuth.jsx';
 import usePagination from '../../../hooks/usePagination.jsx';
 import useInfiniteScroll from '../../../hooks/useInfiniteScroll.jsx';
 
@@ -50,8 +50,6 @@ export default function AlbumPage() {
 
   const rest = albumList.slice(0, -1); // 마지막 요소를 제외한 나머지 배열
   const last = albumList[albumList.length - 1] ?? {};
-
-  console.log(albumList);
 
   return (
     <S.MainLayout>
