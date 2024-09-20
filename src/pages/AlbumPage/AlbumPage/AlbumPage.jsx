@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import { getAlbumList } from '../../../apis/album.js';
 
-import { useAuth }from '../../../hooks/useAuth.jsx';
+import { useAuth } from '../../../hooks/useAuth.jsx';
 import usePagination from '../../../hooks/usePagination.jsx';
 import useInfiniteScroll from '../../../hooks/useInfiniteScroll.jsx';
 
