@@ -16,6 +16,91 @@ export default function Chatting() {
   const [messages, setMessages] = useState(CHAT_DATA);
   const [inputValue, setInputValue] = useState('');
 
+
+  /*
+  const [otherId, setOtherId] = useState(null); // otherId 상태
+  const [chatRoomId, setChatRoomId] = useState(null); // chatRoomId 상태
+
+  // 서버에서 otherId를 받아오는 함수
+  const fetchOtherId = async () => {
+    try {
+      const response = await authAxios.get('/chat/getOtherId');  // 서버에서 otherId 요청
+      setOtherId(response.data.otherId);  // 받아온 otherId 저장
+    } catch (error) {
+      console.error('Error fetching otherId:', error);
+    }
+  };
+
+  // 컴포넌트가 처음 렌더링될 때 서버에서 otherId를 받아옴
+  useEffect(() => {
+    fetchOtherId();
+  }, []);
+
+  // otherId로 채팅방 생성 요청
+  const createChatRoom = async () => {
+    if (otherId) {
+      try {
+        const response = await authAxios.post('/chats/chatRoom', {
+          otherId,  // 상대방의 userId를 서버에 전송
+        });
+        if (response.data.isSuccess) {
+          setChatRoomId(response.data.data.chatRoomId);  // chatRoomId 저장
+        } else {
+          console.log('채팅방 생성 실패:', response.data.message);
+        }
+      } catch (error) {
+        console.error('채팅방 생성 중 오류 발생:', error);
+      }
+    }
+  };
+
+  // 컴포넌트가 렌더링된 후 채팅방 생성 요청
+  useEffect(() => {
+    if (otherId) {
+      createChatRoom();
+    }
+  }, [otherId]);
+
+  // 메시지 전송 함수 (chatRoomId와 함께 서버에 전송)
+  const handleSendMessage = async () => {
+    if (inputValue.trim() && chatRoomId) {
+      const newMessage = {
+        id: messages.length + 1,
+        sender: 'me',
+        text: inputValue,
+        timestamp: new Date().toLocaleTimeString('ko-KR', {
+          hour: '2-digit',
+          minute: '2-digit',
+        }),
+      };
+
+      // 서버에 메시지 전송
+      await sendMessageToServer(chatRoomId, newMessage.text); // chatRoomId와 메시지 전송
+
+      setMessages([...messages, newMessage]);
+      setInputValue('');
+    }
+  };
+
+  // 서버로 메시지 전송 함수 (chatRoomId와 함께 전송)
+  const sendMessageToServer = async (chatRoomId, messageText) => {
+    try {
+      const response = await authAxios.post(`/chats/chatRoom/${chatRoomId}/send`, {
+        content: messageText,  // 메시지 내용
+        chatImages: null,      // 이미지를 보낼 경우 chatImages도 추가 가능
+      });
+
+      if (response.data.isSuccess) {
+        console.log('메시지가 성공적으로 전송되었습니다.');
+      } else {
+        console.log('메시지 전송 실패:', response.data.message);
+      }
+    } catch (error) {
+      console.error('메시지 전송 중 오류 발생:', error);
+    }
+  };
+  */
+
   const handleInputChange = (e) => {
     setInputValue(e.target.value);
   };
@@ -43,6 +128,8 @@ export default function Chatting() {
       handleSendMessage();
     }
   };
+
+  
 
   // const handleReportChatting = async (chatId, content) => {
   //   // 더미 데이터라 chatRoomId 없음 -> api 연결 후 가져와서 주석 풀기
