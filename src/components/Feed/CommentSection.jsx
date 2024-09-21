@@ -1,24 +1,17 @@
 import { useState } from 'react';
+import { authAxios } from '../../axios';
 import useLike from '../../hooks/useLike.jsx';
 import { Icon } from '../Icon';
 import * as S from './CommentSection.style';
 
-const CommentSection = ({ comments, onReport }) => {
+const CommentSection = ({ comments, onReport, albumId }) => {
   const { likeComment, deleteLikeComment } = useLike();
 
   const [commentList, setCommentList] = useState(comments);
   const [newReply, setNewReply] = useState({});
   const [showReplies, setShowReplies] = useState({});
   const [showReplyInput, setShowReplyInput] = useState({});
-
-  const handleCommentLike = ({ isLike, commentId }) => {
-    if (isLike) {
-      deleteLikeComment.mutate({ commentId });
-      return;
-    }
-
-    likeComment.mutate({ commentId });
-  };
+  const [loading, setLoading] = useState(false); // 로딩 상태 추가
 
   const handleReplyChange = (commentId, e) => {
     setNewReply({
@@ -27,44 +20,67 @@ const CommentSection = ({ comments, onReport }) => {
     });
   };
 
-  const handleReplySubmit = (commentId) => {
+  const handleReplySubmit = async (commentId) => {
     const replyText = newReply[commentId];
-
+  
     if (replyText.trim()) {
-      const updatedComments = commentList.map((comment) => {
-        if (comment.id === commentId) {
-          return {
-            ...comment,
-            replies: [
-              ...comment.replies,
-              {
-                id: Date.now(),
-                name: '현재 사용자', // 실제 사용자 이름으로 변경해야 함
-                profileImage: '/path/to/profile.jpg', // 실제 사용자 프로필 이미지 경로로 변경해야 함
-                content: replyText, // 대댓글 내용 업데이트
-                likeCount: 0,
-                createdAt: '방금',
-              },
-            ],
+      console.log('새 대댓글:', replyText, albumId, commentId);
+      console.log(`Sending POST request to: ${import.meta.env.VITE_SERVER_DOMAIN}/albums/${albumId}/comment?parentCommentId=${commentId}`);
+  
+      try {
+        // 사용자 이름 가져오기
+        const userResponse = await authAxios.get('/member/me/withAuth');
+        const username = userResponse.data.isSuccess ? userResponse.data.data.name : '현재 사용자';
+  
+        // FormData 객체 생성
+        const formData = new FormData();
+        formData.append('content', replyText);
+  
+        const response = await authAxios.post(
+          `/albums/${albumId}/comment?parentCommentId=${commentId}`,
+          formData,
+          {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          }
+        );
+  
+        if (response.status === 200 || response.status === 201) {
+          const newReplyData = {
+            id: response.data.data.id,
+            name: username, // 사용자 이름 반영
+            content: replyText,
+            likeCount: 0,
+            createdAt: new Date().toISOString(),
           };
+  
+          // 댓글 리스트 업데이트
+          const updatedComments = commentList.map((comment) => {
+            if (comment.id === commentId) {
+              return {
+                ...comment,
+                childComments: [
+                  ...comment.childComments,
+                  newReplyData,
+                ],
+              };
+            }
+            return comment;
+          });
+  
+          setCommentList(updatedComments);
+          setNewReply({
+            ...newReply,
+            [commentId]: '',
+          });
         }
-        return comment;
-      });
-
-      setCommentList(updatedComments);
-
-      // 대댓글 등록 후 입력창만 닫습니다.
-      setShowReplyInput({
-        ...showReplyInput,
-        [commentId]: false,
-      });
-
-      setNewReply({
-        ...newReply,
-        [commentId]: '',
-      });
+      } catch (error) {
+        console.error('대댓글 등록 중 오류 발생:', error);
+      }
     }
   };
+  
 
   const toggleShowReplies = (commentId) => {
     const newShowReplies = !showReplies[commentId];
@@ -80,7 +96,6 @@ const CommentSection = ({ comments, onReport }) => {
       }));
     } else {
       setShowReplyInput((prevShowReplyInput) => ({
-        ...prevShowReplyInput,
         [commentId]: false,
       }));
     }
@@ -93,16 +108,16 @@ const CommentSection = ({ comments, onReport }) => {
           <S.CommentHeader>
             <S.CommentAuthor>
               <S.ProfileImage
-                src={comment.profileImage || '/default/profile.jpg'} // 기본 프로필 이미지 경로 설정
-                alt={`${comment.name} 프로필`} // API에서 반환되는 name 사용
+                src={comment.profileImage || '/default/profile.jpg'}
+                alt={`${comment.name} 프로필`}
               />
-              {comment.name} {/* API에서 반환되는 name 사용 */}
+              {comment.name}
             </S.CommentAuthor>
             <S.ReportButton onClick={() => onReport(comment.id)}>
               신고
             </S.ReportButton>
           </S.CommentHeader>
-          <S.CommentText>{comment.content}</S.CommentText> {/* API에서 반환되는 content 사용 */}
+          <S.CommentText>{comment.content}</S.CommentText>
           <S.CommentActions>
             <Icon
               id="commentheart"
@@ -122,25 +137,25 @@ const CommentSection = ({ comments, onReport }) => {
               height="12"
               onClick={() => toggleShowReplies(comment.id)}
             />
-            {comment.replies && comment.replies.length > 0 && (
-              <span>{comment.replies.length}</span>
+            {comment.childComments && comment.childComments.length > 0 && (
+              <span>{comment.childComments.length}</span>
             )}
             <S.CommentCreatedAt>{comment.createdAt}</S.CommentCreatedAt>
           </S.CommentActions>
           {showReplies[comment.id] && (
             <>
-              {comment.replies && comment.replies.length > 0 && (
+              {comment.childComments && comment.childComments.length > 0 && (
                 <S.Replies>
-                  {comment.replies.map((reply) => (
+                  {comment.childComments.map((reply) => (
                     <S.Reply key={reply.id}>
                       <S.ReplyAuthor>
                         <S.ProfileImage
-                          src={reply.profileImage}
-                          alt={`${reply.name} 프로필`} // 대댓글 작성자 이름 표시
+                          src={reply.profileImage || '/default/profile.jpg'}
+                          alt={`${reply.name} 프로필`}
                         />
-                        {reply.name} {/* 대댓글 작성자 이름 표시 */}
+                        {reply.name}
                       </S.ReplyAuthor>
-                      <S.ReplyText>{reply.content}</S.ReplyText> {/* 대댓글 내용 표시 */}
+                      <S.ReplyText>{reply.content}</S.ReplyText>
                       <S.ReplyActions>
                         <Icon
                           id="commentheart"
@@ -148,15 +163,13 @@ const CommentSection = ({ comments, onReport }) => {
                           height="12"
                           onClick={() =>
                             handleCommentLike({
-                              isLike: comment.liked,
-                              commentId: comment.id,
+                              isLike: reply.liked,
+                              commentId: reply.id,
                             })
                           }
-                        ></Icon>
+                        />
                         {reply.likeCount}
-                        <S.CommentCreatedAt>
-                          {reply.createdAt}
-                        </S.CommentCreatedAt>
+                        <S.CommentCreatedAt>{reply.createdAt}</S.CommentCreatedAt>
                       </S.ReplyActions>
                     </S.Reply>
                   ))}
@@ -170,8 +183,11 @@ const CommentSection = ({ comments, onReport }) => {
                     onChange={(e) => handleReplyChange(comment.id, e)}
                     placeholder="대댓글을 입력하세요..."
                   />
-                  <S.ReplyButton onClick={() => handleReplySubmit(comment.id)}>
-                    등록
+                  <S.ReplyButton
+                    onClick={() => handleReplySubmit(comment.id)}
+                    disabled={loading} // 로딩 중이면 버튼 비활성화
+                  >
+                    {loading ? '등록 중...' : '등록'}
                   </S.ReplyButton>
                 </S.ReplySection>
               )}
