@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import { getFriendStatus } from '../../apis/friend.js';
 
-import { useAuth }from '../../hooks/useAuth.jsx';
+import { useAuth } from '../../hooks/useAuth.jsx';
 import useFriend from '../../hooks/useFriend.jsx';
 
 import { Avatar } from '../Avatar';
@@ -12,7 +12,7 @@ import { Button } from '../Button';
 import { Icon } from '../Icon';
 import { Profile as Img } from '../../dummy/images';
 
-import { getMyProfile } from '../../apis/getMyProfile.js'; 
+import { getMyProfile } from '../../apis/getMyProfile.js';
 
 import * as S from './Profile.style.jsx';
 
@@ -46,13 +46,13 @@ export default function Profile() {
       const { profile_url } = data;
       setProfile(profile_url);
     } else {
-      console.log("프로필 사진 미설정 상태. 기본 프로필 사진으로 대체됩니다.");
+      console.log('프로필 사진 미설정 상태. 기본 프로필 사진으로 대체됩니다.');
     }
   };
 
   useEffect(() => {
     getProfilePic();
-  }, []); 
+  }, []);
 
   if (nickname !== currentNickname && status !== 'success') {
     return null;
