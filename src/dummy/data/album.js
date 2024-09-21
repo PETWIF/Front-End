@@ -4,6 +4,7 @@ export const ALBUM_LIST = Object.freeze([
   {
     id: 1,
     title: 'Album 1',
+    nickname: '뭘봐요',
     coverImage: Cat1,
     description: 'This is album 1',
     numberOfPhotos: 10,
@@ -15,6 +16,7 @@ export const ALBUM_LIST = Object.freeze([
   {
     id: 2,
     title: 'Album 2',
+    nickname: '뭘봐요',
     coverImage: Cat2,
     description: 'This is album 2',
     numberOfPhotos: 20,
@@ -26,6 +28,7 @@ export const ALBUM_LIST = Object.freeze([
   {
     id: 3,
     title: 'Album 3',
+    nickname: '뭘봐요',
     coverImage: Cat1,
     description: 'This is album 2',
     numberOfPhotos: 20,
@@ -37,6 +40,7 @@ export const ALBUM_LIST = Object.freeze([
   {
     id: 4,
     title: 'Album 4',
+    nickname: '뭘봐요',
     coverImage: Cat2,
     description: 'This is album 2',
     numberOfPhotos: 20,
@@ -48,6 +52,7 @@ export const ALBUM_LIST = Object.freeze([
   {
     id: 5,
     title: 'Album 5',
+    nickname: '뭘봐요',
     coverImage: Cat1,
     description: 'This is album 2',
     numberOfPhotos: 20,
@@ -59,6 +64,7 @@ export const ALBUM_LIST = Object.freeze([
   {
     id: 6,
     title: 'Album 6',
+    nickname: '뭘봐요',
     coverImage: Cat1,
     description: 'This is album 1',
     numberOfPhotos: 10,
@@ -70,6 +76,7 @@ export const ALBUM_LIST = Object.freeze([
   {
     id: 7,
     title: 'Album 7',
+    nickname: '뭘봐요',
     coverImage: Cat2,
     description: 'This is album 2',
     numberOfPhotos: 20,
@@ -81,6 +88,7 @@ export const ALBUM_LIST = Object.freeze([
   {
     id: 8,
     title: 'Album 8',
+    nickname: '뭘봐요',
     coverImage: Cat1,
     description: 'This is album 2',
     numberOfPhotos: 20,
@@ -92,6 +100,7 @@ export const ALBUM_LIST = Object.freeze([
   {
     id: 9,
     title: 'Album 9',
+    nickname: '뭘봐요',
     coverImage: Cat2,
     description: 'This is album 2',
     numberOfPhotos: 20,
@@ -103,6 +112,7 @@ export const ALBUM_LIST = Object.freeze([
   {
     id: 10,
     title: 'Album 10',
+    nickname: '뭘봐요',
     coverImage: Cat1,
     description: 'This is album 2',
     numberOfPhotos: 20,
