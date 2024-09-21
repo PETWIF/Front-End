@@ -6,6 +6,8 @@ import { Icon } from '../../components/Icon';
 import { CHAT_DATA } from '../../dummy/data';
 import { Profile as Img } from '../../dummy/images';
 
+import { postReportChat } from '../../apis/report.js';
+
 import * as S from './Chatting.style.jsx';
 
 const nickname = '댕댕산책가';
@@ -42,6 +44,18 @@ export default function Chatting() {
     }
   };
 
+  // const handleReportChatting = async (chatId, content) => {
+  //   // 더미 데이터라 chatRoomId 없음 -> api 연결 후 가져와서 주석 풀기
+  //   const response = await postReportChat({ chatRoomId, chatId, content });
+  //   const { isSuccess, data } = response;
+
+  //   if (isSuccess) {
+  //     console.log(`${chatId}번 채팅 신고 완료:`, data);
+  //   } else {
+  //     console.log('에러 발생');
+  //   }
+  // };
+
   return (
     <S.ChatContainer>
       <S.ChatHeader>
@@ -66,6 +80,13 @@ export default function Chatting() {
               <S.ChatTimestamp isMe={message.sender === 'me'}>
                 {message.timestamp}
               </S.ChatTimestamp>
+              {message.sender !== 'me' ? 
+              <S.ReportButton 
+              isMe={message.sender === 'me'}
+              // onClick={() => {handleReportChatting(message.id, message.text)}}
+              >
+                신고
+              </S.ReportButton > : "" }
             </S.ChatBubbleContainer>
           </S.ChatMessage>
         ))}

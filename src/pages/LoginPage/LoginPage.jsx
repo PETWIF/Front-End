@@ -92,9 +92,9 @@ export default function LoginPage() {
           <S.MainBoldText>
             반려동물과의 추억을 사람들과 나눠 보세요
           </S.MainBoldText>
-          <S.MockUp>
-              <Icon id='mockup' width='620px' height='620px' />
-          </S.MockUp>
+          {/* //<S.MockUp> */}
+              <Icon id='mock-up' width='244px' height='357px' />
+          {/* </S.MockUp> */}
         </S.PETWIFContainer>
         <S.FormWrapper>
           <S.FormContainer onSubmit={handleSubmit}>
