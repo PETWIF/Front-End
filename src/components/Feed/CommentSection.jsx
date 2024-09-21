@@ -1,9 +1,6 @@
 import { useState } from 'react';
-
 import useLike from '../../hooks/useLike.jsx';
-
 import { Icon } from '../Icon';
-
 import * as S from './CommentSection.style';
 
 const CommentSection = ({ comments, onReport }) => {
@@ -42,9 +39,9 @@ const CommentSection = ({ comments, onReport }) => {
               ...comment.replies,
               {
                 id: Date.now(),
-                author: '현재 사용자', // 실제 사용자 이름으로 변경해야함
-                profileImage: '/path/to/profile.jpg', // 실제 사용자 프로필 이미지 경로로 변경해야함
-                text: replyText,
+                name: '현재 사용자', // 실제 사용자 이름으로 변경해야 함
+                profileImage: '/path/to/profile.jpg', // 실제 사용자 프로필 이미지 경로로 변경해야 함
+                content: replyText, // 대댓글 내용 업데이트
                 likeCount: 0,
                 createdAt: '방금',
               },
@@ -76,7 +73,6 @@ const CommentSection = ({ comments, onReport }) => {
       [commentId]: newShowReplies,
     }));
 
-    // 대댓글 목록을 보이게 할 때 대댓글 입력란도 함께 표시
     if (newShowReplies) {
       setShowReplyInput((prevShowReplyInput) => ({
         ...prevShowReplyInput,
@@ -92,26 +88,26 @@ const CommentSection = ({ comments, onReport }) => {
 
   return (
     <S.CommentSection>
-      {comments.map((comment) => (
+      {commentList.map((comment) => (
         <S.Comment key={comment.id}>
           <S.CommentHeader>
             <S.CommentAuthor>
               <S.ProfileImage
-                src={comment.profileImage}
-                alt={`${comment.author} 프로필`}
+                src={comment.profileImage || '/default/profile.jpg'} // 기본 프로필 이미지 경로 설정
+                alt={`${comment.name} 프로필`} // API에서 반환되는 name 사용
               />
-              {comment.author}
+              {comment.name} {/* API에서 반환되는 name 사용 */}
             </S.CommentAuthor>
             <S.ReportButton onClick={() => onReport(comment.id)}>
               신고
             </S.ReportButton>
           </S.CommentHeader>
-          <S.CommentText>{comment.text}</S.CommentText>
+          <S.CommentText>{comment.content}</S.CommentText> {/* API에서 반환되는 content 사용 */}
           <S.CommentActions>
             <Icon
-              id='commentheart'
-              width='14'
-              height='12'
+              id="commentheart"
+              width="14"
+              height="12"
               onClick={() =>
                 handleCommentLike({
                   isLike: comment.liked,
@@ -119,12 +115,11 @@ const CommentSection = ({ comments, onReport }) => {
                 })
               }
             />
-
             <span>{comment.likeCount}</span>
             <Icon
-              id='replybutton'
-              width='13'
-              height='12'
+              id="replybutton"
+              width="13"
+              height="12"
               onClick={() => toggleShowReplies(comment.id)}
             />
             {comment.replies && comment.replies.length > 0 && (
@@ -141,16 +136,16 @@ const CommentSection = ({ comments, onReport }) => {
                       <S.ReplyAuthor>
                         <S.ProfileImage
                           src={reply.profileImage}
-                          alt={`${reply.author} 프로필`}
+                          alt={`${reply.name} 프로필`} // 대댓글 작성자 이름 표시
                         />
-                        {reply.author}
+                        {reply.name} {/* 대댓글 작성자 이름 표시 */}
                       </S.ReplyAuthor>
-                      <S.ReplyText>{reply.text}</S.ReplyText>
+                      <S.ReplyText>{reply.content}</S.ReplyText> {/* 대댓글 내용 표시 */}
                       <S.ReplyActions>
                         <Icon
-                          id='commentheart'
-                          width='14'
-                          height='12'
+                          id="commentheart"
+                          width="14"
+                          height="12"
                           onClick={() =>
                             handleCommentLike({
                               isLike: comment.liked,
@@ -170,10 +165,10 @@ const CommentSection = ({ comments, onReport }) => {
               {showReplyInput[comment.id] && (
                 <S.ReplySection>
                   <S.ReplyInput
-                    type='text'
+                    type="text"
                     value={newReply[comment.id] || ''}
                     onChange={(e) => handleReplyChange(comment.id, e)}
-                    placeholder='대댓글을 입력하세요...'
+                    placeholder="대댓글을 입력하세요..."
                   />
                   <S.ReplyButton onClick={() => handleReplySubmit(comment.id)}>
                     등록
