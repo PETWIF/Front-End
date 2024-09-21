@@ -57,7 +57,7 @@ export const KakaoLoginCallback = () => {
   }, [error, navigate]);
 
   if (loading) {
-    return <div>카카오오 로그인 처리 중...</div>;  
+    return <div>카카오 로그인 처리 중...</div>;  
   }
 
   if (error) {

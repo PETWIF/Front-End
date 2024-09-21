@@ -27,7 +27,7 @@ export function AuthProvider({ children }) {
     const { isSuccess, data } = response;
 
     if (isSuccess) {
-      const { accessToken, refreshToken, id, nickname, profile_url} = data;
+      const { accessToken, refreshToken, id, nickname, profile_url } = data;
       
       localStorage.setItem('accessToken', accessToken);
       localStorage.setItem('refreshToken', refreshToken);
