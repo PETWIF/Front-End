@@ -6,7 +6,7 @@ import { ko } from 'date-fns/locale';
 import useLike from '../../hooks/useLike.jsx';
 import CommentSection from './CommentSection';
 import { Icon } from '../Icon';
-import { postReportComment, postReportAlbum } from '../../apis/report.js'; 
+import { postReportComment, postReportAlbum } from '../../apis/report.js';
 import useReportModal from '../../hooks/useReportModal.jsx';
 import { albumCover, defaultProfile } from '../../dummy/images';
 import { authAxios } from '../../axios/index.js';
@@ -68,7 +68,7 @@ const FeedItem = forwardRef((props, ref) => {
           // 사용자 이름 가져오기
           const userResponse = await authAxios.get('/member/me/withAuth');
           const username = userResponse.data.data.name; // 사용자 이름 가져오기
-        
+
           const newCommentData = {
             createdAt: new Date().toISOString(), // 현재 시간으로 설정
             updatedAt: new Date().toISOString(), // 현재 시간으로 설정
@@ -79,7 +79,7 @@ const FeedItem = forwardRef((props, ref) => {
             childComments: [], // 초기 대댓글 배열
             liked: false, // 초기 좋아요 상태
           };
-        
+
           // 댓글 리스트에 새 댓글 추가
           setCommentList((prevCommentList) => [...prevCommentList, newCommentData]);
         }
@@ -94,24 +94,24 @@ const FeedItem = forwardRef((props, ref) => {
     const { isSuccess, data } = response;
 
     if (isSuccess) {
-      console.log("댓글 신고 완료:", data);
+      console.log('댓글 신고 완료:', data);
       open();
     } else {
-      console.log("에러 발생");
+      console.log('에러 발생');
     }
   };
 
   const handleReportAlbum = async () => {
-    setIsMenuOpen(false); 
+    setIsMenuOpen(false);
     const reportReason = '부적절한 게시물';
     const response = await postReportAlbum({ albumId, reportReason });
     const { isSuccess, data } = response;
 
     if (isSuccess) {
-      console.log("앨범 신고 완료:", data);
-      open(); 
+      console.log('앨범 신고 완료:', data);
+      open();
     } else {
-      console.log("에러 발생");
+      console.log('에러 발생');
     }
   };
 
@@ -127,62 +127,75 @@ const FeedItem = forwardRef((props, ref) => {
     <>
       <S.FeedItem ref={ref}>
         <S.FeedZone>
-          <S.Header>
-            <S.Profile>
-              <img
-                src={profileImageUrl ?? defaultProfile}
-                alt={`${nickName} 프로필`}
-              />
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <S.ProfileName>{nickName}</S.ProfileName>
-                <S.CreatedAt>{formatDate(updatedAT)}</S.CreatedAt>
-              </div>
-            </S.Profile>
-            <S.Actions>
-              <Link to={`/chatting`}>
-                <Icon id='albumdm' width='31' height='32' />
-              </Link>
-              <Icon
-                id={liked ? 'albumheart' : 'heart-line'}
-                width='31'
-                height='26'
-                onClick={() =>
-                  liked
-                    ? deleteLikeAlbum.mutate({ albumId: data.albumId })
-                    : likeAlbum.mutate({ albumId: data.albumId })
-                }
-              />
-              <Link to={`/bookmark`}>
-                <Icon id='albumbookmark' width='22' height='27' />
-              </Link>
-              <Icon id='albumhamburger' width='23' height='4' onClick={toggleMenu}/>
-              {isMenuOpen && (
-                <div className="menu"
-                  style={{
-                    position: 'relative',
-                    top: '50px',
-                    left: '10px',
-                    backgroundColor: '#fff',
-                    border: '1px solid #ddd',
-                    borderRadius: '4px',
-                    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
-                    zIndex: 1,
-                  }}>
-                  <ul style={{ listStyle: 'none', margin: 0, padding: '8px 0' }}>
-                    <li onClick={handleReportAlbum}
-                      style={{
-                        padding: '8px 16px',
-                        cursor: 'pointer',
-                        whiteSpace: 'nowrap',
-                      }}>신고</li>
-                  </ul>
+          <Link to={`/album/${nickName}`}>
+            <S.Header>
+              <S.Profile>
+                <img
+                  src={profileImageUrl ?? defaultProfile}
+                  alt={`${nickName} 프로필`}
+                />
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <S.ProfileName>{nickName}</S.ProfileName>
+                  <S.CreatedAt>{formatDate(updatedAT)}</S.CreatedAt>
                 </div>
-              )}
-            </S.Actions>
-          </S.Header>
-          <S.StyledLink key={albumId} to={`/album/detail/${albumId}`}>
-            <S.AlbumImage src={coverImageUrl} alt='앨범 이미지' />
-          </S.StyledLink>
+              </S.Profile>
+            </S.Header>
+          </Link>
+          <S.Actions>
+            <Link to={`/chatting`}>
+              <Icon id='albumdm' width='31' height='32' />
+            </Link>
+            <Icon
+              id={liked ? 'albumheart' : 'heart-line'}
+              width='31'
+              height='26'
+              onClick={() =>
+                liked
+                  ? deleteLikeAlbum.mutate({ albumId: data.albumId })
+                  : likeAlbum.mutate({ albumId: data.albumId })
+              }
+            />
+            <Link to={`/bookmark`}>
+              <Icon id='albumbookmark' width='22' height='27' />
+            </Link>
+            <Icon id='albumhamburger' width='23' height='4' onClick={toggleMenu} />
+            {isMenuOpen && (
+              <div className='menu'
+                style={{
+                  position: 'relative',
+                  top: '50px',
+                  left: '10px',
+                  backgroundColor: '#fff',
+                  border: '1px solid #ddd',
+                  borderRadius: '4px',
+                  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
+                  zIndex: 1,
+                }}>
+                <ul style={{ listStyle: 'none', margin: 0, padding: '8px 0' }}>
+                  <li onClick={handleReportAlbum}
+                    style={{
+                      padding: '8px 16px',
+                      cursor: 'pointer',
+                      whiteSpace: 'nowrap',
+                      ':hover': { backgroundColor: '#f5f5f5' },
+                    }}>
+                    신고
+                  </li>
+                  <li
+                    onClick={handleBlockUser}
+                    style={{
+                      padding: '8px 16px',
+                      cursor: 'pointer',
+                      whiteSpace: 'nowrap',
+                      ':hover': { backgroundColor: '#f5f5f5' },
+                    }}
+                  >
+                    차단
+                  </li>
+                </ul>
+              </div>
+            )}
+          </S.Actions>
         </S.FeedZone>
 
         <S.MainContent>

@@ -1,11 +1,11 @@
 import { authAxios } from '../axios';
 
-export const block = async ({ nickname }) => {
+export const block = async ({ nickName }) => {
   const response = await authAxios.post('/blocks', {
-    nickname,
+    nickname: nickName,
   });
 
-  return response;
+  return response.data;
 };
 
 export const viewBlockList = async ({ page = 0 }) => {
@@ -17,16 +17,18 @@ export const viewBlockList = async ({ page = 0 }) => {
 
 export const unblock = async ({ nickname }) => {
   const response = await authAxios.delete('/blocks', {
-    params: { nickname },
+    params: {
+              nickname,
+            },
   });
-  return response;
+  return response.data;
 };
 
 export const checkBlock = async ({ nickname }) => {
   const response = await authAxios.get('/blocks/status', {
     params: { nickname },
   });
-  return response;
+  return response.data.data;
 };
 
 
