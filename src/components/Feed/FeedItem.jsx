@@ -1,23 +1,15 @@
 import { forwardRef, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-
 import { formatDistanceToNow } from 'date-fns';
 import { ko } from 'date-fns/locale';
 
 import useLike from '../../hooks/useLike.jsx';
-
 import CommentSection from './CommentSection';
 import { Icon } from '../Icon';
-
 import { postReportComment, postReportAlbum } from '../../apis/report.js';
-import { block } from '../../apis/block.js';
-
 import useReportModal from '../../hooks/useReportModal.jsx';
-
 import { albumCover, defaultProfile } from '../../dummy/images';
-
 import { authAxios } from '../../axios/index.js';
-
 import * as S from './Feed.style';
 
 const likeUsers = [];
@@ -27,7 +19,6 @@ const FeedItem = forwardRef((props, ref) => {
   const { data } = props;
   const {
     albumId,
-    // bookmarked,
     comments,
     content,
     coverImageUrl,
@@ -38,28 +29,17 @@ const FeedItem = forwardRef((props, ref) => {
     profileImageUrl,
     updatedAT,
   } = data;
+
   const [newComment, setNewComment] = useState('');
+  const [commentList, setCommentList] = useState(comments);
 
   const { isOpen, open, close, ReportModal } = useReportModal();
-
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  // initialComments.map((comment) => ({
-  //   ...comment,
-  //   createdAt: formatDistanceToNow(new Date(comment.createdAt), {
-  //     addSuffix: true,
-  //     locale: ko,
-  //   }),
-  //   replies: comment.replies
-  //     ? comment.replies.map((reply) => ({
-  //         ...reply,
-  //         createdAt: formatDistanceToNow(new Date(reply.createdAt), {
-  //           addSuffix: true,
-  //           locale: ko,
-  //         }),
-  //       }))
-  //     : [],
-  // }))
+  // 댓글 리스트가 변경될 때마다 CommentSection 컴포넌트를 다시 렌더링
+  useEffect(() => {
+    setCommentList(comments);
+  }, [comments]);
 
   const handleCommentChange = (e) => {
     setNewComment(e.target.value);
@@ -67,13 +47,10 @@ const FeedItem = forwardRef((props, ref) => {
 
   const handleCommentSubmit = async () => {
     console.log('새 댓글:', newComment, albumId);
-    console.log(
-      `Sending POST request to: ${import.meta.env.VITE_SERVER_DOMAIN}/albums/${albumId}/comment`
-    );
+    console.log(`Sending POST request to: ${import.meta.env.VITE_SERVER_DOMAIN}/albums/${albumId}/comment`);
 
     if (newComment.trim()) {
       try {
-        // FormData 객체 생성
         const formData = new FormData();
         formData.append('content', newComment);
 
@@ -82,22 +59,29 @@ const FeedItem = forwardRef((props, ref) => {
           formData,
           {
             headers: {
-              'Content-Type': 'multipart/form-data', // form-data 전송을 위한 Content-Type
-              // Authorization 헤더는 authAxios 인스턴스에서 이미 설정되어 있으므로, 여기서는 필요 없음
+              'Content-Type': 'multipart/form-data',
             },
           }
         );
 
         if (response.status === 200 || response.status === 201) {
+          // 사용자 이름 가져오기
+          const userResponse = await authAxios.get('/member/me/withAuth');
+          const username = userResponse.data.data.name; // 사용자 이름 가져오기
+
           const newCommentData = {
+            createdAt: new Date().toISOString(), // 현재 시간으로 설정
+            updatedAt: new Date().toISOString(), // 현재 시간으로 설정
             id: response.data.id,
-            author: '현재 사용자',
-            profileImage: '/path/to/profile.jpg',
-            text: newComment,
-            likeCount: 0,
-            createdAt: '방금',
-            replies: [],
+            content: newComment,
+            name: username || '현재 사용자', // 실제 사용자 이름으로 변경
+            imageUrl: [], // 필요한 경우 이미지 URL 배열 추가
+            childComments: [], // 초기 대댓글 배열
+            liked: false, // 초기 좋아요 상태
           };
+
+          // 댓글 리스트에 새 댓글 추가
+          setCommentList((prevCommentList) => [...prevCommentList, newCommentData]);
         }
       } catch (error) {
         console.error('댓글 전송 중 오류 발생:', error);
@@ -119,7 +103,7 @@ const FeedItem = forwardRef((props, ref) => {
 
   const handleReportAlbum = async () => {
     setIsMenuOpen(false);
-    const reportReason = '부적절한 게시물'; // 임시 사유
+    const reportReason = '부적절한 게시물';
     const response = await postReportAlbum({ albumId, reportReason });
     const { isSuccess, data } = response;
 
@@ -131,34 +115,8 @@ const FeedItem = forwardRef((props, ref) => {
     }
   };
 
-  const handleAlbumHeart = (albumId) => {
-    console.log(`게시글${albumId}에 좋아요를 눌렀습니다.`);
-  };
-
-  const handleBlockUser = async () => {
-    setIsMenuOpen(false);
-    const response = await block({ nickName });
-    const { isSuccess, data } = response;
-
-    if (isSuccess) {
-      console.log('사용자 차단 완료:', data);
-    } else {
-      console.log('에러 발생');
-    }
-  };
-
-  const handleCommentHeart = (commentId) => {
-    console.log(`댓글 ${commentId}에 좋아요를 눌렀습니다.`);
-  };
-
-  const handleReplyHeart = (replyId, commentId) => {
-    console.log(
-      `${commentId}번 댓글의 ${replyId}번 대댓글에 좋아요를 눌렀습니다.`
-    );
-  };
-
   const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen); // 메뉴 열림/닫힘 상태 토글
+    setIsMenuOpen(!isMenuOpen);
   };
 
   const formatDate = (date) => {
@@ -169,94 +127,75 @@ const FeedItem = forwardRef((props, ref) => {
     <>
       <S.FeedItem ref={ref}>
         <S.FeedZone>
-          <S.Header>
-            <Link to={`/album/${nickName}`}>
+          <Link to={`/album/${nickName}`}>
+            <S.Header>
               <S.Profile>
                 <img
                   src={profileImageUrl ?? defaultProfile}
                   alt={`${nickName} 프로필`}
                 />
-                <div
-                  style={{ display: 'flex', alignItems: 'center', gap: '10px' }}
-                >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                   <S.ProfileName>{nickName}</S.ProfileName>
                   <S.CreatedAt>{formatDate(updatedAT)}</S.CreatedAt>
                 </div>
               </S.Profile>
+            </S.Header>
+          </Link>
+          <S.Actions>
+            <Link to={`/chatting`}>
+              <Icon id='albumdm' width='31' height='32' />
             </Link>
-            <S.Actions>
-              <Link to={`/chatting`}>
-                <Icon id='albumdm' width='31' height='32' />
-              </Link>
-              <Icon
-                id={liked ? 'albumheart' : 'heart-line'}
-                width='31'
-                height='26'
-                onClick={() =>
-                  liked
-                    ? deleteLikeAlbum.mutate({ albumId: data.albumId })
-                    : likeAlbum.mutate({ albumId: data.albumId })
-                }
-              />
-              <Link to={`/bookmark`}>
-                <Icon id='albumbookmark' width='22' height='27' />
-              </Link>
-              <Icon
-                id='albumhamburger'
-                width='23'
-                height='4'
-                onClick={toggleMenu}
-              />
-              {isMenuOpen && ( // 메뉴 열림 상태일 때 메뉴 표시
-                <div
-                  className='menu'
-                  style={{
-                    position: 'relative',
-                    top: '50px', // 버튼 바로 아래에 위치하게 함
-                    left: '10px',
-                    backgroundColor: '#fff',
-                    border: '1px solid #ddd',
-                    borderRadius: '4px',
-                    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
-                    zIndex: 1,
-                  }}
-                >
-                  <ul
-                    style={{ listStyle: 'none', margin: 0, padding: '8px 0' }}
+            <Icon
+              id={liked ? 'albumheart' : 'heart-line'}
+              width='31'
+              height='26'
+              onClick={() =>
+                liked
+                  ? deleteLikeAlbum.mutate({ albumId: data.albumId })
+                  : likeAlbum.mutate({ albumId: data.albumId })
+              }
+            />
+            <Link to={`/bookmark`}>
+              <Icon id='albumbookmark' width='22' height='27' />
+            </Link>
+            <Icon id='albumhamburger' width='23' height='4' onClick={toggleMenu} />
+            {isMenuOpen && (
+              <div className='menu'
+                style={{
+                  position: 'relative',
+                  top: '50px',
+                  left: '10px',
+                  backgroundColor: '#fff',
+                  border: '1px solid #ddd',
+                  borderRadius: '4px',
+                  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
+                  zIndex: 1,
+                }}>
+                <ul style={{ listStyle: 'none', margin: 0, padding: '8px 0' }}>
+                  <li onClick={handleReportAlbum}
+                    style={{
+                      padding: '8px 16px',
+                      cursor: 'pointer',
+                      whiteSpace: 'nowrap',
+                      ':hover': { backgroundColor: '#f5f5f5' },
+                    }}>
+                    신고
+                  </li>
+                  <li
+                    onClick={handleBlockUser}
+                    style={{
+                      padding: '8px 16px',
+                      cursor: 'pointer',
+                      whiteSpace: 'nowrap',
+                      ':hover': { backgroundColor: '#f5f5f5' },
+                    }}
                   >
-                    <li
-                      onClick={handleReportAlbum}
-                      style={{
-                        padding: '8px 16px',
-                        cursor: 'pointer',
-                        whiteSpace: 'nowrap',
-                        ':hover': { backgroundColor: '#f5f5f5' },
-                      }}
-                    >
-                      신고
-                    </li>
-                    <li
-                      onClick={handleBlockUser}
-                      style={{
-                        padding: '8px 16px',
-                        cursor: 'pointer',
-                        whiteSpace: 'nowrap',
-                        ':hover': { backgroundColor: '#f5f5f5' },
-                      }}
-                    >
-                      차단
-                    </li>
-                  </ul>
-                </div>
-              )}
-            </S.Actions>
-          </S.Header>
-          <S.StyledLink
-            key={albumId}
-            to={`/album/${nickName}/detail/${albumId}`}
-          >
-            <S.AlbumImage src={coverImageUrl} alt='앨범 이미지' />
-          </S.StyledLink>
+                    차단
+                  </li>
+                </ul>
+              </div>
+            )}
+          </S.Actions>
         </S.FeedZone>
 
         <S.MainContent>
@@ -291,11 +230,10 @@ const FeedItem = forwardRef((props, ref) => {
           <S.CommentSectionContainer>
             <S.CommentSection>
               <CommentSection
-                key={comments.length}
-                comments={comments}
+                key={commentList.length} // 변경된 댓글 리스트 사용
+                comments={commentList}
+                albumId={albumId} // albumId 추가
                 onReport={handleReportComment}
-                onCommentHeart={handleCommentHeart}
-                onReplyHeart={handleReplyHeart}
               />
             </S.CommentSection>
 

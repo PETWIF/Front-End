@@ -704,14 +704,12 @@ const MainArea = forwardRef(
 
     useImperativeHandle(ref, () => ({
       captureContent: async () => {
-        console.log('activate capturecontent');
         if (contentRef.current) {
           const canvas = await html2canvas(contentRef.current, {
             useCORS: true, // 외부 이미지를 캡처할 수 있도록 설정
           });
           const image = canvas.toDataURL('image/png');
           onCaptureComplete(image);
-          console.log('activate image');
         }
       },
     }));
