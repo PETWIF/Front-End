@@ -6,7 +6,7 @@ import { ko } from 'date-fns/locale';
 import useLike from '../../hooks/useLike.jsx';
 import CommentSection from './CommentSection';
 import { Icon } from '../Icon';
-import { postReportComment, postReportAlbum } from '../../apis/report.js'; 
+import { postReportComment, postReportAlbum } from '../../apis/report.js';
 import useReportModal from '../../hooks/useReportModal.jsx';
 import { albumCover, defaultProfile } from '../../dummy/images';
 import { authAxios } from '../../axios/index.js';
@@ -68,7 +68,7 @@ const FeedItem = forwardRef((props, ref) => {
           // 사용자 이름 가져오기
           const userResponse = await authAxios.get('/member/me/withAuth');
           const username = userResponse.data.data.name; // 사용자 이름 가져오기
-        
+
           const newCommentData = {
             createdAt: new Date().toISOString(), // 현재 시간으로 설정
             updatedAt: new Date().toISOString(), // 현재 시간으로 설정
@@ -79,7 +79,7 @@ const FeedItem = forwardRef((props, ref) => {
             childComments: [], // 초기 대댓글 배열
             liked: false, // 초기 좋아요 상태
           };
-        
+
           // 댓글 리스트에 새 댓글 추가
           setCommentList((prevCommentList) => [...prevCommentList, newCommentData]);
         }
@@ -94,24 +94,24 @@ const FeedItem = forwardRef((props, ref) => {
     const { isSuccess, data } = response;
 
     if (isSuccess) {
-      console.log("댓글 신고 완료:", data);
+      console.log('댓글 신고 완료:', data);
       open();
     } else {
-      console.log("에러 발생");
+      console.log('에러 발생');
     }
   };
 
   const handleReportAlbum = async () => {
-    setIsMenuOpen(false); 
+    setIsMenuOpen(false);
     const reportReason = '부적절한 게시물';
     const response = await postReportAlbum({ albumId, reportReason });
     const { isSuccess, data } = response;
 
     if (isSuccess) {
-      console.log("앨범 신고 완료:", data);
-      open(); 
+      console.log('앨범 신고 완료:', data);
+      open();
     } else {
-      console.log("에러 발생");
+      console.log('에러 발생');
     }
   };
 
@@ -127,12 +127,13 @@ const FeedItem = forwardRef((props, ref) => {
     <>
       <S.FeedItem ref={ref}>
         <S.FeedZone>
-          <S.Header>
-            <S.Profile>
-              <img
-                src={profileImageUrl ?? defaultProfile}
-                alt={`${nickName} 프로필`}
-              />
+          <Link to={`/album/${nickName}`}>
+            <S.Header>
+              <S.Profile>
+                <img
+                  src={profileImageUrl ?? defaultProfile}
+                  alt={`${nickName} 프로필`}
+                />
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                 <S.ProfileName>{nickName}</S.ProfileName>
                 <S.CreatedAt>{formatDate(updatedAT)}</S.CreatedAt>

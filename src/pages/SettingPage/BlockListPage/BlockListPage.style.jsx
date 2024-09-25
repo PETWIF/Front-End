@@ -53,6 +53,7 @@ export const FriendList = styled.ul`
 `;
 
 export const FriendItem = styled.li`
+  width: 350px;
   display: flex;
   justify-content: space-between;
   align-items: center;
