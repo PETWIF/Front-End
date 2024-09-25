@@ -250,6 +250,12 @@ const FeedItem = forwardRef((props, ref) => {
                 value={newComment}
                 onChange={handleCommentChange}
                 placeholder='댓글을 입력하세요...'
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && !e.shiftKey) { // Shift + Enter가 아닌 경우
+                    e.preventDefault(); // 줄바꿈을 막기 위해
+                    handleCommentSubmit(); // 댓글 전송
+                  }
+                }}
               />
               <S.CommentSendButton onClick={handleCommentSubmit}>
                 <Icon id='sendbutton' width='26' height='27' />
