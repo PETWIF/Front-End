@@ -2,11 +2,13 @@ import React, { useState } from 'react';
 import * as S from './MakingModal.style';
 import { Radio, RadioGroup } from '../Input';
 import { createAlbum } from '../../apis/album';
+import { useNavigate } from 'react-router-dom';
 
-export default function AlbumModal({ close, albumCover }) {
+export default function AlbumModal({ close, albumCover, albumImages }) {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [scope, setScope] = useState('MY');
+  const navigate = useNavigate();
 
   const handleTitleChange = (e) => setTitle(e.target.value);
   const handleContentChange = (e) => setContent(e.target.value);
@@ -20,16 +22,22 @@ export default function AlbumModal({ close, albumCover }) {
           (blob) => new File([blob], 'coverImage.png', { type: 'image/png' })
         );
 
+      const albumImage = await fetch(albumImages)
+        .then((res) => res.blob())
+        .then(
+          (blob) => new File([blob], 'albumImages.png', { type: 'image/png' })
+        );
+
       await createAlbum({
         title,
         content,
         scope,
         coverImage,
-        albumImages: [coverImage],
+        albumImage,
       });
 
       alert('앨범이 성공적으로 업로드되었습니다.');
-      close();
+      navigate('/home');
     } catch (error) {
       console.error('업로드 중 오류가 발생했습니다.', error);
       alert('업로드에 실패했습니다.');

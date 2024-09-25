@@ -42,7 +42,8 @@ export default function Side({
   setSelectedImages,
   setEmoticons,
   mainAreaRef,
-  capturedImage,
+  coverImage,
+  albumImages,
 }) {
   const {
     isStickerSelected,
@@ -93,6 +94,7 @@ export default function Side({
     if (mainAreaRef.current) {
       await mainAreaRef.current.captureContent(); // MainArea의 이미지를 캡처합니다.
     }
+
     startCoverEditing(); // 캡처 후 표지 편집 모드로 전환합니다.
   };
 
@@ -264,7 +266,11 @@ export default function Side({
             <Button1 onClick={openModal}>업로드</Button1>
             <ButtonBack onClick={stopCoverEditing}>뒤로 가기</ButtonBack>
             {isModalOpen && (
-              <MakingModal close={closeModal} albumCover={capturedImage} />
+              <MakingModal
+                close={closeModal}
+                albumCover={coverImage}
+                albumImages={albumImages}
+              />
             )}
           </SideSection3>
         </>

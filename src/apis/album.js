@@ -35,25 +35,26 @@ export const editAlbum = async ({ albumId, title, content, scope }) => {
   return response;
 };
 
-export const createAlbum = async ({ title, content, scope, coverImage, albumImages }) => {
+export const createAlbum = async ({
+  title,
+  content,
+  scope,
+  coverImage,
+  albumImages,
+}) => {
   const formData = new FormData();
-  
+
   formData.append('title', title);
   formData.append('content', content);
   formData.append('scope', scope);
   formData.append('coverImage', coverImage);
-
-  // 앨범 이미지 배열을 순회하면서 각각을 FormData에 추가
-  albumImages.forEach((image, index) => {
-    formData.append(`albumImages[${index}]`, image);
-  });
+  formData.append('albumImages', albumImages);
 
   const response = await authAxios.post('/albums', formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
     },
   });
-
   return response.data;
 };
 
