@@ -6,7 +6,7 @@ import { ko } from 'date-fns/locale';
 import useLike from '../../hooks/useLike.jsx';
 import CommentSection from './CommentSection';
 import { Icon } from '../Icon';
-import { postReportComment, postReportAlbum } from '../../apis/report.js';
+import { postReportComment, postReportAlbum } from '../../apis/report.js'; 
 import useReportModal from '../../hooks/useReportModal.jsx';
 import { albumCover, defaultProfile } from '../../dummy/images';
 import { authAxios } from '../../axios/index.js';
@@ -31,14 +31,16 @@ const FeedItem = forwardRef((props, ref) => {
   } = data;
 
   const [newComment, setNewComment] = useState('');
-  const [commentList, setCommentList] = useState(comments);
+  const [commentList, setCommentList] = useState(comments || []); // 초기값 설정
 
   const { isOpen, open, close, ReportModal } = useReportModal();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  // 댓글 리스트가 변경될 때마다 CommentSection 컴포넌트를 다시 렌더링
+  // 댓글 리스트가 변경될 때만 CommentSection 컴포넌트를 다시 렌더링
   useEffect(() => {
-    setCommentList(comments);
+    if (Array.isArray(comments)) { // comments가 배열인지 확인
+      setCommentList(comments);
+    }
   }, [comments]);
 
   const handleCommentChange = (e) => {
@@ -94,24 +96,24 @@ const FeedItem = forwardRef((props, ref) => {
     const { isSuccess, data } = response;
 
     if (isSuccess) {
-      console.log('댓글 신고 완료:', data);
+      console.log("댓글 신고 완료:", data);
       open();
     } else {
-      console.log('에러 발생');
+      console.log("에러 발생");
     }
   };
 
   const handleReportAlbum = async () => {
-    setIsMenuOpen(false);
+    setIsMenuOpen(false); 
     const reportReason = '부적절한 게시물';
     const response = await postReportAlbum({ albumId, reportReason });
     const { isSuccess, data } = response;
 
     if (isSuccess) {
-      console.log('앨범 신고 완료:', data);
-      open();
+      console.log("앨범 신고 완료:", data);
+      open(); 
     } else {
-      console.log('에러 발생');
+      console.log("에러 발생");
     }
   };
 
@@ -127,17 +129,16 @@ const FeedItem = forwardRef((props, ref) => {
     <>
       <S.FeedItem ref={ref}>
         <S.FeedZone>
-          <Link to={`/album/${nickName}`}>
-            <S.Header>
-              <S.Profile>
+          <S.Header>
+            <S.Profile>
+              <Link to={`/album/${nickName}`} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                 <img
                   src={profileImageUrl ?? defaultProfile}
                   alt={`${nickName} 프로필`}
                 />
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                 <S.ProfileName>{nickName}</S.ProfileName>
-                <S.CreatedAt>{formatDate(updatedAT)}</S.CreatedAt>
-              </div>
+              </Link>
+              <S.CreatedAt>{formatDate(updatedAT)}</S.CreatedAt>
             </S.Profile>
             <S.Actions>
               <Link to={`/chatting`}>
@@ -156,7 +157,7 @@ const FeedItem = forwardRef((props, ref) => {
               <Link to={`/bookmark`}>
                 <Icon id='albumbookmark' width='22' height='27' />
               </Link>
-              <Icon id='albumhamburger' width='23' height='4' onClick={toggleMenu}/>
+              <Icon id='albumhamburger' width='23' height='4' onClick={toggleMenu} />
               {isMenuOpen && (
                 <div className="menu"
                   style={{
