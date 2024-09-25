@@ -182,6 +182,12 @@ const CommentSection = ({ comments, onReport, albumId }) => {
                     value={newReply[comment.id] || ''}
                     onChange={(e) => handleReplyChange(comment.id, e)}
                     placeholder="대댓글을 입력하세요..."
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        handleReplySubmit(comment.id);
+                      }
+                    }}
                   />
                   <S.ReplyButton
                     onClick={() => handleReplySubmit(comment.id)}

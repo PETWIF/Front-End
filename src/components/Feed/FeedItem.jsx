@@ -134,68 +134,56 @@ const FeedItem = forwardRef((props, ref) => {
                   src={profileImageUrl ?? defaultProfile}
                   alt={`${nickName} 프로필`}
                 />
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  <S.ProfileName>{nickName}</S.ProfileName>
-                  <S.CreatedAt>{formatDate(updatedAT)}</S.CreatedAt>
-                </div>
-              </S.Profile>
-            </S.Header>
-          </Link>
-          <S.Actions>
-            <Link to={`/chatting`}>
-              <Icon id='albumdm' width='31' height='32' />
-            </Link>
-            <Icon
-              id={liked ? 'albumheart' : 'heart-line'}
-              width='31'
-              height='26'
-              onClick={() =>
-                liked
-                  ? deleteLikeAlbum.mutate({ albumId: data.albumId })
-                  : likeAlbum.mutate({ albumId: data.albumId })
-              }
-            />
-            <Link to={`/bookmark`}>
-              <Icon id='albumbookmark' width='22' height='27' />
-            </Link>
-            <Icon id='albumhamburger' width='23' height='4' onClick={toggleMenu} />
-            {isMenuOpen && (
-              <div className='menu'
-                style={{
-                  position: 'relative',
-                  top: '50px',
-                  left: '10px',
-                  backgroundColor: '#fff',
-                  border: '1px solid #ddd',
-                  borderRadius: '4px',
-                  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
-                  zIndex: 1,
-                }}>
-                <ul style={{ listStyle: 'none', margin: 0, padding: '8px 0' }}>
-                  <li onClick={handleReportAlbum}
-                    style={{
-                      padding: '8px 16px',
-                      cursor: 'pointer',
-                      whiteSpace: 'nowrap',
-                      ':hover': { backgroundColor: '#f5f5f5' },
-                    }}>
-                    신고
-                  </li>
-                  <li
-                    onClick={handleBlockUser}
-                    style={{
-                      padding: '8px 16px',
-                      cursor: 'pointer',
-                      whiteSpace: 'nowrap',
-                      ':hover': { backgroundColor: '#f5f5f5' },
-                    }}
-                  >
-                    차단
-                  </li>
-                </ul>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <S.ProfileName>{nickName}</S.ProfileName>
+                <S.CreatedAt>{formatDate(updatedAT)}</S.CreatedAt>
               </div>
-            )}
-          </S.Actions>
+            </S.Profile>
+            <S.Actions>
+              <Link to={`/chatting`}>
+                <Icon id='albumdm' width='31' height='32' />
+              </Link>
+              <Icon
+                id={liked ? 'albumheart' : 'heart-line'}
+                width='31'
+                height='26'
+                onClick={() =>
+                  liked
+                    ? deleteLikeAlbum.mutate({ albumId: data.albumId })
+                    : likeAlbum.mutate({ albumId: data.albumId })
+                }
+              />
+              <Link to={`/bookmark`}>
+                <Icon id='albumbookmark' width='22' height='27' />
+              </Link>
+              <Icon id='albumhamburger' width='23' height='4' onClick={toggleMenu}/>
+              {isMenuOpen && (
+                <div className="menu"
+                  style={{
+                    position: 'relative',
+                    top: '50px',
+                    left: '10px',
+                    backgroundColor: '#fff',
+                    border: '1px solid #ddd',
+                    borderRadius: '4px',
+                    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
+                    zIndex: 1,
+                  }}>
+                  <ul style={{ listStyle: 'none', margin: 0, padding: '8px 0' }}>
+                    <li onClick={handleReportAlbum}
+                      style={{
+                        padding: '8px 16px',
+                        cursor: 'pointer',
+                        whiteSpace: 'nowrap',
+                      }}>신고</li>
+                  </ul>
+                </div>
+              )}
+            </S.Actions>
+          </S.Header>
+          <S.StyledLink key={albumId} to={`/album/${nickName}/detail/${albumId}`}>
+            <S.AlbumImage src={coverImageUrl} alt='앨범 이미지' />
+          </S.StyledLink>
         </S.FeedZone>
 
         <S.MainContent>
@@ -250,6 +238,12 @@ const FeedItem = forwardRef((props, ref) => {
                 value={newComment}
                 onChange={handleCommentChange}
                 placeholder='댓글을 입력하세요...'
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && !e.shiftKey) { // Shift + Enter가 아닌 경우
+                    e.preventDefault(); // 줄바꿈을 막기 위해
+                    handleCommentSubmit(); // 댓글 전송
+                  }
+                }}
               />
               <S.CommentSendButton onClick={handleCommentSubmit}>
                 <Icon id='sendbutton' width='26' height='27' />
