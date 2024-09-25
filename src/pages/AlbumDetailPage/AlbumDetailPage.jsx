@@ -8,16 +8,11 @@ import { useAuth } from '../../hooks/useAuth.jsx';
 
 import { AlbumDetail } from '../../components/AlbumDetail';
 import { AlbumInfo } from '../../components/AlbumInfo';
-import { AlbumItem } from '../AlbumPage';
 import { AlbumViewer } from '../../components/AlbumViewer';
 import { Chatting } from '../../components/Chatting';
-import { DropDown } from '../../components/DropDown';
 import { Icon } from '../../components/Icon';
 import { Search } from '../../components/Search';
 import { UserInfo } from '../../components/UserInfo';
-
-import { SORT_CATEGORIES } from '../../constants';
-import { ALBUM_LIST, feedData } from '../../dummy/data';
 
 import * as S from './AlbumDetailPage.style.jsx';
 
@@ -25,6 +20,7 @@ export default function AlbumDetailPage() {
   const { nickname } = useAuth();
   const { nickname: currentNickname, albumId } = useParams();
 
+  // 앨범 데이터 가져오기
   const { data } = useQuery({
     queryKey: ['albumDetail', albumId],
     queryFn: () => getAlbumDetail({ albumId }),
@@ -34,6 +30,7 @@ export default function AlbumDetailPage() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
+  // 앨범 삭제 핸들러
   const deleteA = useMutation({
     mutationFn: () => deleteAlbum({ albumId }),
     onSuccess: () => {
@@ -45,10 +42,12 @@ export default function AlbumDetailPage() {
   const [keyword, setKeyword] = useState('');
   const [showChat, setShowChat] = useState(false);
 
+  // 데이터가 없을 때
   if (!data) {
     return null;
   }
 
+  // 채팅창 토글
   const handleToggleChat = () => {
     setShowChat((prev) => !prev);
   };
@@ -88,10 +87,15 @@ export default function AlbumDetailPage() {
             </S.MenuItem>
           </S.MenuList>
         )}
-        <AlbumViewer albumImages={data.albumImages} content={data.content} />
+        {/* 앨범 이미지 및 콘텐츠 */}
+        <AlbumViewer
+          albumImages={data.albumImages || []} // albumImages가 null일 경우 빈 배열을 사용
+          content={data.content}
+        />
       </S.MainContainer>
       <S.SideContainer>
         {nickname !== currentNickname && <UserInfo />}
+        {/* 앨범 정보 표시 */}
         <AlbumInfo data={data} />
         {showChat ? (
           <Chatting />

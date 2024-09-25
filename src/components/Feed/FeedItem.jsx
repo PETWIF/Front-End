@@ -180,7 +180,7 @@ const FeedItem = forwardRef((props, ref) => {
               )}
             </S.Actions>
           </S.Header>
-          <S.StyledLink key={albumId} to={`/album/detail/${albumId}`}>
+          <S.StyledLink key={albumId} to={`/album/${nickName}/detail/${albumId}`}>
             <S.AlbumImage src={coverImageUrl} alt='앨범 이미지' />
           </S.StyledLink>
         </S.FeedZone>
