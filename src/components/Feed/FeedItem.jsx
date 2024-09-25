@@ -31,14 +31,16 @@ const FeedItem = forwardRef((props, ref) => {
   } = data;
 
   const [newComment, setNewComment] = useState('');
-  const [commentList, setCommentList] = useState(comments);
+  const [commentList, setCommentList] = useState(comments || []); // 초기값 설정
 
   const { isOpen, open, close, ReportModal } = useReportModal();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  // 댓글 리스트가 변경될 때마다 CommentSection 컴포넌트를 다시 렌더링
+  // 댓글 리스트가 변경될 때만 CommentSection 컴포넌트를 다시 렌더링
   useEffect(() => {
-    setCommentList(comments);
+    if (Array.isArray(comments)) { // comments가 배열인지 확인
+      setCommentList(comments);
+    }
   }, [comments]);
 
   const handleCommentChange = (e) => {
@@ -68,7 +70,7 @@ const FeedItem = forwardRef((props, ref) => {
           // 사용자 이름 가져오기
           const userResponse = await authAxios.get('/member/me/withAuth');
           const username = userResponse.data.data.name; // 사용자 이름 가져오기
-        
+
           const newCommentData = {
             createdAt: new Date().toISOString(), // 현재 시간으로 설정
             updatedAt: new Date().toISOString(), // 현재 시간으로 설정
@@ -79,7 +81,7 @@ const FeedItem = forwardRef((props, ref) => {
             childComments: [], // 초기 대댓글 배열
             liked: false, // 초기 좋아요 상태
           };
-        
+
           // 댓글 리스트에 새 댓글 추가
           setCommentList((prevCommentList) => [...prevCommentList, newCommentData]);
         }
@@ -129,14 +131,14 @@ const FeedItem = forwardRef((props, ref) => {
         <S.FeedZone>
           <S.Header>
             <S.Profile>
-              <img
-                src={profileImageUrl ?? defaultProfile}
-                alt={`${nickName} 프로필`}
-              />
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <Link to={`/album/${nickName}`} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <img
+                  src={profileImageUrl ?? defaultProfile}
+                  alt={`${nickName} 프로필`}
+                />
                 <S.ProfileName>{nickName}</S.ProfileName>
-                <S.CreatedAt>{formatDate(updatedAT)}</S.CreatedAt>
-              </div>
+              </Link>
+              <S.CreatedAt>{formatDate(updatedAT)}</S.CreatedAt>
             </S.Profile>
             <S.Actions>
               <Link to={`/chatting`}>
@@ -155,7 +157,7 @@ const FeedItem = forwardRef((props, ref) => {
               <Link to={`/bookmark`}>
                 <Icon id='albumbookmark' width='22' height='27' />
               </Link>
-              <Icon id='albumhamburger' width='23' height='4' onClick={toggleMenu}/>
+              <Icon id='albumhamburger' width='23' height='4' onClick={toggleMenu} />
               {isMenuOpen && (
                 <div className="menu"
                   style={{
