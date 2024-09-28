@@ -123,6 +123,11 @@ const AlbumDetail = ({ album, albumId }) => {
     setShowChat(true); // 채팅창을 열기
   };
 
+  // 채팅창을 닫는 함수
+  const handleCloseChat = () => {
+    setShowChat(false); // 채팅창을 닫기 위해 showChat을 false로 설정
+  };
+
   const handleCommentHeart = (commentId) => {
     console.log(`댓글 ${commentId}에 좋아요를 눌렀습니다.`);
   };
@@ -132,7 +137,7 @@ const AlbumDetail = ({ album, albumId }) => {
   };
   
   return showChat ? ( // showChat이 true일 때 Chatting 컴포넌트를 렌더링
-    <Chatting />
+    <Chatting onCloseChat={handleCloseChat}/>
   ) : (
     // showChat이 false일 때 AlbumDetail을 렌더링
     <S.AlbumDetailLayout>

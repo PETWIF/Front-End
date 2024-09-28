@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import { Avatar } from '../Avatar';
 import { Icon } from '../../components/Icon';
@@ -9,118 +9,110 @@ import { Profile as Img } from '../../dummy/images';
 import { postReportChat } from '../../apis/report.js';
 
 import * as S from './Chatting.style.jsx';
+import { createChatRoom, fetchChatMessages, sendMessageAPI, leaveChatRoomAPI } from '../../apis/chat.js';
 
-const nickname = '댕댕산책가';
-
-export default function Chatting() {
-  const [messages, setMessages] = useState(CHAT_DATA);
+export default function Chatting({nickname, onCloseChat}) {
+  const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState('');
+  const [chatRoomId, setChatRoomId] = useState(null);
+  const [page, setPage] = useState(1); // 페이지 번호 초기값
 
+  const userId = localStorage.getItem('userId');
 
-  /*
-  const [otherId, setOtherId] = useState(null); // otherId 상태
-  const [chatRoomId, setChatRoomId] = useState(null); // chatRoomId 상태
-
-  // 서버에서 otherId를 받아오는 함수
-  const fetchOtherId = async () => {
-    try {
-      const response = await authAxios.get('/chat/getOtherId');  // 서버에서 otherId 요청
-      setOtherId(response.data.otherId);  // 받아온 otherId 저장
-    } catch (error) {
-      console.error('Error fetching otherId:', error);
-    }
-  };
-
-  // 컴포넌트가 처음 렌더링될 때 서버에서 otherId를 받아옴
   useEffect(() => {
-    fetchOtherId();
-  }, []);
-
-  // otherId로 채팅방 생성 요청
-  const createChatRoom = async () => {
-    if (otherId) {
-      try {
-        const response = await authAxios.post('/chats/chatRoom', {
-          otherId,  // 상대방의 userId를 서버에 전송
-        });
-        if (response.data.isSuccess) {
-          setChatRoomId(response.data.data.chatRoomId);  // chatRoomId 저장
-        } else {
-          console.log('채팅방 생성 실패:', response.data.message);
+    const fetchChatRoomIdAndMessages = async () => {
+      const chatRooms = JSON.parse(localStorage.getItem('chatRooms')) || {};
+      const storedChatRoomId = chatRooms[nickname];
+  
+      if (storedChatRoomId) {
+        setChatRoomId(storedChatRoomId);
+        try {
+          const response = await fetchChatMessages(storedChatRoomId, page); 
+          const fetchedMessages = response.data?.chatList || []; 
+          console.log('Fetched messages:', response.data);
+          setMessages(fetchedMessages);
+        } catch (error) {
+          console.error('채팅 메세지 조회 실패:', error);
         }
-      } catch (error) {
-        console.error('채팅방 생성 중 오류 발생:', error);
-      }
-    }
-  };
-
-  // 컴포넌트가 렌더링된 후 채팅방 생성 요청
-  useEffect(() => {
-    if (otherId) {
-      createChatRoom();
-    }
-  }, [otherId]);
-
-  // 메시지 전송 함수 (chatRoomId와 함께 서버에 전송)
-  const handleSendMessage = async () => {
-    if (inputValue.trim() && chatRoomId) {
-      const newMessage = {
-        id: messages.length + 1,
-        sender: 'me',
-        text: inputValue,
-        timestamp: new Date().toLocaleTimeString('ko-KR', {
-          hour: '2-digit',
-          minute: '2-digit',
-        }),
-      };
-
-      // 서버에 메시지 전송
-      await sendMessageToServer(chatRoomId, newMessage.text); // chatRoomId와 메시지 전송
-
-      setMessages([...messages, newMessage]);
-      setInputValue('');
-    }
-  };
-
-  // 서버로 메시지 전송 함수 (chatRoomId와 함께 전송)
-  const sendMessageToServer = async (chatRoomId, messageText) => {
-    try {
-      const response = await authAxios.post(`/chats/chatRoom/${chatRoomId}/send`, {
-        content: messageText,  // 메시지 내용
-        chatImages: null,      // 이미지를 보낼 경우 chatImages도 추가 가능
-      });
-
-      if (response.data.isSuccess) {
-        console.log('메시지가 성공적으로 전송되었습니다.');
       } else {
-        console.log('메시지 전송 실패:', response.data.message);
+        try {
+          const response = await createChatRoom({ nickname });
+          const { chatRoomId } = response.data;
+          setChatRoomId(chatRoomId);
+  
+          // 로컬 스토리지에 사용자별로 chatRoomId 저장
+          chatRooms[nickname] = chatRoomId;
+          localStorage.setItem('chatRooms', JSON.stringify(chatRooms));
+  
+          // 채팅방 생성 후 첫 페이지 메세지 조회
+          const messageResponse = await fetchChatMessages(chatRoomId, page);
+          const fetchedMessages = messageResponse.data?.chatList || [];
+          setMessages(fetchedMessages);
+        } catch (error) {
+          console.error('채팅방 생성 실패:', error.response);
+        }
       }
-    } catch (error) {
-      console.error('메시지 전송 중 오류 발생:', error);
-    }
-  };
-  */
+    };
+  
+    fetchChatRoomIdAndMessages();
+    
+  }, [nickname, page]);
+  
+  
+
 
   const handleInputChange = (e) => {
     setInputValue(e.target.value);
   };
 
-  const handleSendMessage = () => {
-    if (inputValue.trim()) {
-      const newMessage = {
-        id: messages.length + 1,
-        sender: 'me',
-        text: inputValue,
-        timestamp: new Date().toLocaleTimeString('ko-KR', {
-          hour: '2-digit',
-          minute: '2-digit',
-        }),
-      };
-      setMessages([...messages, newMessage]);
-      setInputValue('');
-      console.log('새 채팅:', inputValue);
+  const handleSendMessage = async () => {
+    if (inputValue.trim() && chatRoomId) {
+      // 메시지를 서버로 보내기
+      try {
+        const token = localStorage.getItem('accessToken'); // 토큰 가져오기
+        await sendMessageAPI({ chatRoomId, content: inputValue, chatImages: null, token });
+        console.log('메시지 전송 성공:', inputValue);
+        
+        // 메시지 전송 후 서버에서 다시 메시지 목록 조회
+        const response = await fetchChatMessages(chatRoomId, page);
+        const fetchedMessages = response.data?.chatList || [];  // 서버에서 받은 chatList 사용
+        setMessages(fetchedMessages);  // 새로운 메시지만으로 업데이트
+  
+        setInputValue('');  // 메시지 전송 후 입력 필드 초기화
+      } catch (error) {
+        console.error('메시지 전송 실패:', error);
+      }
     }
   };
+  
+
+  
+  
+  const handleLeaveChatRoom = async () => {
+    if (chatRoomId) {
+      try {
+        const token = localStorage.getItem('accessToken'); 
+        await leaveChatRoomAPI({ chatRoomId, token });
+  
+        // 로컬 스토리지에서 사용자별로 chatRoomId 삭제
+        const chatRooms = JSON.parse(localStorage.getItem('chatRooms')) || {};
+        delete chatRooms[nickname];
+        localStorage.setItem('chatRooms', JSON.stringify(chatRooms));
+  
+        console.log('채팅방 나가기 성공');
+
+        if (typeof onCloseChat === 'function') {
+          onCloseChat();
+        } else {
+          console.error('onCloseChat이 함수가 아닙니다.', onCloseChat);
+        }
+      } catch (error) {
+        console.error('채팅방 나가기 실패:', error);
+      }
+    }
+  };
+  
+  
 
   const handleKeyPress = (e) => {
     if (e.key === 'Enter') {
@@ -129,8 +121,9 @@ export default function Chatting() {
     }
   };
 
-  
 
+  
+  
   // const handleReportChatting = async (chatId, content) => {
   //   // 더미 데이터라 chatRoomId 없음 -> api 연결 후 가져와서 주석 풀기
   //   const response = await postReportChat({ chatRoomId, chatId, content });
@@ -146,6 +139,9 @@ export default function Chatting() {
   return (
     <S.ChatContainer>
       <S.ChatHeader>
+        <S.ChatLeaveButton onClick={handleLeaveChatRoom}>
+          <Icon id='exitdoor' width='40' height='40'/>
+        </S.ChatLeaveButton>
         <S.ChatTitle>채팅하기</S.ChatTitle>
         <S.NotificationButton>
           <Icon id='notification' width='24' height='24' />
@@ -153,23 +149,23 @@ export default function Chatting() {
       </S.ChatHeader>
       <S.ChatMessages>
         {messages.map((message) => (
-          <S.ChatMessage key={message.id} isMe={message.sender === 'me'}>
-            {message.sender === 'friend' && (
+          <S.ChatMessage key={message.chatId} isMe={message.memberId === Number(userId)}>
+            {message.memberId !== Number(userId) && (
               <S.ChatName>
                 <Avatar src={Img} size='24px' />
                 {nickname}
               </S.ChatName>
             )}
-            <S.ChatBubbleContainer isMe={message.sender === 'me'}>
-              <S.ChatBubble isMe={message.sender === 'me'}>
-                {message.text}
+            <S.ChatBubbleContainer isMe={message.memberId === Number(userId)}>
+              <S.ChatBubble isMe={message.memberId === Number(userId)}>
+                {message.content}
               </S.ChatBubble>
-              <S.ChatTimestamp isMe={message.sender === 'me'}>
+              <S.ChatTimestamp isMe={message.memberId === Number(userId)}>
                 {message.timestamp}
               </S.ChatTimestamp>
-              {message.sender !== 'me' ? 
+              {message.memberId !== Number(userId) ? 
               <S.ReportButton 
-              isMe={message.sender === 'me'}
+              isMe={message.memberId === Number(userId)}
               // onClick={() => {handleReportChatting(message.id, message.text)}}
               >
                 신고
