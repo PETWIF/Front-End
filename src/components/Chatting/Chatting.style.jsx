@@ -188,3 +188,13 @@ export const ReportButton = styled.span`
     color: ${(props) => props.theme.color.primary};
   }
 `;
+
+export const ChatLeaveButton = styled.button`
+  position: absolute;
+  display: flex;
+  margin-top: 20px;
+  margin-right: 50px;
+  background: none;
+  border: none;
+  cursor: pointer;
+`;

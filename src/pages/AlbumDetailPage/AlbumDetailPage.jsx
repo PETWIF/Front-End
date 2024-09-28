@@ -98,7 +98,7 @@ export default function AlbumDetailPage() {
         {/* 앨범 정보 표시 */}
         <AlbumInfo data={data} />
         {showChat ? (
-          <Chatting />
+          <Chatting nickname={currentNickname} onCloseChat={handleToggleChat}/>
         ) : (
           <AlbumDetail album={data} albumId={albumId} />
         )}
